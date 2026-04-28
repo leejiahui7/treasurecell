@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treasure Cell 💎</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold:    #f0a500;
+      --gold-l:  #fff4d6;
+      --amber:   #e67e22;
+      --rose:    #e8637a;
+      --rose-l:  #fde8ec;
+      --teal:    #3aafa9;
+      --teal-l:  #d6f3f2;
+      --purple:  #9b72cf;
+      --purple-l:#f0e8ff;
+      --warm:    #fff9f0;
+      --cream:   #fffdf7;
+      --mid:     #7a6a5a;
+      --dark:    #3a2e22;
+      --border:  #eeddb8;
+      --shadow:  0 3px 16px rgba(58,46,34,0.10);
+      --shadow2: 0 6px 28px rgba(58,46,34,0.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--warm);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: linear-gradient(135deg, #f0a500 0%, #e8637a 55%, #9b72cf 100%);
+      padding: 32px 20px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .site-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: white;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .site-header p {
+      color: rgba(255,255,255,0.88);
+      font-size: 0.95rem;
+      margin-top: 6px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      position: relative;
+    }
+    .gem { font-size: 2rem; display: block; margin-bottom: 6px; }
+
+    /* ── NAV TABS ── */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      background: white;
+      border-bottom: 3px solid var(--border);
+      flex-wrap: wrap;
+    }
+    nav button {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 14px 22px;
+      border: none;
+      background: white;
+      color: var(--mid);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      transition: all 0.18s;
+      letter-spacing: 0.01em;
+    }
+    nav button:hover { color: var(--amber); background: var(--gold-l); }
+    nav button.active { color: var(--amber); border-bottom-color: var(--amber); background: var(--gold-l); }
+
+    /* ── MAIN ── */
+    main { max-width: 900px; margin: 0 auto; padding: 28px 16px 70px; }
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeUp 0.25s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ── SECTION LABEL ── */
+    .slabel {
+      font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--mid); margin: 28px 0 10px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: white; border: 1.5px solid var(--border); border-radius: 16px;
+      padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+
+    /* ── NOTICE ── */
+    .notice {
+      background: var(--gold-l); border: 1.5px solid #f0d080; border-radius: 14px;
+      padding: 14px 18px; margin-bottom: 20px; font-size: 0.88rem; font-weight: 600;
+      display: flex; gap: 10px; align-items: center;
+    }
+
+    /* ══════════════════════════════════════
+       TAB 1 — ROSTER
+    ══════════════════════════════════════ */
+    .roster-toolbar {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 16px;
+    }
+    .roster-toolbar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--amber); }
+
+    .btn-add {
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.88rem;
+      padding: 9px 18px; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      color: white; cursor: pointer; transition: opacity 0.15s; box-shadow: 0 2px 8px rgba(230,126,34,0.3);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-add:hover { opacity: 0.88; }
+
+    /* Year filter pills */
+    .year-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .ypill {
+      font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: white; color: var(--mid); cursor: pointer; transition: all 0.15s;
+    }
+    .ypill.active { background: var(--amber); border-color: var(--amber); color: white; }
+    .ypill:hover:not(.active) { border-color: var(--gold); color: var(--amber); }
+
+    /* Roster table */
+    .roster-wrap { overflow-x: auto; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow); }
+    table.roster { width: 100%; border-collapse: collapse; font-size: 0.83rem; min-width: 700px; }
+    table.roster th {
+      background: linear-gradient(135deg, #fff4d6, #fde8ec);
+      color: var(--dark); font-weight: 800; text-align: left;
+      padding: 11px 14px; border-bottom: 2px solid var(--border);
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+    }
+    table.roster td { padding: 11px 14px; border-bottom: 1px solid #f5e8d0; vertical-align: top; color: var(--dark); }
+    table.roster tr:last-child td { border-bottom: none; }
+    table.roster tr:hover td { background: var(--gold-l); }
+    table.roster .role-cell { font-weight: 700; font-size: 0.8rem; color: var(--mid); white-space: nowrap; }
+    table.roster .date-head { color: var(--amber); font-weight: 900; }
+
+    .badge {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px; margin: 1px 2px;
+    }
+    .badge.worship  { background: #fde8ec; color: var(--rose); }
+    .badge.word     { background: #fff4d6; color: var(--amber); }
+    .badge.kids     { background: #d6f3f2; color: var(--teal); }
+    .badge.supper   { background: #f0e8ff; color: var(--purple); }
+    .badge.core     { background: #e8f4e8; color: #3a7a3a; }
+    .badge.topic    { background: #f5f5f5; color: #666; font-weight: 600; font-size: 0.68rem; }
+
+    .row-actions { display: flex; gap: 4px; }
+    .ia { background: none; border: none; cursor: pointer; padding: 3px 6px; border-radius: 5px; font-size: 0.78rem; transition: background 0.14s; }
+    .ia.ed { color: var(--mid); }
+    .ia.ed:hover { background: var(--gold-l); color: var(--amber); }
+    .ia.dl { color: #ccc; }
+    .ia.dl:hover { background: var(--rose-l); color: var(--rose); }
+
+    /* ══════════════════════════════════════
+       TAB 2 — SPIRITUAL GIFTS
+    ══════════════════════════════════════ */
+    .gifts-header { text-align: center; margin-bottom: 28px; }
+    .gifts-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--purple); margin-bottom: 6px; }
+    .gifts-header p { color: var(--mid); font-size: 0.9rem; font-weight: 600; }
+
+    .gift-bar-wrap { margin-bottom: 16px; }
+    .gift-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .gift-rank {
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 900; font-size: 0.85rem; flex-shrink: 0; color: white;
+    }
+    .gift-rank.r1 { background: linear-gradient(135deg, #f0a500, #e67e22); box-shadow: 0 2px 8px rgba(240,165,0,0.4); }
+    .gift-rank.r2 { background: linear-gradient(135deg, #adb5bd, #868e96); }
+    .gift-rank.r3 { background: linear-gradient(135deg, #cd7f32, #a0522d); }
+    .gift-rank.r4 { background: linear-gradient(135deg, #9b72cf, #7950b0); }
+    .gift-rank.r5 { background: linear-gradient(135deg, #3aafa9, #2e8a85); }
+
+    .gift-info { flex: 1; }
+    .gift-name { font-weight: 800; font-size: 0.95rem; margin-bottom: 4px; }
+    .gift-bar-bg { background: #f0ece3; border-radius: 99px; height: 10px; overflow: hidden; }
+    .gift-bar-fill { height: 100%; border-radius: 99px; transition: width 0.7s ease; }
+    .fill-1 { background: linear-gradient(90deg, #f0a500, #e67e22); }
+    .fill-2 { background: linear-gradient(90deg, #adb5bd, #868e96); }
+    .fill-3 { background: linear-gradient(90deg, #cd7f32, #a0522d); }
+    .fill-4 { background: linear-gradient(90deg, #9b72cf, #7950b0); }
+    .fill-5 { background: linear-gradient(90deg, #3aafa9, #2e8a85); }
+    .gift-count { font-weight: 900; font-size: 0.88rem; color: var(--mid); flex-shrink: 0; width: 80px; text-align: right; }
+
+    /* Member pills */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .member-card {
+      background: white; border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 14px 12px; text-align: center; box-shadow: var(--shadow);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .member-card:hover { transform: translateY(-2px); box-shadow: var(--shadow2); }
+    .member-avatar {
+      width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 1.1rem; margin: 0 auto 8px; font-weight: 900;
+    }
+    .member-name { font-weight: 800; font-size: 0.82rem; color: var(--dark); margin-bottom: 6px; }
+    .member-gifts { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
+    .mgift { font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
+
+    /* ══════════════════════════════════════
+       TAB 3 — WORSHIP SONGS
+    ══════════════════════════════════════ */
+    .songs-toolbar {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+    }
+    .songs-toolbar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--rose); }
+
+    .btn-add-song {
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.88rem;
+      padding: 9px 18px; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, var(--rose), #c0394f);
+      color: white; cursor: pointer; transition: opacity 0.15s;
+      box-shadow: 0 2px 8px rgba(232,99,122,0.3);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-add-song:hover { opacity: 0.88; }
+
+    .song-card {
+      background: white; border: 1.5px solid var(--border); border-radius: 16px;
+      margin-bottom: 14px; box-shadow: var(--shadow); overflow: hidden;
+    }
+    .song-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer;
+      background: linear-gradient(135deg, #fde8ec, #fff4d6);
+      gap: 10px;
+    }
+    .song-title-wrap { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .song-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .song-title { font-weight: 800; font-size: 0.95rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .song-chevron { color: var(--mid); font-size: 0.75rem; flex-shrink: 0; transition: transform 0.2s; }
+    .song-card.open .song-chevron { transform: rotate(180deg); }
+
+    .song-body { display: none; padding: 0 18px 18px; }
+    .song-card.open .song-body { display: block; }
+
+    .song-lyrics {
+      width: 100%; min-height: 180px; font-family: 'Nunito', sans-serif;
+      font-size: 0.88rem; color: var(--dark); line-height: 1.75;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; background: var(--warm); resize: vertical;
+      outline: none; transition: border-color 0.15s; margin-top: 14px;
+    }
+    .song-lyrics:focus { border-color: var(--rose); }
+
+    .song-meta {
+      display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap;
+    }
+    .song-meta input {
+      font-family: 'Nunito', sans-serif; font-size: 0.8rem; padding: 5px 10px;
+      border: 1.5px solid var(--border); border-radius: 7px; color: var(--dark);
+      background: white; outline: none; flex: 1; min-width: 100px;
+    }
+    .song-meta input:focus { border-color: var(--rose); }
+    .song-save-btn {
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.8rem;
+      padding: 6px 14px; border: none; border-radius: 7px;
+      background: var(--rose); color: white; cursor: pointer; transition: opacity 0.15s;
+    }
+    .song-save-btn:hover { opacity: 0.85; }
+
+    /* ══════════════════════════════════════
+       SHARED MODAL
+    ══════════════════════════════════════ */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(58,46,34,0.45); z-index: 300;
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: white; border-radius: 20px; padding: 28px; width: 100%; max-width: 460px;
+      box-shadow: 0 12px 48px rgba(58,46,34,0.2); transform: translateY(16px); transition: transform 0.2s;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .overlay.open .modal { transform: none; }
+    .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--amber); margin-bottom: 20px; }
+    .modal label { display: block; font-size: 0.76rem; font-weight: 800; color: var(--mid); margin-bottom: 4px; margin-top: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .modal input, .modal textarea, .modal select {
+      width: 100%; font-family: 'Nunito', sans-serif; font-size: 0.9rem;
+      padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+      background: var(--warm); color: var(--dark); outline: none; transition: border-color 0.15s;
+    }
+    .modal input:focus, .modal textarea:focus, .modal select:focus { border-color: var(--amber); }
+    .modal textarea { min-height: 80px; resize: vertical; }
+    .modal-foot { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; align-items: center; }
+    .m-cancel { font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 700; padding: 9px 18px; border: 1.5px solid var(--border); border-radius: 10px; background: white; color: var(--mid); cursor: pointer; transition: all 0.15s; }
+    .m-cancel:hover { background: #f5f0e8; }
+    .m-save { font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800; padding: 9px 22px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--amber)); color: white; cursor: pointer; transition: opacity 0.15s; box-shadow: 0 2px 8px rgba(230,126,34,0.3); }
+    .m-save:hover { opacity: 0.87; }
+    .m-del { font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 700; padding: 8px 14px; border: 1.5px solid #f5d0d8; border-radius: 10px; background: white; color: var(--rose); cursor: pointer; margin-right: auto; transition: all 0.15s; }
+    .m-del:hover { background: var(--rose-l); }
+
+    /* Saved toast */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(60px);
+      background: var(--dark); color: white; padding: 10px 22px; border-radius: 99px;
+      font-weight: 700; font-size: 0.85rem; z-index: 500; transition: transform 0.3s, opacity 0.3s;
+      opacity: 0; pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1>Treasure Cell</h1>
+  <p>Growing Together in Christ</p>
+</div>
+
+<nav>
+  <button class="active" onclick="showTab('roster',this)">📋 Roster</button>
+  <button onclick="showTab('gifts',this)">✨ Spiritual Gifts</button>
+  <button onclick="showTab('songs',this)">🎵 Worship Songs</button>
+</nav>
+
+<main>
+
+  <!-- ════════════ TAB 1: ROSTER ════════════ -->
+  <div class="panel active" id="tab-roster">
+    <div class="roster-toolbar">
+      <h2>📋 Cell Group Roster</h2>
+      <button class="btn-add" onclick="openRosterModal(null)">＋ Add Session</button>
+    </div>
+
+    <div class="notice">
+      🏠 Theme: <strong>1 Corinthians</strong> &nbsp;·&nbsp; Venue: Treasure Place (unless stated)
+    </div>
+
+    <div class="year-pills" id="year-pills"></div>
+    <div class="roster-wrap">
+      <table class="roster" id="roster-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Worship 🎤</th>
+            <th>Word 📖</th>
+            <th>Kids 👶</th>
+            <th>Supper 🍽️</th>
+            <th>Topic</th>
+            <th>Core Team</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="roster-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════ TAB 2: GIFTS ════════════ -->
+  <div class="panel" id="tab-gifts">
+    <div class="gifts-header">
+      <h2>✨ Spiritual Gifts</h2>
+      <p>Gifts of our Treasure Cell members · ranked by frequency</p>
+    </div>
+
+    <div class="card">
+      <div class="slabel">Gift Frequency Ranking</div>
+      <div class="gift-bar-wrap" id="gift-bars"></div>
+    </div>
+
+    <div class="slabel">Members &amp; Their Gifts</div>
+    <div class="members-grid" id="members-grid"></div>
+  </div>
+
+  <!-- ════════════ TAB 3: SONGS ════════════ -->
+  <div class="panel" id="tab-songs">
+    <div class="songs-toolbar">
+      <h2>🎵 Worship Songs</h2>
+      <button class="btn-add-song" onclick="addSong()">＋ Add Song</button>
+    </div>
+    <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc;">
+      🎶 Paste lyrics below so everyone can follow along. Click any song to expand.
+    </div>
+    <div id="songs-list"></div>
+  </div>
+
+</main>
+
+<!-- ROSTER MODAL -->
+<div class="overlay" id="roster-modal">
+  <div class="modal">
+    <h3 id="rm-title">Add Session</h3>
+    <label>Date</label><input id="rm-date" type="text" placeholder="e.g. 23 Jan 2026"/>
+    <label>Worship</label><input id="rm-worship" type="text" placeholder="e.g. Grace & Andrew"/>
+    <label>Word</label><input id="rm-word" type="text" placeholder="e.g. Luke"/>
+    <label>Kids</label><input id="rm-kids" type="text" placeholder="e.g. Sarah – Topic"/>
+    <label>Supper</label><textarea id="rm-supper" rows="2" placeholder="e.g. Daryl & Del, Ryan & Esther"></textarea>
+    <label>Topic / Lesson</label><textarea id="rm-topic" rows="2" placeholder="e.g. L1: The Unity Crisis (1 Cor 1:1-17)"></textarea>
+    <label>Venue</label><input id="rm-venue" type="text" placeholder="Treasure Place"/>
+    <label>Core Team IC</label><input id="rm-core" type="text" placeholder="e.g. Joshua & Yuan Jing"/>
+    <div class="modal-foot">
+      <button class="m-del" id="rm-del" style="display:none" onclick="deleteSession()">🗑 Delete</button>
+      <button class="m-cancel" onclick="closeRosterModal()">Cancel</button>
+      <button class="m-save" onclick="saveSession()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Saved!</div>
+
+<script>
+// ─────────────────────── UTILITIES ───────────────────────
+function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function uid(){ return 'id'+Date.now()+Math.floor(Math.random()*9999); }
+function showToast(msg='✓ Saved!'){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+function showTab(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─────────────────────── ROSTER DATA ─────────────────────
+const SEED_SESSIONS = [
+  // ── 2026 1H ──
+  {id:'s1',  year:'2026 1H', date:'23 Jan 2026', worship:'Grace🎤 + Andrew🎸', word:'Luke',   kids:'Bible Story Video',               supper:'Daryl & Delci, Ryan & Esther', topic:'L1: The Unity Crisis: Division and Christ\'s Call (1 Cor 1:1-17)', venue:'Treasure Place', core:'Joshua & Yuan Jing'},
+  {id:'s2',  year:'2026 1H', date:'6 Feb 2026',  worship:'Seth & Delci',        word:'Josh',   kids:'Yuan Jing – Jesus Brings Us Together', supper:'Aunty Janette & Emily, Sarah & Tohken', topic:'L2: The Power of the Christian Message (1 Cor 1:18-2:5)', venue:'Treasure Place', core:'Ryan & Esther'},
+  {id:'s3',  year:'2026 1H', date:'20 Feb 2026', worship:'Delci & Daryl',       word:'Emily',  kids:'Sarah – God\'s Wisdom',           supper:'Potluck – bring your favourite CNY food/snack', topic:'L3: Spiritual Immaturity and Carnality (1 Cor 2:6-3:4)', venue:'Treasure Place', core:'Daryl & Del'},
+  {id:'s4',  year:'2026 1H', date:'6 Mar 2026',  worship:'Grace',               word:'Luke',   kids:'Jia Hui – God Helps Us Grow',     supper:'Grace & Andrew, Josh & Yuan', topic:'L4: The Church is God\'s Temple (1 Cor 3:5-23)', venue:'Treasure Place', core:'Joshua & Yuan Jing'},
+  {id:'s5',  year:'2026 1H', date:'20 Mar 2026', worship:'Daryl & Delci',       word:'Daryl & Hengs', kids:'Megan – Everything We Have Comes from God', supper:'David & Praizel, Tim & Jiahui', topic:'Social Justice Week', venue:'Pandan Valley', core:'Daryl & Del'},
+  {id:'s6',  year:'2026 1H', date:'17 Apr 2026', worship:'Grace & Andrew',      word:'Josh',   kids:'Jia Hui – God Helps Us Choose What is Right', supper:'Luke, Seth & Megan', topic:'L6: Purity in the Church: A Call to Holy Living (1 Cor 5:1-7)', venue:'Treasure Place', core:'Ryan & Esther'},
+  {id:'s7',  year:'2026 1H', date:'1 May 2026',  worship:'Seth & Delci',        word:'Emily',  kids:'Yuan Jing – We are Loved and Valued by God', supper:'Ryan & Esther, Grace & Andrew', topic:'L7: Dispute in the Church (1 Cor 6:1-11)', venue:'Treasure Place', core:'Joshua & Yuan Jing'},
+  {id:'s8',  year:'2026 1H', date:'15 May 2026', worship:'Grace & Andrew',      word:'Daryl',  kids:'Megan – Loving God with our Actions', supper:'Aunty Janette & Emily, Sarah & Tohken', topic:'L8: Defilement in the Church (1 Cor 6:12-20)', venue:'Treasure Place', core:'Daryl & Del'},
+  // ── 2025 2H ──
+  {id:'s9',  year:'2025 2H', date:'4 Jul 2025',  worship:'Andrew',              word:'Daryl',  kids:'Bible Story Video',               supper:'Everyone', topic:'', venue:'Treasure Place', core:'Daryl & Del'},
+  {id:'s10', year:'2025 2H', date:'18 Jul 2025', worship:'Delci🎤 + Seth🎸',    word:'Luke',   kids:'Sarah – The Twelve Spies',        supper:'Daryl & Del, Seth & Megan', topic:'L1: Having Courage and Obedience (Josh 1:1-9)', venue:'Treasure Place', core:'Daryl & Del'},
+  {id:'s11', year:'2025 2H', date:'1 Aug 2025',  worship:'Grace🎤 + Andrew🎸',  word:'Josh',   kids:'Jia Hui – Rehab and the Two Spies', supper:'Ryan & Esther, Aunty Janette & Emily', topic:'L2: Recognizing Faith\'s Power for Transformation (Josh 2)', venue:'', core:'Ryan & Esther'},
+  {id:'s12', year:'2025 2H', date:'15 Aug 2025', worship:'Delci🎤 + Seth🎸',    word:'Emily',  kids:'Yuan Jing – Battle of Jericho',   supper:'Andrew & Grace, Jia Hui & Timothy', topic:'L3: Stepping into God\'s Promises (Josh 3)', venue:'', core:'Josh & YJ'},
+  {id:'s13', year:'2025 2H', date:'5 Sep 2025',  worship:'Grace🎤 + Andrew🎸',  word:'Luke',   kids:'Megan – Deborah',                 supper:'Luke, David & Praizel', topic:'L4: Remembering God\'s faithfulness (Josh 4)', venue:'Aspen Heights', core:'Ryan & Esther'},
+  {id:'s14', year:'2025 2H', date:'19 Sep 2025', worship:'Delci🎤 + Seth🎸',    word:'Emily',  kids:'Bible Story Video',               supper:'Ryan & Esther, Andrew & Grace', topic:'L5: Being Spiritually Ready (Josh 5)', venue:'', core:'Josh & YJ'},
+  {id:'s15', year:'2025 2H', date:'3 Oct 2025',  worship:'Grace🎤 + Andrew🎸',  word:'Daryl',  kids:'Sarah – Gideon',                  supper:'Daryl & Del, Seth & Megan', topic:'L6: Experiencing Victory through Obedience (Josh 6)', venue:'Aspen Heights', core:'Daryl & Del'},
+  {id:'s16', year:'2025 2H', date:'17 Oct 2025', worship:'Jia Hui + Tim',       word:'Luke',   kids:'Yuan Jing – Samson',              supper:'Josh & YJ, Aunty Janette & Emily', topic:'L7: Understanding the Cost to Disobedience (Josh 7)', venue:'Telok Blangah Towers', core:'Daryl & Del'},
+  {id:'s17', year:'2025 2H', date:'7 Nov 2025',  worship:'Delci🎤 + Seth🎸',    word:'Josh',   kids:'Megan – Hannah\'s Prayers & Samuel', supper:'David & Praizel, Jia Hui & Tim', topic:"L8: Knowing God's Mercy in our Failure (Josh 8)", venue:'Pandan Valley', core:'Josh & YJ'},
+  {id:'s18', year:'2025 2H', date:'21 Nov 2025', worship:'Grace🎤 + Andrew🎸',  word:'Daryl',  kids:'Jia Hui – Samuel & David and Goliath', supper:'Luke, Josh & Yuan Jing', topic:'L9+10: Guarding Against Complacency (Josh 23-24)', venue:'Treasure Place', core:'Ryan & Esther'},
+];
+
+let sessions = JSON.parse(localStorage.getItem('tc_sessions') || 'null') || SEED_SESSIONS.map(s=>({...s}));
+let editSessionId = null;
+let activeYear = null;
+
+function allYears(){
+  const yrs = [...new Set(sessions.map(s=>s.year))].sort((a,b)=>b.localeCompare(a));
+  return yrs;
+}
+function renderYearPills(){
+  const yrs = allYears();
+  if (!activeYear || !yrs.includes(activeYear)) activeYear = yrs[0] || null;
+  const wrap = document.getElementById('year-pills');
+  wrap.innerHTML = yrs.map(y=>`<button class="ypill${y===activeYear?' active':''}" onclick="setYear('${y}')">${y}</button>`).join('');
+}
+function setYear(y){ activeYear=y; renderYearPills(); renderRoster(); }
+
+function renderRoster(){
+  const rows = sessions.filter(s=>s.year===activeYear);
+  const tb = document.getElementById('roster-body');
+  tb.innerHTML = rows.length ? rows.map(s=>`
+    <tr>
+      <td><strong style="color:var(--amber)">${x(s.date)}</strong>${s.venue?`<br><span style="font-size:0.72rem;color:var(--mid)">📍 ${x(s.venue)}</span>`:''}</td>
+      <td><span class="badge worship">${x(s.worship)}</span></td>
+      <td><span class="badge word">${x(s.word)}</span></td>
+      <td style="font-size:0.8rem;max-width:160px">${x(s.kids)}</td>
+      <td style="font-size:0.78rem;max-width:160px">${x(s.supper)}</td>
+      <td style="font-size:0.78rem;max-width:180px;color:var(--mid)">${x(s.topic)}</td>
+      <td><span class="badge core">${x(s.core)}</span></td>
+      <td><div class="row-actions">
+        <button class="ia ed" onclick="openRosterModal('${s.id}')" title="Edit">✏️</button>
+        <button class="ia dl" onclick="deleteSessionDirect('${s.id}')" title="Delete">🗑</button>
+      </div></td>
+    </tr>`).join('')
+  : '<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet. Click ＋ to add one.</td></tr>';
+}
+
+function openRosterModal(id){
+  editSessionId = id;
+  const del = document.getElementById('rm-del');
+  if (id){
+    const s = sessions.find(x=>x.id===id);
+    document.getElementById('rm-title').textContent = 'Edit Session';
+    document.getElementById('rm-date').value    = s.date;
+    document.getElementById('rm-worship').value = s.worship;
+    document.getElementById('rm-word').value    = s.word;
+    document.getElementById('rm-kids').value    = s.kids;
+    document.getElementById('rm-supper').value  = s.supper;
+    document.getElementById('rm-topic').value   = s.topic;
+    document.getElementById('rm-venue').value   = s.venue;
+    document.getElementById('rm-core').value    = s.core;
+    del.style.display = 'inline-block';
+  } else {
+    document.getElementById('rm-title').textContent = 'Add Session';
+    ['rm-date','rm-worship','rm-word','rm-kids','rm-supper','rm-topic','rm-venue','rm-core'].forEach(f=>document.getElementById(f).value='');
+    del.style.display = 'none';
+  }
+  document.getElementById('roster-modal').classList.add('open');
+}
+function closeRosterModal(){ document.getElementById('roster-modal').classList.remove('open'); editSessionId=null; }
+
+function saveSession(){
+  const date    = document.getElementById('rm-date').value.trim();
+  if (!date) return;
+  const obj = {
+    id: editSessionId || uid(),
+    year: activeYear || '2026 1H',
+    date,
+    worship: document.getElementById('rm-worship').value,
+    word:    document.getElementById('rm-word').value,
+    kids:    document.getElementById('rm-kids').value,
+    supper:  document.getElementById('rm-supper').value,
+    topic:   document.getElementById('rm-topic').value,
+    venue:   document.getElementById('rm-venue').value,
+    core:    document.getElementById('rm-core').value,
+  };
+  if (editSessionId){ const i=sessions.findIndex(s=>s.id===editSessionId); sessions[i]=obj; }
+  else { sessions.push(obj); }
+  localStorage.setItem('tc_sessions', JSON.stringify(sessions));
+  closeRosterModal(); renderRoster(); showToast('✓ Session saved!');
+}
+
+function deleteSession(){
+  sessions = sessions.filter(s=>s.id!==editSessionId);
+  localStorage.setItem('tc_sessions', JSON.stringify(sessions));
+  closeRosterModal(); renderYearPills(); renderRoster(); showToast('Session deleted');
+}
+function deleteSessionDirect(id){
+  if (!confirm('Delete this session?')) return;
+  sessions = sessions.filter(s=>s.id!==id);
+  localStorage.setItem('tc_sessions', JSON.stringify(sessions));
+  renderYearPills(); renderRoster(); showToast('Session deleted');
+}
+
+document.getElementById('roster-modal').onclick = e=>{ if(e.target===e.currentTarget) closeRosterModal(); };
+
+// ─────────────────────── SPIRITUAL GIFTS ─────────────────
+const GIFTS_DATA = [
+  { rank:1, name:'Exhortation', count:7, max:7, cls:'r1', fill:'fill-1',
+    members:['Daryl','Emily','Grace','Josh','Luke','Seth','Tim'] },
+  { rank:2, name:'Discernment', count:5, max:7, cls:'r2', fill:'fill-2',
+    members:['Andrew','Delci','Esther','Megan','Yuan Jing'] },
+  { rank:3, name:'Prophecy',   count:5, max:7, cls:'r3', fill:'fill-3',
+    members:['Daryl','Grace','Jiahui','Ryan','Sarah'] },
+  { rank:4, name:'Faith',      count:4, max:7, cls:'r4', fill:'fill-4',
+    members:['Emily','Josh','Luke','Praizel'] },
+  { rank:5, name:'Pastor/Shepherd', count:4, max:7, cls:'r5', fill:'fill-5',
+    members:['Andrew','Delci','Seth','Tim'] },
+];
+
+const MEMBERS_DATA = [
+  { name:'Daryl',     gifts:['Exhortation','Prophecy'],           color:'#f0a500', emoji:'🌟' },
+  { name:'Delci',     gifts:['Administration','Helps'],            color:'#d06030', emoji:'🌺' },
+  { name:'Emily',     gifts:['Exhortation','Faith'],              color:'#e8637a', emoji:'🌸' },
+  { name:'Grace',     gifts:['Exhortation','Prophecy'],           color:'#9b72cf', emoji:'💜' },
+  { name:'Josh',      gifts:['Exhortation','Faith'],              color:'#3aafa9', emoji:'🌊' },
+  { name:'Luke',      gifts:['Exhortation','Faith'],              color:'#e67e22', emoji:'🔥' },
+  { name:'Seth',      gifts:['Exhortation','Pastor'],             color:'#5d8a3c', emoji:'🌿' },
+  { name:'Tim',       gifts:['Exhortation','Pastor'],             color:'#c05080', emoji:'🎯' },
+  { name:'Andrew',    gifts:['Discernment','Pastor'],             color:'#3a80d0', emoji:'⚡' },
+  { name:'Esther',    gifts:['Discernment'],                      color:'#8050c0', emoji:'✨' },
+  { name:'Megan',     gifts:['Discernment'],                      color:'#50a080', emoji:'🌻' },
+  { name:'Yuan Jing', gifts:['Discernment'],                      color:'#d0a030', emoji:'🎋' },
+  { name:'Jiahui',    gifts:['Prophecy'],                         color:'#a04060', emoji:'🌹' },
+  { name:'Ryan',      gifts:['Prophecy'],                         color:'#4070a0', emoji:'💙' },
+  { name:'Sarah',     gifts:['Prophecy'],                         color:'#60a050', emoji:'🍀' },
+  { name:'Praizel',   gifts:['Faith'],                            color:'#c08030', emoji:'🌾' },
+];
+
+const GIFT_COLORS = {
+  'Exhortation':    {bg:'#fff4d6',color:'#e67e22'},
+  'Discernment':    {bg:'#f0f0f0',color:'#868e96'},
+  'Prophecy':       {bg:'#f0e8e0',color:'#a0522d'},
+  'Faith':          {bg:'#f0e8ff',color:'#7950b0'},
+  'Pastor':         {bg:'#e8f4e8',color:'#3a7a3a'},
+  'Pastor/Shepherd':{bg:'#e8f4e8',color:'#3a7a3a'},
+  'Administration': {bg:'#e8f0ff',color:'#3a5ab8'},
+  'Helps':          {bg:'#fff0e8',color:'#c06030'},
+};
+
+function renderGifts(){
+  const bars = document.getElementById('gift-bars');
+  bars.innerHTML = GIFTS_DATA.map(g=>`
+    <div class="gift-row">
+      <div class="gift-rank ${g.cls}">${g.rank}</div>
+      <div class="gift-info">
+        <div class="gift-name">${g.name}</div>
+        <div class="gift-bar-bg"><div class="gift-bar-fill ${g.fill}" style="width:${g.count/g.max*100}%"></div></div>
+      </div>
+      <div class="gift-count">${g.count} member${g.count!==1?'s':''}</div>
+    </div>`).join('');
+
+  const grid = document.getElementById('members-grid');
+  grid.innerHTML = MEMBERS_DATA.map(m=>`
+    <div class="member-card">
+      <div class="member-avatar" style="background:${m.color}22;color:${m.color}">${m.emoji}</div>
+      <div class="member-name">${x(m.name)}</div>
+      <div class="member-gifts">${m.gifts.slice(0,2).map(g=>{
+        const gc=GIFT_COLORS[g]||{bg:'#f0ece3',color:'#666'};
+        return `<span class="mgift" style="background:${gc.bg};color:${gc.color}">${g}</span>`;
+      }).join('')}</div>
+    </div>`).join('');
+}
+
+// ─────────────────────── WORSHIP SONGS ───────────────────
+const SEED_SONGS = [
+  { id:'song1', title:'Great Are You Lord', artist:'All Sons & Daughters',
+    lyrics:`It's Your breath in our lungs\nSo we pour out our praise, we pour out our praise\nIt's Your breath in our lungs\nSo we pour out our praise to You only\n\nAnd all the earth will shout Your praise\nOur hearts will cry, these bones will sing\nGreat are You Lord` },
+  { id:'song2', title:'What A Beautiful Name', artist:'Hillsong Worship',
+    lyrics:`You were the Word at the beginning\nOne with God the Lord Most High\nYour hidden glory in creation\nNow revealed in You our Christ\n\nWhat a beautiful Name it is\nWhat a beautiful Name it is\nThe Name of Jesus Christ my King` },
+  { id:'song3', title:'Goodness of God', artist:'Bethel Music',
+    lyrics:`I love You Lord\nOh Your mercy never fails me\nAll my days I've been held in Your hands\nFrom the moment that I wake up\nUntil I lay my head\nI will sing of the goodness of God` },
+];
+
+let songs = JSON.parse(localStorage.getItem('tc_songs') || 'null') || SEED_SONGS.map(s=>({...s}));
+
+function saveSongs(){ localStorage.setItem('tc_songs', JSON.stringify(songs)); }
+
+function renderSongs(){
+  const list = document.getElementById('songs-list');
+  if (!songs.length){ list.innerHTML='<div class="card" style="text-align:center;color:var(--mid);padding:32px">No songs yet. Click ＋ to add one! 🎶</div>'; return; }
+  list.innerHTML = songs.map((s,i)=>`
+    <div class="song-card" id="sc-${s.id}">
+      <div class="song-header" onclick="toggleSong('${s.id}')">
+        <div class="song-title-wrap">
+          <span class="song-icon">🎵</span>
+          <span class="song-title">${x(s.title)}</span>
+        </div>
+        <div class="song-actions" onclick="event.stopPropagation()">
+          <button class="ia ed" onclick="editSongTitle('${s.id}')" title="Rename">✏️</button>
+          <button class="ia dl" onclick="deleteSong('${s.id}')" title="Delete">🗑</button>
+        </div>
+        <span class="song-chevron">▼</span>
+      </div>
+      <div class="song-body">
+        <div class="song-meta">
+          <input id="art-${s.id}" value="${x(s.artist)}" placeholder="Artist / Band" oninput="updateArtist('${s.id}',this.value)"/>
+          <button class="song-save-btn" onclick="saveSongLyrics('${s.id}')">💾 Save</button>
+        </div>
+        <textarea class="song-lyrics" id="lyr-${s.id}" placeholder="Paste song lyrics here…">${x(s.lyrics)}</textarea>
+      </div>
+    </div>`).join('');
+}
+
+function toggleSong(id){
+  const card = document.getElementById('sc-'+id);
+  card.classList.toggle('open');
+}
+
+function addSong(){
+  const title = prompt('Song title:');
+  if (!title) return;
+  const s = { id: uid(), title: title.trim(), artist:'', lyrics:'' };
+  songs.push(s);
+  saveSongs(); renderSongs();
+  // Auto-open
+  setTimeout(()=>{ const c=document.getElementById('sc-'+s.id); if(c) c.classList.add('open'); },100);
+  showToast('✓ Song added!');
+}
+
+function editSongTitle(id){
+  const s = songs.find(x=>x.id===id);
+  const t = prompt('Rename song:', s.title);
+  if (t && t.trim()){ s.title = t.trim(); saveSongs(); renderSongs(); showToast('✓ Renamed!'); }
+}
+
+function deleteSong(id){
+  if (!confirm('Delete this song?')) return;
+  songs = songs.filter(s=>s.id!==id);
+  saveSongs(); renderSongs(); showToast('Song deleted');
+}
+
+function saveSongLyrics(id){
+  const s = songs.find(x=>x.id===id);
+  s.lyrics = document.getElementById('lyr-'+id).value;
+  s.artist = document.getElementById('art-'+id).value;
+  saveSongs(); showToast('✓ Lyrics saved!');
+}
+
+function updateArtist(id,val){ const s=songs.find(x=>x.id===id); if(s) s.artist=val; }
+
+// ─────────────────────── INIT ─────────────────────────────
+renderYearPills();
+renderRoster();
+renderGifts();
+renderSongs();
+</script>
+</body>
+</html>
