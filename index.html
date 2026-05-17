@@ -144,16 +144,17 @@
     .ypill:hover:not(.active) { border-color: var(--gold); color: var(--amber); }
 
     /* Roster table */
-    .roster-wrap { overflow-x: auto; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow); }
+    .roster-wrap { overflow-x: auto; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow); max-height: 70vh; overflow-y: auto; }
     table.roster { width: 100%; border-collapse: collapse; font-size: 0.83rem; min-width: 700px; }
     table.roster th {
       background: linear-gradient(135deg, #fff4d6, #fde8ec);
       color: var(--dark); font-weight: 800; text-align: left;
       padding: 11px 14px; border-bottom: 2px solid var(--border);
       font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+      position: sticky; top: 0; z-index: 2;
     }
+    table.roster th:first-child { position: sticky; top: 0; z-index: 2; }
     table.roster td { padding: 11px 14px; border-bottom: 1px solid #f5e8d0; vertical-align: top; color: var(--dark); }
-    table.roster tr:last-child td { border-bottom: none; }
     table.roster tr:hover td { background: var(--gold-l); }
     table.roster .role-cell { font-weight: 700; font-size: 0.8rem; color: var(--mid); white-space: nowrap; }
     table.roster .date-head { color: var(--amber); font-weight: 900; }
@@ -291,6 +292,47 @@
     }
     .song-save-btn:hover { opacity: 0.85; }
 
+    /* Fullscreen lyrics overlay */
+    .fs-overlay {
+      position: fixed; inset: 0; z-index: 400;
+      background: #1a120a;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .fs-overlay.open { opacity: 1; pointer-events: all; }
+    .fs-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #3a2010, #2a1a30);
+      flex-shrink: 0;
+    }
+    .fs-title { color: white; font-weight: 800; font-size: 1.05rem; }
+    .fs-artist { color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
+    .fs-close {
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      width: 36px; height: 36px; border-radius: 50%; font-size: 1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; flex-shrink: 0;
+    }
+    .fs-close:hover { background: rgba(255,255,255,0.25); }
+    .fs-lyrics {
+      flex: 1; overflow-y: auto; padding: 28px 24px;
+      color: rgba(255,255,255,0.92); font-size: clamp(1rem, 3.5vw, 1.25rem);
+      line-height: 2; white-space: pre-wrap; font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .fs-font-controls {
+      display: flex; gap: 8px; padding: 12px 20px;
+      background: rgba(0,0,0,0.3); flex-shrink: 0; justify-content: center;
+    }
+    .fs-font-btn {
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.82rem;
+      padding: 6px 14px; border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 8px; background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s;
+    }
+    .fs-font-btn:hover { background: rgba(255,255,255,0.18); }
+
     /* ══════════════════════════════════════
        SHARED MODAL
     ══════════════════════════════════════ */
@@ -426,6 +468,23 @@
       <button class="m-cancel" onclick="closeRosterModal()">Cancel</button>
       <button class="m-save" onclick="saveSession()">Save</button>
     </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN LYRICS OVERLAY -->
+<div class="fs-overlay" id="fs-overlay">
+  <div class="fs-header">
+    <div>
+      <div class="fs-title" id="fs-title"></div>
+      <div class="fs-artist" id="fs-artist"></div>
+    </div>
+    <button class="fs-close" onclick="closeFullscreen()">✕</button>
+  </div>
+  <div class="fs-lyrics" id="fs-lyrics"></div>
+  <div class="fs-font-controls">
+    <button class="fs-font-btn" onclick="fsFont(-2)">A−</button>
+    <button class="fs-font-btn" onclick="fsFont(2)">A＋</button>
+    <button class="fs-font-btn" onclick="fsBg()">🌙 / ☀️</button>
   </div>
 </div>
 
@@ -659,6 +718,7 @@ function renderSongs(){
           <span class="song-title">${x(s.title)}</span>
         </div>
         <div class="song-actions" onclick="event.stopPropagation()">
+          <button class="ia ed" onclick="openFullscreen('${s.id}')" title="Fullscreen">⛶</button>
           <button class="ia ed" onclick="editSongTitle('${s.id}')" title="Rename">✏️</button>
           <button class="ia dl" onclick="deleteSong('${s.id}')" title="Delete">🗑</button>
         </div>
@@ -710,6 +770,50 @@ function saveSongLyrics(id){
 }
 
 function updateArtist(id,val){ const s=songs.find(x=>x.id===id); if(s) s.artist=val; }
+
+// ─────────────────────── FULLSCREEN LYRICS ───────────────
+let fsFontSize = 18;
+let fsDark = true;
+
+function openFullscreen(id){
+  const s = songs.find(x=>x.id===id);
+  if (!s) return;
+  // Save any unsaved edits first
+  const lyrEl = document.getElementById('lyr-'+id);
+  if (lyrEl) s.lyrics = lyrEl.value;
+  document.getElementById('fs-title').textContent  = s.title;
+  document.getElementById('fs-artist').textContent = s.artist || '';
+  document.getElementById('fs-lyrics').textContent = s.lyrics || '(No lyrics yet — close and paste some!)';
+  document.getElementById('fs-lyrics').style.fontSize = fsFontSize+'px';
+  applyFsBg();
+  document.getElementById('fs-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFullscreen(){
+  document.getElementById('fs-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function fsFont(delta){
+  fsFontSize = Math.min(36, Math.max(12, fsFontSize + delta));
+  document.getElementById('fs-lyrics').style.fontSize = fsFontSize+'px';
+}
+function fsBg(){
+  fsDark = !fsDark;
+  applyFsBg();
+}
+function applyFsBg(){
+  const ov = document.getElementById('fs-overlay');
+  const ly = document.getElementById('fs-lyrics');
+  if (fsDark){
+    ov.style.background = '#1a120a';
+    ly.style.color = 'rgba(255,255,255,0.92)';
+  } else {
+    ov.style.background = '#fffdf7';
+    ly.style.color = '#3a2e22';
+  }
+}
+// Close fullscreen on Escape key
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeFullscreen(); });
 
 // ─────────────────────── INIT ─────────────────────────────
 renderYearPills();
