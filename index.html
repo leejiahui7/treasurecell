@@ -383,7 +383,8 @@
 </div>
 
 <nav>
-  <button class="active" onclick="showTab('roster',this)">📋 Roster</button>
+  <button class="active" onclick="showRosterYear('2026 1H',this)">📋 2026 1H Roster</button>
+  <button onclick="showRosterYear('2026 2H',this)">📅 2026 2H Roster</button>
   <button onclick="showTab('gifts',this)">✨ Spiritual Gifts</button>
   <button onclick="showTab('songs',this)">🎵 Worship Songs</button>
 </nav>
@@ -505,6 +506,10 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
+function showRosterYear(year,btn){
+  setYear(year);
+  showTab('roster',btn);
+}
 
 // ─────────────────────── ROSTER DATA ─────────────────────
 const SEED_SESSIONS = [
@@ -517,6 +522,19 @@ const SEED_SESSIONS = [
   {id:'s6',  year:'2026 1H', date:'17 Apr 2026', worship:'Grace & Andrew',      word:'Josh',   kids:'Jia Hui – God Helps Us Choose What is Right', supper:'Luke, Seth & Megan', topic:'L6: Purity in the Church: A Call to Holy Living (1 Cor 5:1-7)', venue:'Treasure Place', core:'Ryan & Esther'},
   {id:'s7',  year:'2026 1H', date:'1 May 2026',  worship:'Seth & Delci',        word:'Emily',  kids:'Yuan Jing – We are Loved and Valued by God', supper:'Ryan & Esther, Grace & Andrew', topic:'L7: Dispute in the Church (1 Cor 6:1-11)', venue:'Treasure Place', core:'Joshua & Yuan Jing'},
   {id:'s8',  year:'2026 1H', date:'15 May 2026', worship:'Grace & Andrew',      word:'Daryl',  kids:'Megan – Loving God with our Actions', supper:'Aunty Janette & Emily, Sarah & Tohken', topic:'L8: Defilement in the Church (1 Cor 6:12-20)', venue:'Treasure Place', core:'Daryl & Del'},
+  // ── 2026 2H ──
+  {id:'s19', year:'2026 2H', date:'3 Jul 2026',  worship:'', word:'', kids:'', supper:'', topic:'L9: Marriage and Singleness (1 Cor 7:1-24)', venue:'Treasure Place', core:''},
+  {id:'s20', year:'2026 2H', date:'17 Jul 2026', worship:'', word:'', kids:'', supper:'', topic:'L10: Living for God in Every Season (1 Cor 7:25-40)', venue:'Treasure Place', core:''},
+  {id:'s21', year:'2026 2H', date:'7 Aug 2026',  worship:'', word:'', kids:'', supper:'', topic:'L11: Christian Freedom and Responsibility (1 Cor 8)', venue:'Treasure Place', core:''},
+  {id:'s22', year:'2026 2H', date:'21 Aug 2026', worship:'', word:'', kids:'', supper:'', topic:'L12: Rights, Sacrifice and the Gospel (1 Cor 9)', venue:'Treasure Place', core:''},
+  {id:'s23', year:'2026 2H', date:'4 Sep 2026',  worship:'', word:'', kids:'', supper:'', topic:'L13: Learning from Israel’s Example (1 Cor 10:1-13)', venue:'Treasure Place', core:''},
+  {id:'s24', year:'2026 2H', date:'18 Sep 2026', worship:'', word:'', kids:'', supper:'', topic:'L14: Doing Everything for God's Glory (1 Cor 10:14-33)', venue:'Treasure Place', core:''},
+  {id:'s25', year:'2026 2H', date:'2 Oct 2026',  worship:'', word:'', kids:'', supper:'', topic:'L15: Order and Worship in the Church (1 Cor 11)', venue:'Treasure Place', core:''},
+  {id:'s26', year:'2026 2H', date:'16 Oct 2026', worship:'', word:'', kids:'', supper:'', topic:'L16: Spiritual Gifts and Unity (1 Cor 12)', venue:'Treasure Place', core:''},
+  {id:'s27', year:'2026 2H', date:'6 Nov 2026',  worship:'', word:'', kids:'', supper:'', topic:'L17: The Way of Love (1 Cor 13)', venue:'Treasure Place', core:''},
+  {id:'s28', year:'2026 2H', date:'20 Nov 2026', worship:'', word:'', kids:'', supper:'', topic:'L18: Worship that Builds the Church (1 Cor 14)', venue:'Treasure Place', core:''},
+  {id:'s29', year:'2026 2H', date:'4 Dec 2026',  worship:'', word:'', kids:'', supper:'', topic:'L19: The Resurrection of Christ (1 Cor 15)', venue:'Treasure Place', core:''},
+  {id:'s30', year:'2026 2H', date:'18 Dec 2026', worship:'', word:'', kids:'', supper:'', topic:'L20: Final Encouragements and Mission (1 Cor 16)', venue:'Treasure Place', core:''},
   // ── 2025 2H ──
   {id:'s9',  year:'2025 2H', date:'4 Jul 2025',  worship:'Andrew',              word:'Daryl',  kids:'Bible Story Video',               supper:'Everyone', topic:'', venue:'Treasure Place', core:'Daryl & Del'},
   {id:'s10', year:'2025 2H', date:'18 Jul 2025', worship:'Delci🎤 + Seth🎸',    word:'Luke',   kids:'Sarah – The Twelve Spies',        supper:'Daryl & Del, Seth & Megan', topic:'L1: Having Courage and Obedience (Josh 1:1-9)', venue:'Treasure Place', core:'Daryl & Del'},
@@ -532,7 +550,7 @@ const SEED_SESSIONS = [
 
 let sessions = JSON.parse(localStorage.getItem('tc_sessions') || 'null') || SEED_SESSIONS.map(s=>({...s}));
 let editSessionId = null;
-let activeYear = null;
+let activeYear = '2026 1H';
 
 function allYears(){
   const yrs = [...new Set(sessions.map(s=>s.year))].sort((a,b)=>b.localeCompare(a));
