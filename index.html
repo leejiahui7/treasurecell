@@ -1,6 +1,3 @@
-const SUPA_URL = 'https://nczuxhpghzdncsjwuvpf.supabase.co';
-const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,19 +38,29 @@ const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
     .ypill.new-half{background:linear-gradient(135deg,#d6f3f2,#f0e8ff);border-color:var(--teal);color:var(--teal)}
     .ypill.new-half.active{background:var(--teal);border-color:var(--teal);color:white}
 
-    /* ROSTER TABLE — no height cap, free scroll on mobile */
+    /* ROSTER TABLE */
     .roster-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid var(--border);box-shadow:var(--shadow)}
     table.roster{width:100%;border-collapse:collapse;font-size:.83rem;min-width:700px}
     table.roster th{background:linear-gradient(135deg,#fff4d6,#fde8ec);color:var(--dark);font-weight:800;text-align:left;padding:11px 14px;border-bottom:2px solid var(--border);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-    table.roster td{padding:11px 14px;border-bottom:1px solid #f5e8d0;vertical-align:top;color:var(--dark)}
+    table.roster td{padding:8px 10px;border-bottom:1px solid #f5e8d0;vertical-align:top;color:var(--dark)}
     table.roster tr:last-child td{border-bottom:none}
     table.roster tr:hover td{background:var(--gold-l)}
     tr.upcoming-row td{background:#f9fffe}tr.upcoming-row:hover td{background:var(--teal-l)}
 
+    /* INLINE EDIT */
+    .editable-cell{position:relative;cursor:text;min-width:80px}
+    .editable-cell:hover::after{content:'✏️';position:absolute;top:2px;right:2px;font-size:.6rem;opacity:.5;pointer-events:none}
+    .cell-input{font-family:'Nunito',sans-serif;font-size:.82rem;color:var(--dark);border:2px solid var(--amber);border-radius:7px;padding:4px 7px;background:white;width:100%;outline:none;resize:none;min-height:28px}
+    .cell-input:focus{box-shadow:0 0 0 3px rgba(240,165,0,.18)}
+    textarea.cell-input{min-height:52px;resize:vertical}
+    .row-save-btn{font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;padding:3px 10px;border:none;border-radius:6px;background:var(--teal);color:white;cursor:pointer;white-space:nowrap;margin-top:3px;display:block}
+    .row-save-btn:hover{opacity:.85}
+    .row-editing td{background:#fffdf0 !important;border-bottom:2px solid var(--amber)}
+
     .badge{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin:1px 2px}
     .badge.worship{background:#fde8ec;color:var(--rose)}.badge.word{background:#fff4d6;color:var(--amber)}
     .badge.core{background:#e8f4e8;color:#3a7a3a}.badge.upcoming{background:#d6f3f2;color:var(--teal);border:1px dashed var(--teal);font-size:.65rem;padding:1px 6px}
-    .row-actions{display:flex;gap:4px}
+    .row-actions{display:flex;gap:4px;flex-direction:column;align-items:flex-start}
     .ia{background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;font-size:.78rem;transition:background .14s}
     .ia.ed:hover{background:var(--gold-l);color:var(--amber)}.ia.dl{color:#ccc}.ia.dl:hover{background:var(--rose-l);color:var(--rose)}
 
@@ -157,6 +164,7 @@ const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
     .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark);color:white;padding:10px 22px;border-radius:99px;font-weight:700;font-size:.85rem;z-index:600;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
     .loading-msg{text-align:center;padding:40px;color:var(--mid);font-weight:700;font-size:.9rem}
+    .inline-edit-hint{font-size:.72rem;color:var(--mid);font-weight:600;margin-bottom:8px;padding:6px 12px;background:var(--gold-l);border-radius:8px;border:1px solid var(--border);display:inline-block}
   </style>
 </head>
 <body>
@@ -188,6 +196,9 @@ const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
     </div>
     <div class="notice" id="roster-notice" style="background:var(--teal-l);border-color:#80d8d4">
       📖 Theme: <strong>1 Corinthians (cont.)</strong> &nbsp;·&nbsp; 🏠 Venue: Treasure Place (unless stated)
+    </div>
+    <div style="margin-bottom:12px">
+      <span class="inline-edit-hint">✏️ Click any cell to edit inline · press Enter or click Save to sync</span>
     </div>
     <div class="year-pills" id="year-pills"></div>
     <div class="roster-wrap">
@@ -244,7 +255,7 @@ const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
 
 </main>
 
-<!-- ROSTER MODAL -->
+<!-- ROSTER MODAL (for adding new sessions) -->
 <div class="overlay" id="roster-modal">
   <div class="modal">
     <h3 id="rm-title">Add Session</h3>
@@ -297,29 +308,10 @@ const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
 
 <script>
 // ════════════════════════════════════════════════════════
-//  SHARED STORAGE — Supabase (free, safe, designed for this)
-//
-//  WHY SUPABASE IS SAFE TO EMBED:
-//  The "anon key" below is PUBLIC by design — it only allows
-//  read/write to the specific table you create. It cannot
-//  access your account, billing, or any other project.
-//  This is different from a GitHub PAT which controls everything.
-//
-//  ONE-TIME SETUP (5 mins, free forever):
-//  1. Go to https://supabase.com → New project (free tier)
-//  2. Go to Table Editor → New table:
-//       Name: "celldata"
-//       Columns: id (int8, primary key), payload (text)
-//       Disable Row Level Security for now
-//  3. SQL Editor → run:
-//       INSERT INTO celldata (id, payload) VALUES (1, '{}');
-//  4. Settings → API → copy:
-//       • Project URL  → paste into SUPA_URL below
-//       • anon/public key → paste into SUPA_KEY below
-//  5. Save index.html and push to GitHub ✅
+//  SUPABASE CONFIG — real credentials
 // ════════════════════════════════════════════════════════
-const SUPA_URL = 'YOUR_SUPABASE_URL';      // e.g. 'https://xyzxyz.supabase.co'
-const SUPA_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g. 'eyJhbGci...'
+const SUPA_URL = 'https://nczuxhpghzdncsjwuvpf.supabase.co';
+const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
 const CONFIGURED = !SUPA_URL.startsWith('YOUR_');
 
 // ── UTILS ────────────────────────────────────────────────
@@ -460,26 +452,136 @@ function updateNotice(y){
   n.style.background=t.bg;n.style.borderColor=t.bc;
 }
 function setYear(y){activeYear=y;renderYearPills();updateNotice(y);renderRoster()}
+
+// ── INLINE EDITING ────────────────────────────────────────
+let currentlyEditingId=null;
+
 function renderRoster(){
   const rows=DB.sessions.filter(s=>s.year===activeYear);
   const na=`<span style="color:#ccc;font-size:.75rem">—</span>`;
   document.getElementById('roster-body').innerHTML=rows.length
-    ?rows.map(s=>{const up=isUpcoming(s.date);return`<tr class="${up?'upcoming-row':''}">
-      <td><strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(s.date)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}</td>
-      <td>${s.worship?`<span class="badge worship">${x(s.worship)}</span>`:na}</td>
-      <td>${s.word?`<span class="badge word">${x(s.word)}</span>`:na}</td>
-      <td style="font-size:.8rem;max-width:130px">${x(s.kids)||na}</td>
-      <td style="font-size:.78rem;max-width:150px;white-space:pre-line">${x(s.supper)||na}</td>
-      <td style="font-size:.78rem;max-width:200px;color:var(--mid)">${x(s.topic)||na}</td>
-      <td style="font-size:.78rem;white-space:nowrap">${s.venue?'📍 '+x(s.venue):na}</td>
-      <td>${s.core?`<span class="badge core">${x(s.core)}</span>`:na}</td>
-      <td><div class="row-actions">
-        <button class="ia ed" onclick="openRosterModal('${s.id}')">✏️</button>
-        <button class="ia dl" onclick="deleteSessionDirect('${s.id}')">🗑</button>
-      </div></td>
+    ?rows.map(s=>{const up=isUpcoming(s.date);return`<tr class="${up?'upcoming-row':''}" id="tr-${s.id}">
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','date')">
+        <span id="disp-${s.id}-date"><strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(s.date)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','worship')">
+        <span id="disp-${s.id}-worship">${s.worship?`<span class="badge worship">${x(s.worship)}</span>`:na}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','word')">
+        <span id="disp-${s.id}-word">${s.word?`<span class="badge word">${x(s.word)}</span>`:na}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','kids')" style="font-size:.8rem;max-width:130px">
+        <span id="disp-${s.id}-kids">${x(s.kids)||na}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','supper')" style="font-size:.78rem;max-width:150px;white-space:pre-line">
+        <span id="disp-${s.id}-supper">${x(s.supper)||na}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','topic')" style="font-size:.78rem;max-width:200px;color:var(--mid)">
+        <span id="disp-${s.id}-topic">${x(s.topic)||na}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','venue')" style="font-size:.78rem;white-space:nowrap">
+        <span id="disp-${s.id}-venue">${s.venue?'📍 '+x(s.venue):na}</span>
+      </td>
+      <td class="editable-cell" onclick="makeEditable(event,'${s.id}','core')">
+        <span id="disp-${s.id}-core">${s.core?`<span class="badge core">${x(s.core)}</span>`:na}</span>
+      </td>
+      <td>
+        <div class="row-actions">
+          <button class="ia dl" onclick="deleteSessionDirect('${s.id}')" title="Delete">🗑</button>
+        </div>
+      </td>
     </tr>`}).join('')
     :`<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet.</td></tr>`;
 }
+
+// textarea fields (multiline)
+const MULTILINE_FIELDS=['supper','topic','kids'];
+
+function makeEditable(event,sessionId,field){
+  // ignore clicks on buttons inside the cell
+  if(event.target.tagName==='BUTTON'||event.target.tagName==='INPUT'||event.target.tagName==='TEXTAREA')return;
+  
+  // cancel any existing inline edit first
+  if(currentlyEditingId){
+    const prev=currentlyEditingId;
+    currentlyEditingId=null;
+    // restore display for previously editing row
+    restoreDisplay(prev.id,prev.field);
+  }
+
+  const s=DB.sessions.find(s=>s.id===sessionId);
+  if(!s)return;
+  currentlyEditingId={id:sessionId,field};
+
+  const dispEl=document.getElementById(`disp-${sessionId}-${field}`);
+  if(!dispEl)return;
+
+  const isMulti=MULTILINE_FIELDS.includes(field);
+  const val=s[field]||'';
+
+  if(isMulti){
+    dispEl.innerHTML=`<textarea class="cell-input" id="inp-${sessionId}-${field}" rows="3">${val}</textarea>
+      <button class="row-save-btn" onclick="saveInlineEdit('${sessionId}','${field}')">💾 Save</button>`;
+  }else{
+    dispEl.innerHTML=`<input class="cell-input" id="inp-${sessionId}-${field}" value="${val.replace(/"/g,'&quot;')}"/>
+      <button class="row-save-btn" onclick="saveInlineEdit('${sessionId}','${field}')">💾 Save</button>`;
+  }
+
+  // highlight the row
+  document.getElementById(`tr-${sessionId}`).classList.add('row-editing');
+
+  // focus and select
+  const inp=document.getElementById(`inp-${sessionId}-${field}`);
+  if(inp){inp.focus();inp.select();}
+
+  // save on Enter (single-line), Escape cancels
+  if(inp){
+    inp.addEventListener('keydown',function(e){
+      if(!isMulti&&e.key==='Enter'){e.preventDefault();saveInlineEdit(sessionId,field);}
+      if(e.key==='Escape'){e.preventDefault();currentlyEditingId=null;restoreDisplay(sessionId,field,s[field]);}
+    });
+  }
+}
+
+function restoreDisplay(sessionId,field,value){
+  const s=DB.sessions.find(s=>s.id===sessionId);
+  if(!s)return;
+  const v=value!==undefined?value:s[field];
+  const na=`<span style="color:#ccc;font-size:.75rem">—</span>`;
+  const dispEl=document.getElementById(`disp-${sessionId}-${field}`);
+  if(!dispEl)return;
+
+  const up=isUpcoming(s.date);
+  if(field==='date'){
+    dispEl.innerHTML=`<strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(v)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}`;
+  }else if(field==='worship'){
+    dispEl.innerHTML=v?`<span class="badge worship">${x(v)}</span>`:na;
+  }else if(field==='word'){
+    dispEl.innerHTML=v?`<span class="badge word">${x(v)}</span>`:na;
+  }else if(field==='core'){
+    dispEl.innerHTML=v?`<span class="badge core">${x(v)}</span>`:na;
+  }else if(field==='venue'){
+    dispEl.innerHTML=v?'📍 '+x(v):na;
+  }else{
+    dispEl.innerHTML=x(v)||na;
+  }
+  document.getElementById(`tr-${sessionId}`)?.classList.remove('row-editing');
+}
+
+async function saveInlineEdit(sessionId,field){
+  const inp=document.getElementById(`inp-${sessionId}-${field}`);
+  if(!inp)return;
+  const newVal=inp.value;
+  const s=DB.sessions.find(s=>s.id===sessionId);
+  if(!s)return;
+  s[field]=newVal;
+  currentlyEditingId=null;
+  restoreDisplay(sessionId,field,newVal);
+  showToast('💾 Saving…');
+  await persist();
+  showToast('✅ Saved & synced!');
+}
+
 function openRosterModal(id){
   editSessionId=id;
   if(id){
