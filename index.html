@@ -366,20 +366,38 @@ async function saveToDB(payload){
 
 let DB={sessions:[],songs:[],photos:[]};
 
+// Seed IDs that should always reflect the latest data from the source spreadsheet.
+// Any session with one of these IDs gets overwritten with fresh seed data on every load.
+const AUTHORITATIVE_SEED_IDS=new Set(['s2h1','s2h2','s2h3','s2h4','s2h5','s2h6','s2h7','s2h8','s2h9','s2h10']);
+
 async function refreshData(){
+  const seed=getSeedSessions();
+  const seedMap=Object.fromEntries(seed.map(s=>[s.id,s]));
+
   const remote=await loadFromDB();
   if(remote){
-    const remoteIds=new Set((remote.sessions||[]).map(s=>s.id));
-    const missing=getSeedSessions().filter(s=>!remoteIds.has(s.id));
-    DB.sessions=[...(remote.sessions||[]),...missing];
+    // Start with remote sessions, but force-overwrite authoritative seed rows
+    const remoteSessions=(remote.sessions||[]).map(s=>
+      AUTHORITATIVE_SEED_IDS.has(s.id)?seedMap[s.id]:s
+    );
+    // Add any seed rows that don't exist in remote at all
+    const remoteIds=new Set(remoteSessions.map(s=>s.id));
+    const missing=seed.filter(s=>!remoteIds.has(s.id));
+    DB.sessions=[...remoteSessions,...missing];
     DB.songs=remote.songs&&remote.songs.length?remote.songs:getSeedSongs();
     DB.photos=Array.isArray(remote.photos)?remote.photos:[];
   }else{
     try{const lb=JSON.parse(localStorage.getItem('tc_db')||'{}');
-      DB.sessions=lb.sessions||getSeedSessions();
+      // Same force-overwrite for localStorage fallback
+      const lbSessions=(lb.sessions||[]).map(s=>
+        AUTHORITATIVE_SEED_IDS.has(s.id)?seedMap[s.id]:s
+      );
+      const lbIds=new Set(lbSessions.map(s=>s.id));
+      const missing=seed.filter(s=>!lbIds.has(s.id));
+      DB.sessions=[...lbSessions,...missing];
       DB.songs=lb.songs||getSeedSongs();
       DB.photos=lb.photos||[];
-    }catch{DB.sessions=getSeedSessions();DB.songs=getSeedSongs();DB.photos=[];}
+    }catch{DB.sessions=seed;DB.songs=getSeedSongs();DB.photos=[];}
   }
   renderAll();
 }
@@ -394,17 +412,17 @@ function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos
 
 // ── SEED DATA ────────────────────────────────────────────
 function getSeedSessions(){return[
-  // 2026 2H
+  // 2026 2H — kept in sync with source spreadsheet (authoritative seed, always overrides stored data)
   {id:'s2h1',year:'2026 2H',date:'3 Jul 2026',worship:'Andrew & Grace',word:'Luke',kids:'Movie Night',supper:'Daryl & Delci\nAunty Janette, Emily',topic:'Love that Builds Up (1 Cor 8:1-13)',venue:'Treasure Place',core:'Daryl & Delci'},
   {id:'s2h2',year:'2026 2H',date:'17 Jul 2026',worship:'Delci & Seth',word:'Emily',kids:'',supper:'Luke',topic:'Self-Denial for the Gospel (1 Cor 9:1-27)',venue:'',core:'Josh & YJ'},
   {id:'s2h3',year:'2026 2H',date:'7 Aug 2026',worship:'Andrew & Grace',word:'Josh',kids:'',supper:'Josh & YJ',topic:'Lessons from the Wilderness: A Call to Faithfulness (1 Cor 10:1-11:1)',venue:'',core:'Luke'},
   {id:'s2h4',year:'2026 2H',date:'21 Aug 2026',worship:'Delci & Seth',word:'Word Ministry Team',kids:'',supper:'Ryan & Esther\nAndrew & Grace',topic:'Faith & Science',venue:'',core:'Daryl & Del'},
-  {id:'s2h5',year:'2026 2H',date:'4 Sep 2026',worship:'Andrew & Grace',word:'Daryl',kids:'',supper:'Daryl & Delci Toh\nKen and Sarah',topic:'Spiritual Gifts (1 Cor 12:1-31)',venue:'Aspen Heights',core:'Ryan & Esther'},
+  {id:'s2h5',year:'2026 2H',date:'4 Sep 2026',worship:'Andrew & Grace',word:'Daryl',kids:'',supper:'Daryl & Delci Toh\nKen and Sarah',topic:'Spiritual Gifts (1 Cor 12: 1-31)',venue:'Aspen Heights',core:'Ryan & Esther'},
   {id:'s2h6',year:'2026 2H',date:'18 Sep 2026',worship:'Delci & Seth',word:'Luke',kids:'Sarah',supper:'Andrew & Grace',topic:'The Supremacy of Love (1 Cor 13:1-13)',venue:'',core:'Andrew & Grace'},
   {id:'s2h7',year:'2026 2H',date:'2 Oct 2026',worship:'Andrew & Grace',word:'Josh',kids:'Sarah',supper:'Josh & YJ',topic:'Orderly Worship and Edification (1 Cor 14:1-40)',venue:'Aspen Heights',core:'Daryl & Del'},
-  {id:'s2h8',year:'2026 2H',date:'16 Oct 2026',worship:'Delci & Seth',word:'Emily',kids:'Jia Hui',supper:'Ryan & Esther Toh\nKen and Sarah',topic:'Our Resurrection Hope (1 Cor 15:1-19)',venue:'Pandan Valley (Luke)',core:'Josh & YJ'},
+  {id:'s2h8',year:'2026 2H',date:'16 Oct 2026',worship:'Delci & Seth',word:'Emily',kids:'Jia Hui',supper:'Ryan & Esther Toh\nKen and Sarah',topic:'Our Resurrection Hope (1 Cor 15 :1-19)',venue:'Pandan Valley (luke)',core:'Josh & YJ'},
   {id:'s2h9',year:'2026 2H',date:'6 Nov 2026',worship:'Andrew & Grace',word:'Daryl',kids:'Jia Hui',supper:'Tim and Jia Hui',topic:'The Transformed and Resurrected Body (1 Cor 15:35-58)',venue:'Tim & Jia Hui (Pinetre...)',core:'Ryan & Esther'},
-  {id:'s2h10',year:'2026 2H',date:'20 Nov 2026',worship:'Father Heart of God Retreat',word:'',kids:'',supper:'',topic:'',venue:'',core:''},
+  {id:'s2h10',year:'2026 2H',date:'20 Nov 2026',worship:'Father Heart of God Retreat',word:'-',kids:'-',supper:'-',topic:'-',venue:'-',core:'-'},
   // 2026 1H
   {id:'s1',year:'2026 1H',date:'23 Jan 2026',worship:"Grace🎤 + Andrew🎸",word:'Luke',kids:'Bible Story Video',supper:'Daryl & Delci, Ryan & Esther',topic:"L1: The Unity Crisis: Division and Christ's Call (1 Cor 1:1-17)",venue:'Treasure Place',core:'Joshua & Yuan Jing'},
   {id:'s2',year:'2026 1H',date:'6 Feb 2026',worship:'Seth & Delci',word:'Josh',kids:'Yuan Jing – Jesus Brings Us Together',supper:'Aunty Janette & Emily, Sarah & Tohken',topic:'L2: The Power of the Christian Message (1 Cor 1:18-2:5)',venue:'Treasure Place',core:'Ryan & Esther'},
