@@ -1,3 +1,6 @@
+const SUPA_URL = 'https://nczuxhpghzdncsjwuvpf.supabase.co';
+const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,189 +9,154 @@
   <title>Treasure Cell 💎</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --gold:#f0a500;--gold-l:#fff4d6;--amber:#e67e22;--rose:#e8637a;--rose-l:#fde8ec;
-      --teal:#3aafa9;--teal-l:#d6f3f2;--purple:#9b72cf;--purple-l:#f0e8ff;
-      --warm:#fff9f0;--mid:#7a6a5a;--dark:#3a2e22;--border:#eeddb8;
-      --shadow:0 3px 16px rgba(58,46,34,0.10);--shadow2:0 6px 28px rgba(58,46,34,0.14);
-    }
+    :root{--gold:#f0a500;--gold-l:#fff4d6;--amber:#e67e22;--rose:#e8637a;--rose-l:#fde8ec;--teal:#3aafa9;--teal-l:#d6f3f2;--purple:#9b72cf;--purple-l:#f0e8ff;--warm:#fff9f0;--mid:#7a6a5a;--dark:#3a2e22;--border:#eeddb8;--shadow:0 3px 16px rgba(58,46,34,.10);--shadow2:0 6px 28px rgba(58,46,34,.14)}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Nunito',sans-serif;background:var(--warm);color:var(--dark);min-height:100vh}
-
     .site-header{background:linear-gradient(135deg,#f0a500 0%,#e8637a 55%,#9b72cf 100%);padding:32px 20px 24px;text-align:center;position:relative;overflow:hidden}
     .site-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
-    .site-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3rem);color:white;text-shadow:0 2px 8px rgba(0,0,0,0.2);position:relative}
-    .site-header p{color:rgba(255,255,255,0.88);font-size:0.95rem;margin-top:6px;font-weight:600;letter-spacing:0.04em;position:relative}
-
+    .site-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3rem);color:white;text-shadow:0 2px 8px rgba(0,0,0,.2);position:relative}
+    .site-header p{color:rgba(255,255,255,.88);font-size:.95rem;margin-top:6px;font-weight:600;letter-spacing:.04em;position:relative}
     nav{display:flex;justify-content:center;background:white;border-bottom:3px solid var(--border);flex-wrap:wrap}
-    nav button{font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;padding:14px 20px;border:none;background:white;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all 0.18s}
+    nav button{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:14px 18px;border:none;background:white;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .18s}
     nav button:hover{color:var(--amber);background:var(--gold-l)}
     nav button.active{color:var(--amber);border-bottom-color:var(--amber);background:var(--gold-l)}
-
     main{max-width:960px;margin:0 auto;padding:28px 16px 70px}
-    .panel{display:none}
-    .panel.active{display:block;animation:fadeUp 0.25s ease}
+    .panel{display:none}.panel.active{display:block;animation:fadeUp .25s ease}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-    .slabel{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid);margin:28px 0 10px}
+    .slabel{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin:28px 0 10px}
     .card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:var(--shadow)}
-    .notice{border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:0.88rem;font-weight:600;display:flex;gap:10px;align-items:center;border:1.5px solid}
-
-    /* sync */
-    .sync-bar{display:flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:700;color:var(--mid);margin-bottom:12px;padding:8px 14px;background:white;border:1.5px solid var(--border);border-radius:10px}
+    .notice{border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.88rem;font-weight:600;display:flex;gap:10px;align-items:center;border:1.5px solid}
+    .sync-bar{display:flex;align-items:center;gap:8px;font-size:.75rem;font-weight:700;color:var(--mid);margin-bottom:12px;padding:8px 14px;background:white;border:1.5px solid var(--border);border-radius:10px}
     .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#ccc}
-    .sync-dot.synced{background:#4caf50}
-    .sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}
-    .sync-dot.error{background:var(--rose)}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-
-    /* roster */
+    .sync-dot.synced{background:#4caf50}.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}.sync-dot.error{background:var(--rose)}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
     .roster-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px}
     .roster-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--amber)}
-    .btn-add{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));color:white;cursor:pointer;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(230,126,34,0.3);display:flex;align-items:center;gap:6px}
-    .btn-add:hover{opacity:0.88}
-
+    .btn-add{font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));color:white;cursor:pointer;transition:opacity .15s;box-shadow:0 2px 8px rgba(230,126,34,.3);display:flex;align-items:center;gap:6px}
+    .btn-add:hover{opacity:.88}
     .year-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-    .ypill{font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--mid);cursor:pointer;transition:all 0.15s}
+    .ypill{font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--mid);cursor:pointer;transition:all .15s}
     .ypill.active{background:var(--amber);border-color:var(--amber);color:white}
     .ypill:hover:not(.active){border-color:var(--gold);color:var(--amber)}
     .ypill.new-half{background:linear-gradient(135deg,#d6f3f2,#f0e8ff);border-color:var(--teal);color:var(--teal)}
     .ypill.new-half.active{background:var(--teal);border-color:var(--teal);color:white}
 
-    .roster-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid var(--border);box-shadow:var(--shadow);max-height:72vh;overflow-y:auto}
-    table.roster{width:100%;border-collapse:collapse;font-size:0.83rem;min-width:740px}
-    table.roster th{background:linear-gradient(135deg,#fff4d6,#fde8ec);color:var(--dark);font-weight:800;text-align:left;padding:11px 14px;border-bottom:2px solid var(--border);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;position:sticky;top:0;z-index:2}
+    /* ROSTER TABLE — no height cap, free scroll on mobile */
+    .roster-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid var(--border);box-shadow:var(--shadow)}
+    table.roster{width:100%;border-collapse:collapse;font-size:.83rem;min-width:700px}
+    table.roster th{background:linear-gradient(135deg,#fff4d6,#fde8ec);color:var(--dark);font-weight:800;text-align:left;padding:11px 14px;border-bottom:2px solid var(--border);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
     table.roster td{padding:11px 14px;border-bottom:1px solid #f5e8d0;vertical-align:top;color:var(--dark)}
+    table.roster tr:last-child td{border-bottom:none}
     table.roster tr:hover td{background:var(--gold-l)}
-    tr.upcoming-row td{background:#f9fffe}
-    tr.upcoming-row:hover td{background:var(--teal-l)}
+    tr.upcoming-row td{background:#f9fffe}tr.upcoming-row:hover td{background:var(--teal-l)}
 
-    .badge{display:inline-block;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin:1px 2px}
-    .badge.worship{background:#fde8ec;color:var(--rose)}
-    .badge.word{background:#fff4d6;color:var(--amber)}
-    .badge.core{background:#e8f4e8;color:#3a7a3a}
-    .badge.upcoming{background:#d6f3f2;color:var(--teal);border:1px dashed var(--teal);font-size:0.65rem;padding:1px 6px}
-
+    .badge{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin:1px 2px}
+    .badge.worship{background:#fde8ec;color:var(--rose)}.badge.word{background:#fff4d6;color:var(--amber)}
+    .badge.core{background:#e8f4e8;color:#3a7a3a}.badge.upcoming{background:#d6f3f2;color:var(--teal);border:1px dashed var(--teal);font-size:.65rem;padding:1px 6px}
     .row-actions{display:flex;gap:4px}
-    .ia{background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;font-size:0.78rem;transition:background 0.14s}
-    .ia.ed{color:var(--mid)}.ia.ed:hover{background:var(--gold-l);color:var(--amber)}
-    .ia.dl{color:#ccc}.ia.dl:hover{background:var(--rose-l);color:var(--rose)}
+    .ia{background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;font-size:.78rem;transition:background .14s}
+    .ia.ed:hover{background:var(--gold-l);color:var(--amber)}.ia.dl{color:#ccc}.ia.dl:hover{background:var(--rose-l);color:var(--rose)}
 
-    /* gifts */
+    /* GIFTS */
     .gifts-header{text-align:center;margin-bottom:28px}
     .gifts-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--purple);margin-bottom:6px}
-    .gifts-header p{color:var(--mid);font-size:0.9rem;font-weight:600}
-    .gift-bar-wrap{margin-bottom:16px}
+    .gifts-header p{color:var(--mid);font-size:.9rem;font-weight:600}
     .gift-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .gift-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;flex-shrink:0;color:white}
-    .gift-rank.r1{background:linear-gradient(135deg,#f0a500,#e67e22)}
-    .gift-rank.r2{background:linear-gradient(135deg,#adb5bd,#868e96)}
-    .gift-rank.r3{background:linear-gradient(135deg,#cd7f32,#a0522d)}
-    .gift-rank.r4{background:linear-gradient(135deg,#9b72cf,#7950b0)}
+    .gift-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0;color:white}
+    .gift-rank.r1{background:linear-gradient(135deg,#f0a500,#e67e22)}.gift-rank.r2{background:linear-gradient(135deg,#adb5bd,#868e96)}
+    .gift-rank.r3{background:linear-gradient(135deg,#cd7f32,#a0522d)}.gift-rank.r4{background:linear-gradient(135deg,#9b72cf,#7950b0)}
     .gift-rank.r5{background:linear-gradient(135deg,#3aafa9,#2e8a85)}
-    .gift-info{flex:1}.gift-name{font-weight:800;font-size:0.95rem;margin-bottom:4px}
+    .gift-info{flex:1}.gift-name{font-weight:800;font-size:.95rem;margin-bottom:4px}
     .gift-bar-bg{background:#f0ece3;border-radius:99px;height:10px;overflow:hidden}
-    .gift-bar-fill{height:100%;border-radius:99px;transition:width 0.7s ease}
+    .gift-bar-fill{height:100%;border-radius:99px;transition:width .7s ease}
     .fill-1{background:linear-gradient(90deg,#f0a500,#e67e22)}.fill-2{background:linear-gradient(90deg,#adb5bd,#868e96)}
     .fill-3{background:linear-gradient(90deg,#cd7f32,#a0522d)}.fill-4{background:linear-gradient(90deg,#9b72cf,#7950b0)}
     .fill-5{background:linear-gradient(90deg,#3aafa9,#2e8a85)}
-    .gift-count{font-weight:900;font-size:0.88rem;color:var(--mid);flex-shrink:0;width:80px;text-align:right}
+    .gift-count{font-weight:900;font-size:.88rem;color:var(--mid);flex-shrink:0;width:80px;text-align:right}
     .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:24px}
-    .member-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:14px 12px;text-align:center;box-shadow:var(--shadow);transition:transform 0.15s,box-shadow 0.15s}
+    .member-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:14px 12px;text-align:center;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
     .member-card:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
-    .member-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 8px;font-weight:900}
-    .member-name{font-weight:800;font-size:0.82rem;color:var(--dark);margin-bottom:6px}
+    .member-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 8px}
+    .member-name{font-weight:800;font-size:.82rem;color:var(--dark);margin-bottom:6px}
     .member-gifts{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
-    .mgift{font-size:0.65rem;padding:2px 7px;border-radius:10px;font-weight:700}
+    .mgift{font-size:.65rem;padding:2px 7px;border-radius:10px;font-weight:700}
 
-    /* songs */
+    /* SONGS */
     .songs-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
     .songs-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--rose)}
-    .btn-add-song{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--rose),#c0394f);color:white;cursor:pointer;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(232,99,122,0.3);display:flex;align-items:center;gap:6px}
-    .btn-add-song:hover{opacity:0.88}
+    .btn-add-song{font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--rose),#c0394f);color:white;cursor:pointer;box-shadow:0 2px 8px rgba(232,99,122,.3);display:flex;align-items:center;gap:6px}
+    .btn-add-song:hover{opacity:.88}
     .song-card{background:white;border:1.5px solid var(--border);border-radius:16px;margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}
     .song-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;background:linear-gradient(135deg,#fde8ec,#fff4d6);gap:10px}
     .song-title-wrap{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
     .song-icon{font-size:1.3rem;flex-shrink:0}
-    .song-title{font-weight:800;font-size:0.95rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .song-title{font-weight:800;font-size:.95rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .song-actions{display:flex;gap:4px;flex-shrink:0}
-    .song-chevron{color:var(--mid);font-size:0.75rem;flex-shrink:0;transition:transform 0.2s}
+    .song-chevron{color:var(--mid);font-size:.75rem;flex-shrink:0;transition:transform .2s}
     .song-card.open .song-chevron{transform:rotate(180deg)}
-    .song-body{display:none;padding:0 18px 18px}
-    .song-card.open .song-body{display:block}
-    .song-lyrics{width:100%;min-height:180px;font-family:'Nunito',sans-serif;font-size:0.88rem;color:var(--dark);line-height:1.75;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--warm);resize:vertical;outline:none;transition:border-color 0.15s;margin-top:14px}
+    .song-body{display:none;padding:0 18px 18px}.song-card.open .song-body{display:block}
+    .song-lyrics{width:100%;min-height:180px;font-family:'Nunito',sans-serif;font-size:.88rem;color:var(--dark);line-height:1.75;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--warm);resize:vertical;outline:none;margin-top:14px}
     .song-lyrics:focus{border-color:var(--rose)}
     .song-meta{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
-    .song-meta input{font-family:'Nunito',sans-serif;font-size:0.8rem;padding:5px 10px;border:1.5px solid var(--border);border-radius:7px;color:var(--dark);background:white;outline:none;flex:1;min-width:100px}
-    .song-meta input:focus{border-color:var(--rose)}
-    .song-save-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:0.8rem;padding:6px 14px;border:none;border-radius:7px;background:var(--rose);color:white;cursor:pointer;transition:opacity 0.15s}
-    .song-save-btn:hover{opacity:0.85}
-
-    /* fullscreen lyrics */
-    .fs-overlay{position:fixed;inset:0;z-index:400;background:#1a120a;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.25s}
+    .song-meta input{font-family:'Nunito',sans-serif;font-size:.8rem;padding:5px 10px;border:1.5px solid var(--border);border-radius:7px;color:var(--dark);background:white;outline:none;flex:1;min-width:100px}
+    .song-save-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;padding:6px 14px;border:none;border-radius:7px;background:var(--rose);color:white;cursor:pointer}
+    .song-save-btn:hover{opacity:.85}
+    .fs-overlay{position:fixed;inset:0;z-index:400;background:#1a120a;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .25s}
     .fs-overlay.open{opacity:1;pointer-events:all}
     .fs-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(135deg,#3a2010,#2a1a30);flex-shrink:0}
-    .fs-title{color:white;font-weight:800;font-size:1.05rem}
-    .fs-artist{color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:600;margin-top:2px}
-    .fs-close{background:rgba(255,255,255,0.15);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;flex-shrink:0}
-    .fs-close:hover{background:rgba(255,255,255,0.25)}
-    .fs-lyrics{flex:1;overflow-y:auto;padding:28px 24px;color:rgba(255,255,255,0.92);font-size:clamp(1rem,3.5vw,1.25rem);line-height:2;white-space:pre-wrap;font-weight:600}
-    .fs-font-controls{display:flex;gap:8px;padding:12px 20px;background:rgba(0,0,0,0.3);flex-shrink:0;justify-content:center}
-    .fs-font-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:0.82rem;padding:6px 14px;border:1.5px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);cursor:pointer;transition:all 0.15s}
-    .fs-font-btn:hover{background:rgba(255,255,255,0.18)}
+    .fs-title{color:white;font-weight:800;font-size:1.05rem}.fs-artist{color:rgba(255,255,255,.6);font-size:.8rem;font-weight:600;margin-top:2px}
+    .fs-close{background:rgba(255,255,255,.15);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .fs-close:hover{background:rgba(255,255,255,.25)}
+    .fs-lyrics{flex:1;overflow-y:auto;padding:28px 24px;color:rgba(255,255,255,.92);font-size:clamp(1rem,3.5vw,1.25rem);line-height:2;white-space:pre-wrap;font-weight:600}
+    .fs-font-controls{display:flex;gap:8px;padding:12px 20px;background:rgba(0,0,0,.3);flex-shrink:0;justify-content:center}
+    .fs-font-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;padding:6px 14px;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);cursor:pointer}
+    .fs-font-btn:hover{background:rgba(255,255,255,.18)}
 
-    /* photos */
+    /* PHOTOS */
     .photos-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
     .photos-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--purple)}
-    .btn-upload-photo{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--purple),#7950b0);color:white;cursor:pointer;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(155,114,207,0.35);display:flex;align-items:center;gap:6px}
-    .btn-upload-photo:hover{opacity:0.88}
-
+    .btn-upload-photo{font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--purple),#7950b0);color:white;cursor:pointer;box-shadow:0 2px 8px rgba(155,114,207,.35);display:flex;align-items:center;gap:6px}
+    .btn-upload-photo:hover{opacity:.88}
     .photos-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
     @media(max-width:580px){.photos-grid{grid-template-columns:repeat(3,1fr)}}
-
-    .photo-cell{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#f5ede0;border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s}
+    .photo-cell{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#f5ede0;border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:transform .15s,box-shadow .15s}
     .photo-cell:hover{transform:scale(1.03);box-shadow:var(--shadow2)}
     .photo-cell img{width:100%;height:100%;object-fit:cover;display:block}
-    .photo-del{position:absolute;top:5px;right:5px;background:rgba(58,46,34,0.72);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:0.7rem;cursor:pointer;align-items:center;justify-content:center;display:none;transition:background 0.15s;line-height:1}
-    .photo-cell:hover .photo-del{display:flex}
-    .photo-del:hover{background:var(--rose)}
-
-    .photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;aspect-ratio:1;border:2px dashed var(--border);border-radius:12px;cursor:pointer;transition:all 0.15s;background:white;color:var(--mid);font-size:0.72rem;font-weight:700}
+    .photo-del{position:absolute;top:5px;right:5px;background:rgba(58,46,34,.72);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:.7rem;cursor:pointer;align-items:center;justify-content:center;display:none}
+    .photo-cell:hover .photo-del{display:flex}.photo-del:hover{background:var(--rose)}
+    .photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;aspect-ratio:1;border:2px dashed var(--border);border-radius:12px;cursor:pointer;transition:all .15s;background:white;color:var(--mid);font-size:.72rem;font-weight:700}
     .photo-empty:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-l)}
     .photo-empty-icon{font-size:1.5rem}
-
-    /* lightbox */
-    .lightbox{position:fixed;inset:0;z-index:500;background:rgba(20,10,5,0.94);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.22s;padding:20px}
+    .lightbox{position:fixed;inset:0;z-index:500;background:rgba(20,10,5,.94);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s;padding:20px}
     .lightbox.open{opacity:1;pointer-events:all}
-    .lightbox img{max-width:90vw;max-height:86vh;border-radius:12px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,0.5)}
-    .lb-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,0.15);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
-    .lb-close:hover{background:rgba(255,255,255,0.3)}
-    .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.12);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
-    .lb-nav:hover{background:rgba(255,255,255,0.25)}
+    .lightbox img{max-width:90vw;max-height:86vh;border-radius:12px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+    .lb-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.15);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .lb-close:hover{background:rgba(255,255,255,.3)}
+    .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .lb-nav:hover{background:rgba(255,255,255,.25)}
     .lb-prev{left:16px}.lb-next{right:16px}
-    .lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:700;font-family:'Nunito',sans-serif}
+    .lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:.8rem;font-weight:700;font-family:'Nunito',sans-serif}
 
-    /* modal */
-    .overlay{position:fixed;inset:0;background:rgba(58,46,34,0.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.2s}
+    /* MODAL */
+    .overlay{position:fixed;inset:0;background:rgba(58,46,34,.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
     .overlay.open{opacity:1;pointer-events:all}
-    .modal{background:white;border-radius:20px;padding:28px;width:100%;max-width:460px;box-shadow:0 12px 48px rgba(58,46,34,0.2);transform:translateY(16px);transition:transform 0.2s;max-height:90vh;overflow-y:auto}
+    .modal{background:white;border-radius:20px;padding:28px;width:100%;max-width:460px;box-shadow:0 12px 48px rgba(58,46,34,.2);transform:translateY(16px);transition:transform .2s;max-height:90vh;overflow-y:auto}
     .overlay.open .modal{transform:none}
     .modal h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--amber);margin-bottom:20px}
-    .modal label{display:block;font-size:0.76rem;font-weight:800;color:var(--mid);margin-bottom:4px;margin-top:14px;text-transform:uppercase;letter-spacing:0.06em}
-    .modal input,.modal textarea,.modal select{width:100%;font-family:'Nunito',sans-serif;font-size:0.9rem;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--warm);color:var(--dark);outline:none;transition:border-color 0.15s}
+    .modal label{display:block;font-size:.76rem;font-weight:800;color:var(--mid);margin-bottom:4px;margin-top:14px;text-transform:uppercase;letter-spacing:.06em}
+    .modal input,.modal textarea,.modal select{width:100%;font-family:'Nunito',sans-serif;font-size:.9rem;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--warm);color:var(--dark);outline:none}
     .modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--amber)}
     .modal textarea{min-height:80px;resize:vertical}
     .modal-foot{display:flex;gap:10px;margin-top:22px;justify-content:flex-end;align-items:center}
-    .m-cancel{font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:9px 18px;border:1.5px solid var(--border);border-radius:10px;background:white;color:var(--mid);cursor:pointer}
+    .m-cancel{font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;padding:9px 18px;border:1.5px solid var(--border);border-radius:10px;background:white;color:var(--mid);cursor:pointer}
     .m-cancel:hover{background:#f5f0e8}
-    .m-save{font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:800;padding:9px 22px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));color:white;cursor:pointer;box-shadow:0 2px 8px rgba(230,126,34,0.3)}
-    .m-save:hover{opacity:0.87}
-    .m-del{font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:700;padding:8px 14px;border:1.5px solid #f5d0d8;border-radius:10px;background:white;color:var(--rose);cursor:pointer;margin-right:auto}
+    .m-save{font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;padding:9px 22px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));color:white;cursor:pointer;box-shadow:0 2px 8px rgba(230,126,34,.3)}
+    .m-save:hover{opacity:.87}
+    .m-del{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;padding:8px 14px;border:1.5px solid #f5d0d8;border-radius:10px;background:white;color:var(--rose);cursor:pointer;margin-right:auto}
     .m-del:hover{background:var(--rose-l)}
-
-    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark);color:white;padding:10px 22px;border-radius:99px;font-weight:700;font-size:0.85rem;z-index:600;transition:transform 0.3s,opacity 0.3s;opacity:0;pointer-events:none}
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark);color:white;padding:10px 22px;border-radius:99px;font-weight:700;font-size:.85rem;z-index:600;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none}
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-    .loading-msg{text-align:center;padding:40px;color:var(--mid);font-weight:700;font-size:0.9rem}
+    .loading-msg{text-align:center;padding:40px;color:var(--mid);font-weight:700;font-size:.9rem}
   </style>
 </head>
 <body>
@@ -216,7 +184,7 @@
     <div class="sync-bar">
       <div class="sync-dot syncing" id="sync-dot"></div>
       <span id="sync-text">Connecting…</span>
-      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
+      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
     </div>
     <div class="notice" id="roster-notice" style="background:var(--teal-l);border-color:#80d8d4">
       📖 Theme: <strong>1 Corinthians (cont.)</strong> &nbsp;·&nbsp; 🏠 Venue: Treasure Place (unless stated)
@@ -241,7 +209,7 @@
     </div>
     <div class="card">
       <div class="slabel">Gift Frequency Ranking</div>
-      <div class="gift-bar-wrap" id="gift-bars"></div>
+      <div id="gift-bars"></div>
     </div>
     <div class="slabel">Members &amp; Their Gifts</div>
     <div class="members-grid" id="members-grid"></div>
@@ -253,7 +221,7 @@
       <h2>🎵 Worship Songs</h2>
       <button class="btn-add-song" onclick="addSong()">＋ Add Song</button>
     </div>
-    <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc">🎶 Paste lyrics below so everyone can follow along. Click any song to expand.</div>
+    <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc">🎶 Paste lyrics so everyone can follow along. Click any song to expand.</div>
     <div id="songs-list"><div class="loading-msg">⏳ Loading…</div></div>
   </div>
 
@@ -270,7 +238,7 @@
       🖼️ Upload your favourite Treasure Cell memories! Click any photo to view fullscreen.
     </div>
     <div class="photos-grid" id="photos-grid">
-      <div class="loading-msg" style="grid-column:1/-1">⏳ Loading photos…</div>
+      <div class="loading-msg" style="grid-column:1/-1">⏳ Loading…</div>
     </div>
   </div>
 
@@ -328,12 +296,38 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ════════════════════════════════════════════════════════
+//  SHARED STORAGE — Supabase (free, safe, designed for this)
+//
+//  WHY SUPABASE IS SAFE TO EMBED:
+//  The "anon key" below is PUBLIC by design — it only allows
+//  read/write to the specific table you create. It cannot
+//  access your account, billing, or any other project.
+//  This is different from a GitHub PAT which controls everything.
+//
+//  ONE-TIME SETUP (5 mins, free forever):
+//  1. Go to https://supabase.com → New project (free tier)
+//  2. Go to Table Editor → New table:
+//       Name: "celldata"
+//       Columns: id (int8, primary key), payload (text)
+//       Disable Row Level Security for now
+//  3. SQL Editor → run:
+//       INSERT INTO celldata (id, payload) VALUES (1, '{}');
+//  4. Settings → API → copy:
+//       • Project URL  → paste into SUPA_URL below
+//       • anon/public key → paste into SUPA_KEY below
+//  5. Save index.html and push to GitHub ✅
+// ════════════════════════════════════════════════════════
+const SUPA_URL = 'YOUR_SUPABASE_URL';      // e.g. 'https://xyzxyz.supabase.co'
+const SUPA_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g. 'eyJhbGci...'
+const CONFIGURED = !SUPA_URL.startsWith('YOUR_');
+
 // ── UTILS ────────────────────────────────────────────────
 function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function uid(){return 'tc'+Date.now()+Math.floor(Math.random()*9999)}
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500)
+  setTimeout(()=>t.classList.remove('show'),2600)
 }
 function showTab(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -342,38 +336,35 @@ function showTab(name,btn){
   btn.classList.add('active');
 }
 
-// ── GIST STORAGE ─────────────────────────────────────────
-const GIST_ID  = '56a679135ce9fbe125dce1ef26c5f975';
-const GH_TOKEN = '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';
-const GIST_FILE = 'treasurecell.json';
-
+// ── SUPABASE STORAGE ─────────────────────────────────────
 function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
 }
 
-async function loadFromGist(){
+async function loadFromDB(){
+  if(!CONFIGURED){setSyncStatus('error','Configure Supabase to enable shared sync');return null}
   try{
     setSyncStatus('syncing','Loading…');
-    const res=await fetch(`https://api.github.com/gists/${GIST_ID}`,{
-      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}
+    const res=await fetch(`${SUPA_URL}/rest/v1/celldata?id=eq.1&select=payload`,{
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
     });
     if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    const content=data.files[GIST_FILE]?.content;
-    if(!content||content==='{}')return null;
+    const rows=await res.json();
+    if(!rows.length||!rows[0].payload||rows[0].payload==='{}')return null;
     setSyncStatus('synced','Synced · '+new Date().toLocaleTimeString());
-    return JSON.parse(content);
+    return JSON.parse(rows[0].payload);
   }catch(e){setSyncStatus('error','Load failed: '+e.message);return null}
 }
 
-async function saveToGist(payload){
+async function saveToDB(payload){
+  if(!CONFIGURED)return false;
   try{
     setSyncStatus('syncing','Saving…');
-    const res=await fetch(`https://api.github.com/gists/${GIST_ID}`,{
+    const res=await fetch(`${SUPA_URL}/rest/v1/celldata?id=eq.1`,{
       method:'PATCH',
-      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(payload,null,2)}}})
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({payload:JSON.stringify(payload)})
     });
     if(!res.ok)throw new Error('HTTP '+res.status);
     setSyncStatus('synced','Saved · '+new Date().toLocaleTimeString());
@@ -384,24 +375,26 @@ async function saveToGist(payload){
 let DB={sessions:[],songs:[],photos:[]};
 
 async function refreshData(){
-  const remote=await loadFromGist();
+  const remote=await loadFromDB();
   if(remote){
-    // Merge: remote is master, but seed in any sessions not yet on remote
     const remoteIds=new Set((remote.sessions||[]).map(s=>s.id));
     const missing=getSeedSessions().filter(s=>!remoteIds.has(s.id));
     DB.sessions=[...(remote.sessions||[]),...missing];
     DB.songs=remote.songs&&remote.songs.length?remote.songs:getSeedSongs();
     DB.photos=Array.isArray(remote.photos)?remote.photos:[];
   }else{
-    DB.sessions=getSeedSessions();
-    DB.songs=getSeedSongs();
-    DB.photos=[];
+    try{const lb=JSON.parse(localStorage.getItem('tc_db')||'{}');
+      DB.sessions=lb.sessions||getSeedSessions();
+      DB.songs=lb.songs||getSeedSongs();
+      DB.photos=lb.photos||[];
+    }catch{DB.sessions=getSeedSessions();DB.songs=getSeedSongs();DB.photos=[];}
   }
   renderAll();
 }
 
 async function persist(){
-  await saveToGist({sessions:DB.sessions,songs:DB.songs,photos:DB.photos});
+  const ok=await saveToDB({sessions:DB.sessions,songs:DB.songs,photos:DB.photos});
+  try{localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions,songs:DB.songs,photos:DB.photos}))}catch{}
   renderAll();
 }
 
@@ -409,56 +402,18 @@ function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos
 
 // ── SEED DATA ────────────────────────────────────────────
 function getSeedSessions(){return[
-  // ── 2026 2H — from spreadsheet ──
-  {id:'s2h1', year:'2026 2H',date:'3 Jul 2026',
-   worship:'Andrew & Grace',word:'Luke',kids:'Movie Night',
-   supper:'Daryl & Delci\nAunty Janette, Emily',
-   topic:'Love that Builds Up (1 Cor 8:1-13)',
-   venue:'Treasure Place',core:'Daryl & Delci'},
-  {id:'s2h2', year:'2026 2H',date:'17 Jul 2026',
-   worship:'Delci & Seth',word:'Emily',kids:'',
-   supper:'Luke',
-   topic:'Self-Denial for the Gospel (1 Cor 9:1-27)',
-   venue:'',core:'Josh & YJ'},
-  {id:'s2h3', year:'2026 2H',date:'7 Aug 2026',
-   worship:'Andrew & Grace',word:'Josh',kids:'',
-   supper:'Josh & YJ',
-   topic:'Lessons from the Wilderness: A Call to Faithfulness (1 Cor 10:1-11:1)',
-   venue:'',core:'Luke'},
-  {id:'s2h4', year:'2026 2H',date:'21 Aug 2026',
-   worship:'Delci & Seth',word:'Word Ministry Team',kids:'',
-   supper:'Ryan & Esther\nAndrew & Grace',
-   topic:'Faith & Science',
-   venue:'',core:'Daryl & Del'},
-  {id:'s2h5', year:'2026 2H',date:'4 Sep 2026',
-   worship:'Andrew & Grace',word:'Daryl',kids:'',
-   supper:'Daryl & Delci Toh\nKen and Sarah',
-   topic:'Spiritual Gifts (1 Cor 12:1-31)',
-   venue:'Aspen Heights',core:'Ryan & Esther'},
-  {id:'s2h6', year:'2026 2H',date:'18 Sep 2026',
-   worship:'Delci & Seth',word:'Luke',kids:'Sarah',
-   supper:'Andrew & Grace',
-   topic:'The Supremacy of Love (1 Cor 13:1-13)',
-   venue:'',core:'Andrew & Grace'},
-  {id:'s2h7', year:'2026 2H',date:'2 Oct 2026',
-   worship:'Andrew & Grace',word:'Josh',kids:'Sarah',
-   supper:'Josh & YJ',
-   topic:'Orderly Worship and Edification (1 Cor 14:1-40)',
-   venue:'Aspen Heights',core:'Daryl & Del'},
-  {id:'s2h8', year:'2026 2H',date:'16 Oct 2026',
-   worship:'Delci & Seth',word:'Emily',kids:'Jia Hui',
-   supper:'Ryan & Esther Toh\nKen and Sarah',
-   topic:'Our Resurrection Hope (1 Cor 15:1-19)',
-   venue:'Pandan Valley (Luke)',core:'Josh & YJ'},
-  {id:'s2h9', year:'2026 2H',date:'6 Nov 2026',
-   worship:'Andrew & Grace',word:'Daryl',kids:'Jia Hui',
-   supper:'Tim and Jia Hui',
-   topic:'The Transformed and Resurrected Body (1 Cor 15:35-58)',
-   venue:'Tim & Jia Hui (Pinetre...)',core:'Ryan & Esther'},
-  {id:'s2h10',year:'2026 2H',date:'20 Nov 2026',
-   worship:'Father Heart of God Retreat',word:'',kids:'',
-   supper:'',topic:'',venue:'',core:''},
-  // ── 2026 1H ──
+  // 2026 2H
+  {id:'s2h1',year:'2026 2H',date:'3 Jul 2026',worship:'Andrew & Grace',word:'Luke',kids:'Movie Night',supper:'Daryl & Delci\nAunty Janette, Emily',topic:'Love that Builds Up (1 Cor 8:1-13)',venue:'Treasure Place',core:'Daryl & Delci'},
+  {id:'s2h2',year:'2026 2H',date:'17 Jul 2026',worship:'Delci & Seth',word:'Emily',kids:'',supper:'Luke',topic:'Self-Denial for the Gospel (1 Cor 9:1-27)',venue:'',core:'Josh & YJ'},
+  {id:'s2h3',year:'2026 2H',date:'7 Aug 2026',worship:'Andrew & Grace',word:'Josh',kids:'',supper:'Josh & YJ',topic:'Lessons from the Wilderness: A Call to Faithfulness (1 Cor 10:1-11:1)',venue:'',core:'Luke'},
+  {id:'s2h4',year:'2026 2H',date:'21 Aug 2026',worship:'Delci & Seth',word:'Word Ministry Team',kids:'',supper:'Ryan & Esther\nAndrew & Grace',topic:'Faith & Science',venue:'',core:'Daryl & Del'},
+  {id:'s2h5',year:'2026 2H',date:'4 Sep 2026',worship:'Andrew & Grace',word:'Daryl',kids:'',supper:'Daryl & Delci Toh\nKen and Sarah',topic:'Spiritual Gifts (1 Cor 12:1-31)',venue:'Aspen Heights',core:'Ryan & Esther'},
+  {id:'s2h6',year:'2026 2H',date:'18 Sep 2026',worship:'Delci & Seth',word:'Luke',kids:'Sarah',supper:'Andrew & Grace',topic:'The Supremacy of Love (1 Cor 13:1-13)',venue:'',core:'Andrew & Grace'},
+  {id:'s2h7',year:'2026 2H',date:'2 Oct 2026',worship:'Andrew & Grace',word:'Josh',kids:'Sarah',supper:'Josh & YJ',topic:'Orderly Worship and Edification (1 Cor 14:1-40)',venue:'Aspen Heights',core:'Daryl & Del'},
+  {id:'s2h8',year:'2026 2H',date:'16 Oct 2026',worship:'Delci & Seth',word:'Emily',kids:'Jia Hui',supper:'Ryan & Esther Toh\nKen and Sarah',topic:'Our Resurrection Hope (1 Cor 15:1-19)',venue:'Pandan Valley (Luke)',core:'Josh & YJ'},
+  {id:'s2h9',year:'2026 2H',date:'6 Nov 2026',worship:'Andrew & Grace',word:'Daryl',kids:'Jia Hui',supper:'Tim and Jia Hui',topic:'The Transformed and Resurrected Body (1 Cor 15:35-58)',venue:'Tim & Jia Hui (Pinetre...)',core:'Ryan & Esther'},
+  {id:'s2h10',year:'2026 2H',date:'20 Nov 2026',worship:'Father Heart of God Retreat',word:'',kids:'',supper:'',topic:'',venue:'',core:''},
+  // 2026 1H
   {id:'s1',year:'2026 1H',date:'23 Jan 2026',worship:"Grace🎤 + Andrew🎸",word:'Luke',kids:'Bible Story Video',supper:'Daryl & Delci, Ryan & Esther',topic:"L1: The Unity Crisis: Division and Christ's Call (1 Cor 1:1-17)",venue:'Treasure Place',core:'Joshua & Yuan Jing'},
   {id:'s2',year:'2026 1H',date:'6 Feb 2026',worship:'Seth & Delci',word:'Josh',kids:'Yuan Jing – Jesus Brings Us Together',supper:'Aunty Janette & Emily, Sarah & Tohken',topic:'L2: The Power of the Christian Message (1 Cor 1:18-2:5)',venue:'Treasure Place',core:'Ryan & Esther'},
   {id:'s3',year:'2026 1H',date:'20 Feb 2026',worship:'Delci & Daryl',word:'Emily',kids:"Sarah – God's Wisdom",supper:'Potluck – bring your favourite CNY food/snack',topic:'L3: Spiritual Immaturity and Carnality (1 Cor 2:6-3:4)',venue:'Treasure Place',core:'Daryl & Del'},
@@ -467,7 +422,7 @@ function getSeedSessions(){return[
   {id:'s6',year:'2026 1H',date:'17 Apr 2026',worship:'Grace & Andrew',word:'Josh',kids:'Jia Hui – God Helps Us Choose What is Right',supper:'Luke, Seth & Megan',topic:'L6: Purity in the Church: A Call to Holy Living (1 Cor 5:1-7)',venue:'Treasure Place',core:'Ryan & Esther'},
   {id:'s7',year:'2026 1H',date:'1 May 2026',worship:'Seth & Delci',word:'Emily',kids:'Yuan Jing – We are Loved and Valued by God',supper:'Ryan & Esther, Grace & Andrew',topic:'L7: Dispute in the Church (1 Cor 6:1-11)',venue:'Treasure Place',core:'Joshua & Yuan Jing'},
   {id:'s8',year:'2026 1H',date:'15 May 2026',worship:'Grace & Andrew',word:'Daryl',kids:'Megan – Loving God with our Actions',supper:'Aunty Janette & Emily, Sarah & Tohken',topic:'L8: Defilement in the Church (1 Cor 6:12-20)',venue:'Treasure Place',core:'Daryl & Del'},
-  // ── 2025 2H ──
+  // 2025 2H
   {id:'s9',year:'2025 2H',date:'4 Jul 2025',worship:'Andrew',word:'Daryl',kids:'Bible Story Video',supper:'Everyone',topic:'',venue:'Treasure Place',core:'Daryl & Del'},
   {id:'s10',year:'2025 2H',date:'18 Jul 2025',worship:'Delci🎤 + Seth🎸',word:'Luke',kids:'Sarah – The Twelve Spies',supper:'Daryl & Del, Seth & Megan',topic:'L1: Having Courage and Obedience (Josh 1:1-9)',venue:'Treasure Place',core:'Daryl & Del'},
   {id:'s11',year:'2025 2H',date:'1 Aug 2025',worship:'Grace🎤 + Andrew🎸',word:'Josh',kids:'Jia Hui – Rehab and the Two Spies',supper:'Ryan & Esther, Aunty Janette & Emily',topic:"L2: Recognizing Faith's Power for Transformation (Josh 2)",venue:'',core:'Ryan & Esther'},
@@ -486,8 +441,7 @@ function getSeedSongs(){return[
 ]}
 
 // ── ROSTER ───────────────────────────────────────────────
-let activeYear='2026 2H';
-let editSessionId=null;
+let activeYear='2026 2H',editSessionId=null;
 const YEAR_THEMES={
   '2026 2H':{theme:'1 Corinthians (cont.)',venue:'Treasure Place (unless stated)',bg:'var(--teal-l)',bc:'#80d8d4'},
   '2026 1H':{theme:'1 Corinthians',venue:'Treasure Place (unless stated)',bg:'var(--gold-l)',bc:'#f0d080'},
@@ -495,7 +449,6 @@ const YEAR_THEMES={
 };
 function isUpcoming(d){return!!d&&new Date(d)>new Date()}
 function allYears(){return[...new Set(DB.sessions.map(s=>s.year))].sort((a,b)=>b.localeCompare(a))}
-
 function renderYearPills(){
   document.getElementById('year-pills').innerHTML=allYears().map(y=>
     `<button class="ypill${y===activeYear?' active':''}${y==='2026 2H'?' new-half':''}" onclick="setYear('${y}')">${y}${y==='2026 2H'?' ✨':''}</button>`
@@ -507,45 +460,36 @@ function updateNotice(y){
   n.style.background=t.bg;n.style.borderColor=t.bc;
 }
 function setYear(y){activeYear=y;renderYearPills();updateNotice(y);renderRoster()}
-
 function renderRoster(){
   const rows=DB.sessions.filter(s=>s.year===activeYear);
-  const na=`<span style="color:#ccc;font-size:0.75rem">—</span>`;
+  const na=`<span style="color:#ccc;font-size:.75rem">—</span>`;
   document.getElementById('roster-body').innerHTML=rows.length
-    ?rows.map(s=>{
-      const up=isUpcoming(s.date);
-      return`<tr class="${up?'upcoming-row':''}">
-        <td><strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(s.date)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}</td>
-        <td>${s.worship?`<span class="badge worship">${x(s.worship)}</span>`:na}</td>
-        <td>${s.word?`<span class="badge word">${x(s.word)}</span>`:na}</td>
-        <td style="font-size:0.8rem;max-width:130px">${x(s.kids)||na}</td>
-        <td style="font-size:0.78rem;max-width:150px;white-space:pre-line">${x(s.supper)||na}</td>
-        <td style="font-size:0.78rem;max-width:200px;color:var(--mid)">${x(s.topic)||na}</td>
-        <td style="font-size:0.78rem;white-space:nowrap">${s.venue?`📍 ${x(s.venue)}`:na}</td>
-        <td>${s.core?`<span class="badge core">${x(s.core)}</span>`:na}</td>
-        <td><div class="row-actions">
-          <button class="ia ed" onclick="openRosterModal('${s.id}')">✏️</button>
-          <button class="ia dl" onclick="deleteSessionDirect('${s.id}')">🗑</button>
-        </div></td>
-      </tr>`;
-    }).join('')
-    :`<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet. Click ＋ to add one.</td></tr>`;
+    ?rows.map(s=>{const up=isUpcoming(s.date);return`<tr class="${up?'upcoming-row':''}">
+      <td><strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(s.date)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}</td>
+      <td>${s.worship?`<span class="badge worship">${x(s.worship)}</span>`:na}</td>
+      <td>${s.word?`<span class="badge word">${x(s.word)}</span>`:na}</td>
+      <td style="font-size:.8rem;max-width:130px">${x(s.kids)||na}</td>
+      <td style="font-size:.78rem;max-width:150px;white-space:pre-line">${x(s.supper)||na}</td>
+      <td style="font-size:.78rem;max-width:200px;color:var(--mid)">${x(s.topic)||na}</td>
+      <td style="font-size:.78rem;white-space:nowrap">${s.venue?'📍 '+x(s.venue):na}</td>
+      <td>${s.core?`<span class="badge core">${x(s.core)}</span>`:na}</td>
+      <td><div class="row-actions">
+        <button class="ia ed" onclick="openRosterModal('${s.id}')">✏️</button>
+        <button class="ia dl" onclick="deleteSessionDirect('${s.id}')">🗑</button>
+      </div></td>
+    </tr>`}).join('')
+    :`<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet.</td></tr>`;
 }
-
 function openRosterModal(id){
   editSessionId=id;
   if(id){
     const s=DB.sessions.find(s=>s.id===id);
     document.getElementById('rm-title').textContent='Edit Session';
     document.getElementById('rm-halfyear').value=s.year||activeYear;
-    document.getElementById('rm-date').value=s.date;
-    document.getElementById('rm-worship').value=s.worship;
-    document.getElementById('rm-word').value=s.word;
-    document.getElementById('rm-kids').value=s.kids;
-    document.getElementById('rm-supper').value=s.supper;
-    document.getElementById('rm-topic').value=s.topic;
-    document.getElementById('rm-venue').value=s.venue;
-    document.getElementById('rm-core').value=s.core;
+    document.getElementById('rm-date').value=s.date;document.getElementById('rm-worship').value=s.worship;
+    document.getElementById('rm-word').value=s.word;document.getElementById('rm-kids').value=s.kids;
+    document.getElementById('rm-supper').value=s.supper;document.getElementById('rm-topic').value=s.topic;
+    document.getElementById('rm-venue').value=s.venue;document.getElementById('rm-core').value=s.core;
     document.getElementById('rm-del').style.display='inline-block';
   }else{
     document.getElementById('rm-title').textContent='Add Session';
@@ -557,36 +501,20 @@ function openRosterModal(id){
 }
 function closeRosterModal(){document.getElementById('roster-modal').classList.remove('open');editSessionId=null}
 document.getElementById('roster-modal').onclick=e=>{if(e.target===e.currentTarget)closeRosterModal()}
-
 async function saveSession(){
   const date=document.getElementById('rm-date').value.trim();
   if(!date){showToast('⚠️ Please enter a date');return}
-  const obj={
-    id:editSessionId||uid(),
-    year:document.getElementById('rm-halfyear').value||activeYear,
-    date,
-    worship:document.getElementById('rm-worship').value,
-    word:document.getElementById('rm-word').value,
-    kids:document.getElementById('rm-kids').value,
-    supper:document.getElementById('rm-supper').value,
-    topic:document.getElementById('rm-topic').value,
-    venue:document.getElementById('rm-venue').value,
-    core:document.getElementById('rm-core').value,
-  };
+  const obj={id:editSessionId||uid(),year:document.getElementById('rm-halfyear').value||activeYear,date,
+    worship:document.getElementById('rm-worship').value,word:document.getElementById('rm-word').value,
+    kids:document.getElementById('rm-kids').value,supper:document.getElementById('rm-supper').value,
+    topic:document.getElementById('rm-topic').value,venue:document.getElementById('rm-venue').value,
+    core:document.getElementById('rm-core').value};
   if(editSessionId){const i=DB.sessions.findIndex(s=>s.id===editSessionId);DB.sessions[i]=obj}
   else DB.sessions.push(obj);
-  closeRosterModal();showToast('💾 Saving…');
-  await persist();showToast('✅ Saved & shared!');
+  closeRosterModal();showToast('💾 Saving…');await persist();showToast('✅ Saved & shared!');
 }
-async function deleteSession(){
-  DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);
-  closeRosterModal();await persist();showToast('🗑 Deleted');
-}
-async function deleteSessionDirect(id){
-  if(!confirm('Delete this session?'))return;
-  DB.sessions=DB.sessions.filter(s=>s.id!==id);
-  await persist();showToast('🗑 Deleted');
-}
+async function deleteSession(){DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);closeRosterModal();await persist();showToast('🗑 Deleted')}
+async function deleteSessionDirect(id){if(!confirm('Delete this session?'))return;DB.sessions=DB.sessions.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted')}
 
 // ── GIFTS ────────────────────────────────────────────────
 const GIFTS_DATA=[
@@ -674,18 +602,15 @@ async function addSong(){
   showToast('✅ Song added!');
 }
 async function editSongTitle(id){
-  const s=DB.songs.find(s=>s.id===id);
-  const t=prompt('Rename:',s.title);
+  const s=DB.songs.find(s=>s.id===id);const t=prompt('Rename:',s.title);
   if(t&&t.trim()){s.title=t.trim();await persist();showToast('✅ Renamed!')}
 }
 async function deleteSong(id){
-  if(!confirm('Delete this song?'))return;
-  DB.songs=DB.songs.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted');
+  if(!confirm('Delete this song?'))return;DB.songs=DB.songs.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted')
 }
 async function saveSongLyrics(id){
   const s=DB.songs.find(s=>s.id===id);
-  s.lyrics=document.getElementById('lyr-'+id).value;
-  s.artist=document.getElementById('art-'+id).value;
+  s.lyrics=document.getElementById('lyr-'+id).value;s.artist=document.getElementById('art-'+id).value;
   await persist();showToast('✅ Saved & shared!');
 }
 
@@ -698,25 +623,20 @@ function openFullscreen(id){
   document.getElementById('fs-artist').textContent=s.artist||'';
   document.getElementById('fs-lyrics').textContent=s.lyrics||'(No lyrics yet)';
   document.getElementById('fs-lyrics').style.fontSize=fsFontSize+'px';
-  applyFsBg();document.getElementById('fs-overlay').classList.add('open');
-  document.body.style.overflow='hidden';
+  applyFsBg();document.getElementById('fs-overlay').classList.add('open');document.body.style.overflow='hidden';
 }
 function closeFullscreen(){document.getElementById('fs-overlay').classList.remove('open');document.body.style.overflow=''}
 function fsFont(d){fsFontSize=Math.min(36,Math.max(12,fsFontSize+d));document.getElementById('fs-lyrics').style.fontSize=fsFontSize+'px'}
 function fsBg(){fsDark=!fsDark;applyFsBg()}
 function applyFsBg(){
   const ov=document.getElementById('fs-overlay'),ly=document.getElementById('fs-lyrics');
-  ov.style.background=fsDark?'#1a120a':'#fffdf7';
-  ly.style.color=fsDark?'rgba(255,255,255,0.92)':'#3a2e22';
+  ov.style.background=fsDark?'#1a120a':'#fffdf7';ly.style.color=fsDark?'rgba(255,255,255,.92)':'#3a2e22';
 }
 
 // ── PHOTOS ───────────────────────────────────────────────
-const GRID=25; // 5×5
-let lbIdx=0;
-
+const GRID=25;let lbIdx=0;
 function renderPhotos(){
-  const photos=DB.photos||[];
-  let html='';
+  const photos=DB.photos||[];let html='';
   for(let i=0;i<GRID;i++){
     if(i<photos.length){
       html+=`<div class="photo-cell" onclick="openLightbox(${i})">
@@ -725,70 +645,46 @@ function renderPhotos(){
       </div>`;
     }else{
       html+=`<div class="photo-empty" onclick="document.getElementById('photo-input').click()">
-        <span class="photo-empty-icon">📷</span>
-        <span>Add photo</span>
+        <span class="photo-empty-icon">📷</span><span>Add photo</span>
       </div>`;
     }
   }
   document.getElementById('photos-grid').innerHTML=html;
 }
-
 async function handlePhotoUpload(ev){
-  const files=Array.from(ev.target.files);
-  if(!files.length)return;
-  const slots=GRID-(DB.photos.length);
-  if(slots<=0){showToast('⚠️ Gallery full (25 photos max)');ev.target.value='';return}
-  const toAdd=files.slice(0,slots);
-  showToast('⏳ Processing…');
+  const files=Array.from(ev.target.files);if(!files.length)return;
+  const slots=GRID-DB.photos.length;
+  if(slots<=0){showToast('⚠️ Gallery full (25 photos)');ev.target.value='';return}
+  const toAdd=files.slice(0,slots);showToast('⏳ Processing…');
   for(const f of toAdd){
-    const raw=await toDataUrl(f);
-    const compressed=await compressImg(raw,900,0.78);
-    DB.photos.push({id:uid(),dataUrl:compressed});
+    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,900,.78)});
   }
-  ev.target.value='';
-  await persist();
-  showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
+  ev.target.value='';await persist();showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
 }
-function toDataUrl(file){
-  return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=rej;r.readAsDataURL(file)})
-}
+function toDataUrl(f){return new Promise((r,j)=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.onerror=j;fr.readAsDataURL(f)})}
 function compressImg(url,maxW,q){
-  return new Promise(res=>{
+  return new Promise(r=>{
     const img=new Image();
     img.onload=()=>{
-      let w=img.width,h=img.height;
-      if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
+      let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
       const c=document.createElement('canvas');c.width=w;c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      res(c.toDataURL('image/jpeg',q));
-    };
-    img.src=url;
+      c.getContext('2d').drawImage(img,0,0,w,h);r(c.toDataURL('image/jpeg',q));
+    };img.src=url;
   })
 }
-async function deletePhoto(ev,i){
-  ev.stopPropagation();
-  if(!confirm('Remove this photo?'))return;
-  DB.photos.splice(i,1);await persist();showToast('🗑 Photo removed');
-}
-
-// lightbox
+async function deletePhoto(ev,i){ev.stopPropagation();if(!confirm('Remove this photo?'))return;DB.photos.splice(i,1);await persist();showToast('🗑 Removed')}
 function openLightbox(i){
-  lbIdx=i;
-  document.getElementById('lb-img').src=DB.photos[i].dataUrl;
+  lbIdx=i;document.getElementById('lb-img').src=DB.photos[i].dataUrl;
   document.getElementById('lb-counter').textContent=(i+1)+' / '+DB.photos.length;
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow='hidden';
+  document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
 function lbBgClick(e){if(e.target===document.getElementById('lightbox'))closeLightbox()}
 function lbNav(dir,e){
-  e.stopPropagation();
-  lbIdx=(lbIdx+dir+DB.photos.length)%DB.photos.length;
+  e.stopPropagation();lbIdx=(lbIdx+dir+DB.photos.length)%DB.photos.length;
   document.getElementById('lb-img').src=DB.photos[lbIdx].dataUrl;
   document.getElementById('lb-counter').textContent=(lbIdx+1)+' / '+DB.photos.length;
 }
-
-// keyboard shortcuts
 document.addEventListener('keydown',e=>{
   if(document.getElementById('lightbox').classList.contains('open')){
     if(e.key==='ArrowLeft')lbNav(-1,{stopPropagation:()=>{}});
