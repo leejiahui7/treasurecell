@@ -10,180 +10,188 @@ const GH_TOKEN = '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';
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --gold:    #f0a500;
-      --gold-l:  #fff4d6;
-      --amber:   #e67e22;
-      --rose:    #e8637a;
-      --rose-l:  #fde8ec;
-      --teal:    #3aafa9;
-      --teal-l:  #d6f3f2;
-      --purple:  #9b72cf;
-      --purple-l:#f0e8ff;
-      --warm:    #fff9f0;
-      --cream:   #fffdf7;
-      --mid:     #7a6a5a;
-      --dark:    #3a2e22;
-      --border:  #eeddb8;
-      --shadow:  0 3px 16px rgba(58,46,34,0.10);
-      --shadow2: 0 6px 28px rgba(58,46,34,0.14);
+      --gold:#f0a500;--gold-l:#fff4d6;--amber:#e67e22;--rose:#e8637a;--rose-l:#fde8ec;
+      --teal:#3aafa9;--teal-l:#d6f3f2;--purple:#9b72cf;--purple-l:#f0e8ff;
+      --warm:#fff9f0;--mid:#7a6a5a;--dark:#3a2e22;--border:#eeddb8;
+      --shadow:0 3px 16px rgba(58,46,34,0.10);--shadow2:0 6px 28px rgba(58,46,34,0.14);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Nunito', sans-serif; background: var(--warm); color: var(--dark); min-height: 100vh; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Nunito',sans-serif;background:var(--warm);color:var(--dark);min-height:100vh}
 
-    .site-header {
-      background: linear-gradient(135deg, #f0a500 0%, #e8637a 55%, #9b72cf 100%);
-      padding: 32px 20px 24px; text-align: center; position: relative; overflow: hidden;
-    }
-    .site-header::before {
-      content: ''; position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-    .site-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,6vw,3rem); color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2); position: relative; }
-    .site-header p { color: rgba(255,255,255,0.88); font-size: 0.95rem; margin-top: 6px; font-weight: 600; letter-spacing: 0.04em; position: relative; }
+    .site-header{background:linear-gradient(135deg,#f0a500 0%,#e8637a 55%,#9b72cf 100%);padding:32px 20px 24px;text-align:center;position:relative;overflow:hidden}
+    .site-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+    .site-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3rem);color:white;text-shadow:0 2px 8px rgba(0,0,0,0.2);position:relative}
+    .site-header p{color:rgba(255,255,255,0.88);font-size:0.95rem;margin-top:6px;font-weight:600;letter-spacing:0.04em;position:relative}
 
-    nav { display: flex; justify-content: center; background: white; border-bottom: 3px solid var(--border); flex-wrap: wrap; }
-    nav button { font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700; padding: 14px 22px; border: none; background: white; color: var(--mid); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all 0.18s; }
-    nav button:hover { color: var(--amber); background: var(--gold-l); }
-    nav button.active { color: var(--amber); border-bottom-color: var(--amber); background: var(--gold-l); }
+    nav{display:flex;justify-content:center;background:white;border-bottom:3px solid var(--border);flex-wrap:wrap}
+    nav button{font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;padding:14px 20px;border:none;background:white;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all 0.18s}
+    nav button:hover{color:var(--amber);background:var(--gold-l)}
+    nav button.active{color:var(--amber);border-bottom-color:var(--amber);background:var(--gold-l)}
 
-    main { max-width: 900px; margin: 0 auto; padding: 28px 16px 70px; }
-    .panel { display: none; }
-    .panel.active { display: block; animation: fadeUp 0.25s ease; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    main{max-width:960px;margin:0 auto;padding:28px 16px 70px}
+    .panel{display:none}
+    .panel.active{display:block;animation:fadeUp 0.25s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-    .slabel { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mid); margin: 28px 0 10px; }
-    .card { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow); }
-    .notice { background: var(--gold-l); border: 1.5px solid #f0d080; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; font-size: 0.88rem; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+    .slabel{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid);margin:28px 0 10px}
+    .card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:var(--shadow)}
+    .notice{border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:0.88rem;font-weight:600;display:flex;gap:10px;align-items:center;border:1.5px solid}
 
-    /* Sync status bar */
-    .sync-bar { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: var(--mid); margin-bottom: 12px; padding: 8px 14px; background: white; border: 1.5px solid var(--border); border-radius: 10px; }
-    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
-    .sync-dot.synced { background: #4caf50; }
-    .sync-dot.syncing { background: var(--amber); animation: pulse 1s infinite; }
-    .sync-dot.error { background: var(--rose); }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    /* sync */
+    .sync-bar{display:flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:700;color:var(--mid);margin-bottom:12px;padding:8px 14px;background:white;border:1.5px solid var(--border);border-radius:10px}
+    .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#ccc}
+    .sync-dot.synced{background:#4caf50}
+    .sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}
+    .sync-dot.error{background:var(--rose)}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
-    .roster-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-    .roster-toolbar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--amber); }
-    .btn-add { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.88rem; padding: 9px 18px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--amber)); color: white; cursor: pointer; transition: opacity 0.15s; box-shadow: 0 2px 8px rgba(230,126,34,0.3); display: flex; align-items: center; gap: 6px; }
-    .btn-add:hover { opacity: 0.88; }
+    /* roster */
+    .roster-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+    .roster-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--amber)}
+    .btn-add{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));color:white;cursor:pointer;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(230,126,34,0.3);display:flex;align-items:center;gap:6px}
+    .btn-add:hover{opacity:0.88}
 
-    .year-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .ypill { font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700; padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; color: var(--mid); cursor: pointer; transition: all 0.15s; }
-    .ypill.active { background: var(--amber); border-color: var(--amber); color: white; }
-    .ypill:hover:not(.active) { border-color: var(--gold); color: var(--amber); }
-    .ypill.new-half { background: linear-gradient(135deg,#d6f3f2,#f0e8ff); border-color: var(--teal); color: var(--teal); }
-    .ypill.new-half.active { background: var(--teal); border-color: var(--teal); color: white; }
+    .year-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .ypill{font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--mid);cursor:pointer;transition:all 0.15s}
+    .ypill.active{background:var(--amber);border-color:var(--amber);color:white}
+    .ypill:hover:not(.active){border-color:var(--gold);color:var(--amber)}
+    .ypill.new-half{background:linear-gradient(135deg,#d6f3f2,#f0e8ff);border-color:var(--teal);color:var(--teal)}
+    .ypill.new-half.active{background:var(--teal);border-color:var(--teal);color:white}
 
-    .roster-wrap { overflow-x: auto; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow); max-height: 70vh; overflow-y: auto; }
-    table.roster { width: 100%; border-collapse: collapse; font-size: 0.83rem; min-width: 700px; }
-    table.roster th { background: linear-gradient(135deg,#fff4d6,#fde8ec); color: var(--dark); font-weight: 800; text-align: left; padding: 11px 14px; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; position: sticky; top: 0; z-index: 2; }
-    table.roster td { padding: 11px 14px; border-bottom: 1px solid #f5e8d0; vertical-align: top; color: var(--dark); }
-    table.roster tr:hover td { background: var(--gold-l); }
+    .roster-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid var(--border);box-shadow:var(--shadow);max-height:72vh;overflow-y:auto}
+    table.roster{width:100%;border-collapse:collapse;font-size:0.83rem;min-width:740px}
+    table.roster th{background:linear-gradient(135deg,#fff4d6,#fde8ec);color:var(--dark);font-weight:800;text-align:left;padding:11px 14px;border-bottom:2px solid var(--border);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;position:sticky;top:0;z-index:2}
+    table.roster td{padding:11px 14px;border-bottom:1px solid #f5e8d0;vertical-align:top;color:var(--dark)}
+    table.roster tr:hover td{background:var(--gold-l)}
+    tr.upcoming-row td{background:#f9fffe}
+    tr.upcoming-row:hover td{background:var(--teal-l)}
 
-    .badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin: 1px 2px; }
-    .badge.worship { background: #fde8ec; color: var(--rose); }
-    .badge.word    { background: #fff4d6; color: var(--amber); }
-    .badge.core    { background: #e8f4e8; color: #3a7a3a; }
-    .badge.upcoming { background: #d6f3f2; color: var(--teal); border: 1px dashed var(--teal); font-size: 0.65rem; padding: 1px 6px; }
+    .badge{display:inline-block;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin:1px 2px}
+    .badge.worship{background:#fde8ec;color:var(--rose)}
+    .badge.word{background:#fff4d6;color:var(--amber)}
+    .badge.core{background:#e8f4e8;color:#3a7a3a}
+    .badge.upcoming{background:#d6f3f2;color:var(--teal);border:1px dashed var(--teal);font-size:0.65rem;padding:1px 6px}
 
-    .row-actions { display: flex; gap: 4px; }
-    .ia { background: none; border: none; cursor: pointer; padding: 3px 6px; border-radius: 5px; font-size: 0.78rem; transition: background 0.14s; }
-    .ia.ed { color: var(--mid); }
-    .ia.ed:hover { background: var(--gold-l); color: var(--amber); }
-    .ia.dl { color: #ccc; }
-    .ia.dl:hover { background: var(--rose-l); color: var(--rose); }
-    tr.upcoming-row td { background: #f9fffe; }
-    tr.upcoming-row:hover td { background: var(--teal-l); }
+    .row-actions{display:flex;gap:4px}
+    .ia{background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;font-size:0.78rem;transition:background 0.14s}
+    .ia.ed{color:var(--mid)}.ia.ed:hover{background:var(--gold-l);color:var(--amber)}
+    .ia.dl{color:#ccc}.ia.dl:hover{background:var(--rose-l);color:var(--rose)}
 
-    /* Gifts */
-    .gifts-header { text-align: center; margin-bottom: 28px; }
-    .gifts-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--purple); margin-bottom: 6px; }
-    .gifts-header p { color: var(--mid); font-size: 0.9rem; font-weight: 600; }
-    .gift-bar-wrap { margin-bottom: 16px; }
-    .gift-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .gift-rank { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; flex-shrink: 0; color: white; }
-    .gift-rank.r1 { background: linear-gradient(135deg,#f0a500,#e67e22); }
-    .gift-rank.r2 { background: linear-gradient(135deg,#adb5bd,#868e96); }
-    .gift-rank.r3 { background: linear-gradient(135deg,#cd7f32,#a0522d); }
-    .gift-rank.r4 { background: linear-gradient(135deg,#9b72cf,#7950b0); }
-    .gift-rank.r5 { background: linear-gradient(135deg,#3aafa9,#2e8a85); }
-    .gift-info { flex: 1; }
-    .gift-name { font-weight: 800; font-size: 0.95rem; margin-bottom: 4px; }
-    .gift-bar-bg { background: #f0ece3; border-radius: 99px; height: 10px; overflow: hidden; }
-    .gift-bar-fill { height: 100%; border-radius: 99px; transition: width 0.7s ease; }
-    .fill-1 { background: linear-gradient(90deg,#f0a500,#e67e22); }
-    .fill-2 { background: linear-gradient(90deg,#adb5bd,#868e96); }
-    .fill-3 { background: linear-gradient(90deg,#cd7f32,#a0522d); }
-    .fill-4 { background: linear-gradient(90deg,#9b72cf,#7950b0); }
-    .fill-5 { background: linear-gradient(90deg,#3aafa9,#2e8a85); }
-    .gift-count { font-weight: 900; font-size: 0.88rem; color: var(--mid); flex-shrink: 0; width: 80px; text-align: right; }
-    .members-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(130px,1fr)); gap: 10px; margin-top: 24px; }
-    .member-card { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 12px; text-align: center; box-shadow: var(--shadow); transition: transform 0.15s,box-shadow 0.15s; }
-    .member-card:hover { transform: translateY(-2px); box-shadow: var(--shadow2); }
-    .member-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 8px; font-weight: 900; }
-    .member-name { font-weight: 800; font-size: 0.82rem; color: var(--dark); margin-bottom: 6px; }
-    .member-gifts { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; }
-    .mgift { font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
+    /* gifts */
+    .gifts-header{text-align:center;margin-bottom:28px}
+    .gifts-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--purple);margin-bottom:6px}
+    .gifts-header p{color:var(--mid);font-size:0.9rem;font-weight:600}
+    .gift-bar-wrap{margin-bottom:16px}
+    .gift-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .gift-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;flex-shrink:0;color:white}
+    .gift-rank.r1{background:linear-gradient(135deg,#f0a500,#e67e22)}
+    .gift-rank.r2{background:linear-gradient(135deg,#adb5bd,#868e96)}
+    .gift-rank.r3{background:linear-gradient(135deg,#cd7f32,#a0522d)}
+    .gift-rank.r4{background:linear-gradient(135deg,#9b72cf,#7950b0)}
+    .gift-rank.r5{background:linear-gradient(135deg,#3aafa9,#2e8a85)}
+    .gift-info{flex:1}.gift-name{font-weight:800;font-size:0.95rem;margin-bottom:4px}
+    .gift-bar-bg{background:#f0ece3;border-radius:99px;height:10px;overflow:hidden}
+    .gift-bar-fill{height:100%;border-radius:99px;transition:width 0.7s ease}
+    .fill-1{background:linear-gradient(90deg,#f0a500,#e67e22)}.fill-2{background:linear-gradient(90deg,#adb5bd,#868e96)}
+    .fill-3{background:linear-gradient(90deg,#cd7f32,#a0522d)}.fill-4{background:linear-gradient(90deg,#9b72cf,#7950b0)}
+    .fill-5{background:linear-gradient(90deg,#3aafa9,#2e8a85)}
+    .gift-count{font-weight:900;font-size:0.88rem;color:var(--mid);flex-shrink:0;width:80px;text-align:right}
+    .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:24px}
+    .member-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:14px 12px;text-align:center;box-shadow:var(--shadow);transition:transform 0.15s,box-shadow 0.15s}
+    .member-card:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
+    .member-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 8px;font-weight:900}
+    .member-name{font-weight:800;font-size:0.82rem;color:var(--dark);margin-bottom:6px}
+    .member-gifts{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
+    .mgift{font-size:0.65rem;padding:2px 7px;border-radius:10px;font-weight:700}
 
-    /* Songs */
-    .songs-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-    .songs-toolbar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--rose); }
-    .btn-add-song { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.88rem; padding: 9px 18px; border: none; border-radius: 10px; background: linear-gradient(135deg,var(--rose),#c0394f); color: white; cursor: pointer; transition: opacity 0.15s; box-shadow: 0 2px 8px rgba(232,99,122,0.3); display: flex; align-items: center; gap: 6px; }
-    .btn-add-song:hover { opacity: 0.88; }
-    .song-card { background: white; border: 1.5px solid var(--border); border-radius: 16px; margin-bottom: 14px; box-shadow: var(--shadow); overflow: hidden; }
-    .song-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; background: linear-gradient(135deg,#fde8ec,#fff4d6); gap: 10px; }
-    .song-title-wrap { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-    .song-icon { font-size: 1.3rem; flex-shrink: 0; }
-    .song-title { font-weight: 800; font-size: 0.95rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-actions { display: flex; gap: 4px; flex-shrink: 0; }
-    .song-chevron { color: var(--mid); font-size: 0.75rem; flex-shrink: 0; transition: transform 0.2s; }
-    .song-card.open .song-chevron { transform: rotate(180deg); }
-    .song-body { display: none; padding: 0 18px 18px; }
-    .song-card.open .song-body { display: block; }
-    .song-lyrics { width: 100%; min-height: 180px; font-family: 'Nunito',sans-serif; font-size: 0.88rem; color: var(--dark); line-height: 1.75; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--warm); resize: vertical; outline: none; transition: border-color 0.15s; margin-top: 14px; }
-    .song-lyrics:focus { border-color: var(--rose); }
-    .song-meta { display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
-    .song-meta input { font-family: 'Nunito',sans-serif; font-size: 0.8rem; padding: 5px 10px; border: 1.5px solid var(--border); border-radius: 7px; color: var(--dark); background: white; outline: none; flex: 1; min-width: 100px; }
-    .song-meta input:focus { border-color: var(--rose); }
-    .song-save-btn { font-family: 'Nunito',sans-serif; font-weight: 700; font-size: 0.8rem; padding: 6px 14px; border: none; border-radius: 7px; background: var(--rose); color: white; cursor: pointer; transition: opacity 0.15s; }
-    .song-save-btn:hover { opacity: 0.85; }
+    /* songs */
+    .songs-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+    .songs-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--rose)}
+    .btn-add-song{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--rose),#c0394f);color:white;cursor:pointer;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(232,99,122,0.3);display:flex;align-items:center;gap:6px}
+    .btn-add-song:hover{opacity:0.88}
+    .song-card{background:white;border:1.5px solid var(--border);border-radius:16px;margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}
+    .song-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;background:linear-gradient(135deg,#fde8ec,#fff4d6);gap:10px}
+    .song-title-wrap{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+    .song-icon{font-size:1.3rem;flex-shrink:0}
+    .song-title{font-weight:800;font-size:0.95rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .song-actions{display:flex;gap:4px;flex-shrink:0}
+    .song-chevron{color:var(--mid);font-size:0.75rem;flex-shrink:0;transition:transform 0.2s}
+    .song-card.open .song-chevron{transform:rotate(180deg)}
+    .song-body{display:none;padding:0 18px 18px}
+    .song-card.open .song-body{display:block}
+    .song-lyrics{width:100%;min-height:180px;font-family:'Nunito',sans-serif;font-size:0.88rem;color:var(--dark);line-height:1.75;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--warm);resize:vertical;outline:none;transition:border-color 0.15s;margin-top:14px}
+    .song-lyrics:focus{border-color:var(--rose)}
+    .song-meta{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+    .song-meta input{font-family:'Nunito',sans-serif;font-size:0.8rem;padding:5px 10px;border:1.5px solid var(--border);border-radius:7px;color:var(--dark);background:white;outline:none;flex:1;min-width:100px}
+    .song-meta input:focus{border-color:var(--rose)}
+    .song-save-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:0.8rem;padding:6px 14px;border:none;border-radius:7px;background:var(--rose);color:white;cursor:pointer;transition:opacity 0.15s}
+    .song-save-btn:hover{opacity:0.85}
 
-    /* Fullscreen */
-    .fs-overlay { position: fixed; inset: 0; z-index: 400; background: #1a120a; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
-    .fs-overlay.open { opacity: 1; pointer-events: all; }
-    .fs-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: linear-gradient(135deg,#3a2010,#2a1a30); flex-shrink: 0; }
-    .fs-title { color: white; font-weight: 800; font-size: 1.05rem; }
-    .fs-artist { color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
-    .fs-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
-    .fs-close:hover { background: rgba(255,255,255,0.25); }
-    .fs-lyrics { flex: 1; overflow-y: auto; padding: 28px 24px; color: rgba(255,255,255,0.92); font-size: clamp(1rem,3.5vw,1.25rem); line-height: 2; white-space: pre-wrap; font-weight: 600; }
-    .fs-font-controls { display: flex; gap: 8px; padding: 12px 20px; background: rgba(0,0,0,0.3); flex-shrink: 0; justify-content: center; }
-    .fs-font-btn { font-family: 'Nunito',sans-serif; font-weight: 700; font-size: 0.82rem; padding: 6px 14px; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s; }
-    .fs-font-btn:hover { background: rgba(255,255,255,0.18); }
+    /* fullscreen lyrics */
+    .fs-overlay{position:fixed;inset:0;z-index:400;background:#1a120a;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.25s}
+    .fs-overlay.open{opacity:1;pointer-events:all}
+    .fs-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(135deg,#3a2010,#2a1a30);flex-shrink:0}
+    .fs-title{color:white;font-weight:800;font-size:1.05rem}
+    .fs-artist{color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:600;margin-top:2px}
+    .fs-close{background:rgba(255,255,255,0.15);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;flex-shrink:0}
+    .fs-close:hover{background:rgba(255,255,255,0.25)}
+    .fs-lyrics{flex:1;overflow-y:auto;padding:28px 24px;color:rgba(255,255,255,0.92);font-size:clamp(1rem,3.5vw,1.25rem);line-height:2;white-space:pre-wrap;font-weight:600}
+    .fs-font-controls{display:flex;gap:8px;padding:12px 20px;background:rgba(0,0,0,0.3);flex-shrink:0;justify-content:center}
+    .fs-font-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:0.82rem;padding:6px 14px;border:1.5px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);cursor:pointer;transition:all 0.15s}
+    .fs-font-btn:hover{background:rgba(255,255,255,0.18)}
 
-    /* Modal */
-    .overlay { position: fixed; inset: 0; background: rgba(58,46,34,0.45); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-    .overlay.open { opacity: 1; pointer-events: all; }
-    .modal { background: white; border-radius: 20px; padding: 28px; width: 100%; max-width: 460px; box-shadow: 0 12px 48px rgba(58,46,34,0.2); transform: translateY(16px); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
-    .overlay.open .modal { transform: none; }
-    .modal h3 { font-family: 'Playfair Display',serif; font-size: 1.25rem; color: var(--amber); margin-bottom: 20px; }
-    .modal label { display: block; font-size: 0.76rem; font-weight: 800; color: var(--mid); margin-bottom: 4px; margin-top: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .modal input, .modal textarea, .modal select { width: 100%; font-family: 'Nunito',sans-serif; font-size: 0.9rem; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--warm); color: var(--dark); outline: none; transition: border-color 0.15s; }
-    .modal input:focus, .modal textarea:focus, .modal select:focus { border-color: var(--amber); }
-    .modal textarea { min-height: 80px; resize: vertical; }
-    .modal-foot { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; align-items: center; }
-    .m-cancel { font-family: 'Nunito',sans-serif; font-size: 0.88rem; font-weight: 700; padding: 9px 18px; border: 1.5px solid var(--border); border-radius: 10px; background: white; color: var(--mid); cursor: pointer; }
-    .m-cancel:hover { background: #f5f0e8; }
-    .m-save { font-family: 'Nunito',sans-serif; font-size: 0.88rem; font-weight: 800; padding: 9px 22px; border: none; border-radius: 10px; background: linear-gradient(135deg,var(--gold),var(--amber)); color: white; cursor: pointer; box-shadow: 0 2px 8px rgba(230,126,34,0.3); }
-    .m-save:hover { opacity: 0.87; }
-    .m-del { font-family: 'Nunito',sans-serif; font-size: 0.85rem; font-weight: 700; padding: 8px 14px; border: 1.5px solid #f5d0d8; border-radius: 10px; background: white; color: var(--rose); cursor: pointer; margin-right: auto; }
-    .m-del:hover { background: var(--rose-l); }
+    /* photos */
+    .photos-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+    .photos-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--purple)}
+    .btn-upload-photo{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;padding:9px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--purple),#7950b0);color:white;cursor:pointer;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(155,114,207,0.35);display:flex;align-items:center;gap:6px}
+    .btn-upload-photo:hover{opacity:0.88}
 
-    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--dark); color: white; padding: 10px 22px; border-radius: 99px; font-weight: 700; font-size: 0.85rem; z-index: 500; transition: transform 0.3s,opacity 0.3s; opacity: 0; pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .photos-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    @media(max-width:580px){.photos-grid{grid-template-columns:repeat(3,1fr)}}
 
-    .loading-spinner { text-align: center; padding: 40px; color: var(--mid); font-weight: 700; font-size: 0.9rem; }
+    .photo-cell{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#f5ede0;border:1.5px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s}
+    .photo-cell:hover{transform:scale(1.03);box-shadow:var(--shadow2)}
+    .photo-cell img{width:100%;height:100%;object-fit:cover;display:block}
+    .photo-del{position:absolute;top:5px;right:5px;background:rgba(58,46,34,0.72);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:0.7rem;cursor:pointer;align-items:center;justify-content:center;display:none;transition:background 0.15s;line-height:1}
+    .photo-cell:hover .photo-del{display:flex}
+    .photo-del:hover{background:var(--rose)}
+
+    .photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;aspect-ratio:1;border:2px dashed var(--border);border-radius:12px;cursor:pointer;transition:all 0.15s;background:white;color:var(--mid);font-size:0.72rem;font-weight:700}
+    .photo-empty:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-l)}
+    .photo-empty-icon{font-size:1.5rem}
+
+    /* lightbox */
+    .lightbox{position:fixed;inset:0;z-index:500;background:rgba(20,10,5,0.94);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.22s;padding:20px}
+    .lightbox.open{opacity:1;pointer-events:all}
+    .lightbox img{max-width:90vw;max-height:86vh;border-radius:12px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+    .lb-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,0.15);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+    .lb-close:hover{background:rgba(255,255,255,0.3)}
+    .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.12);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+    .lb-nav:hover{background:rgba(255,255,255,0.25)}
+    .lb-prev{left:16px}.lb-next{right:16px}
+    .lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:700;font-family:'Nunito',sans-serif}
+
+    /* modal */
+    .overlay{position:fixed;inset:0;background:rgba(58,46,34,0.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.2s}
+    .overlay.open{opacity:1;pointer-events:all}
+    .modal{background:white;border-radius:20px;padding:28px;width:100%;max-width:460px;box-shadow:0 12px 48px rgba(58,46,34,0.2);transform:translateY(16px);transition:transform 0.2s;max-height:90vh;overflow-y:auto}
+    .overlay.open .modal{transform:none}
+    .modal h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--amber);margin-bottom:20px}
+    .modal label{display:block;font-size:0.76rem;font-weight:800;color:var(--mid);margin-bottom:4px;margin-top:14px;text-transform:uppercase;letter-spacing:0.06em}
+    .modal input,.modal textarea,.modal select{width:100%;font-family:'Nunito',sans-serif;font-size:0.9rem;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--warm);color:var(--dark);outline:none;transition:border-color 0.15s}
+    .modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--amber)}
+    .modal textarea{min-height:80px;resize:vertical}
+    .modal-foot{display:flex;gap:10px;margin-top:22px;justify-content:flex-end;align-items:center}
+    .m-cancel{font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:9px 18px;border:1.5px solid var(--border);border-radius:10px;background:white;color:var(--mid);cursor:pointer}
+    .m-cancel:hover{background:#f5f0e8}
+    .m-save{font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:800;padding:9px 22px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));color:white;cursor:pointer;box-shadow:0 2px 8px rgba(230,126,34,0.3)}
+    .m-save:hover{opacity:0.87}
+    .m-del{font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:700;padding:8px 14px;border:1.5px solid #f5d0d8;border-radius:10px;background:white;color:var(--rose);cursor:pointer;margin-right:auto}
+    .m-del:hover{background:var(--rose-l)}
+
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark);color:white;padding:10px 22px;border-radius:99px;font-weight:700;font-size:0.85rem;z-index:600;transition:transform 0.3s,opacity 0.3s;opacity:0;pointer-events:none}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .loading-msg{text-align:center;padding:40px;color:var(--mid);font-weight:700;font-size:0.9rem}
   </style>
 </head>
 <body>
@@ -197,48 +205,38 @@ const GH_TOKEN = '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';
   <button class="active" onclick="showTab('roster',this)">📋 Roster</button>
   <button onclick="showTab('gifts',this)">✨ Spiritual Gifts</button>
   <button onclick="showTab('songs',this)">🎵 Worship Songs</button>
+  <button onclick="showTab('photos',this)">📸 Photos</button>
 </nav>
 
 <main>
 
-  <!-- ROSTER TAB -->
+  <!-- ═══ ROSTER ═══ -->
   <div class="panel active" id="tab-roster">
     <div class="roster-toolbar">
       <h2>📋 Cell Group Roster</h2>
       <button class="btn-add" onclick="openRosterModal(null)">＋ Add Session</button>
     </div>
-
-    <div class="sync-bar" id="sync-bar">
+    <div class="sync-bar">
       <div class="sync-dot syncing" id="sync-dot"></div>
       <span id="sync-text">Connecting…</span>
-      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer;">↻ Refresh</button>
+      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
     </div>
-
-    <div class="notice" id="roster-notice">
+    <div class="notice" id="roster-notice" style="background:var(--teal-l);border-color:#80d8d4">
       📖 Theme: <strong>1 Corinthians (cont.)</strong> &nbsp;·&nbsp; 🏠 Venue: Treasure Place (unless stated)
     </div>
-
     <div class="year-pills" id="year-pills"></div>
     <div class="roster-wrap">
       <table class="roster">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Worship 🎤</th>
-            <th>Word 📖</th>
-            <th>Kids 👶</th>
-            <th>Supper 🍽️</th>
-            <th>Topic</th>
-            <th>Core Team</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="roster-body"><tr><td colspan="8" class="loading-spinner">⏳ Loading roster…</td></tr></tbody>
+        <thead><tr>
+          <th>Date</th><th>Worship 🎤</th><th>Word 📖</th><th>Kids 👶</th>
+          <th>Supper 🍽️</th><th>Topic</th><th>Venue 📍</th><th>Core Team</th><th></th>
+        </tr></thead>
+        <tbody id="roster-body"><tr><td colspan="9" class="loading-msg">⏳ Loading…</td></tr></tbody>
       </table>
     </div>
   </div>
 
-  <!-- GIFTS TAB -->
+  <!-- ═══ GIFTS ═══ -->
   <div class="panel" id="tab-gifts">
     <div class="gifts-header">
       <h2>✨ Spiritual Gifts</h2>
@@ -252,16 +250,31 @@ const GH_TOKEN = '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';
     <div class="members-grid" id="members-grid"></div>
   </div>
 
-  <!-- SONGS TAB -->
+  <!-- ═══ SONGS ═══ -->
   <div class="panel" id="tab-songs">
     <div class="songs-toolbar">
       <h2>🎵 Worship Songs</h2>
       <button class="btn-add-song" onclick="addSong()">＋ Add Song</button>
     </div>
-    <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc;">
-      🎶 Paste lyrics below so everyone can follow along. Click any song to expand.
+    <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc">🎶 Paste lyrics below so everyone can follow along. Click any song to expand.</div>
+    <div id="songs-list"><div class="loading-msg">⏳ Loading…</div></div>
+  </div>
+
+  <!-- ═══ PHOTOS ═══ -->
+  <div class="panel" id="tab-photos">
+    <div class="photos-toolbar">
+      <h2>📸 Photos</h2>
+      <label class="btn-upload-photo">
+        📷 Upload Photos
+        <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"/>
+      </label>
     </div>
-    <div id="songs-list"><div class="loading-spinner">⏳ Loading songs…</div></div>
+    <div class="notice" style="background:var(--purple-l);border-color:#c9a8f0">
+      🖼️ Upload your favourite Treasure Cell memories! Click any photo to view fullscreen.
+    </div>
+    <div class="photos-grid" id="photos-grid">
+      <div class="loading-msg" style="grid-column:1/-1">⏳ Loading photos…</div>
+    </div>
   </div>
 
 </main>
@@ -277,13 +290,13 @@ const GH_TOKEN = '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';
       <option value="2025 2H">2025 2H</option>
     </select>
     <label>Date</label><input id="rm-date" type="text" placeholder="e.g. 3 Jul 2026"/>
-    <label>Worship</label><input id="rm-worship" type="text" placeholder="e.g. Grace & Andrew"/>
+    <label>Worship</label><input id="rm-worship" type="text" placeholder="e.g. Andrew & Grace"/>
     <label>Word</label><input id="rm-word" type="text" placeholder="e.g. Luke"/>
     <label>Kids</label><input id="rm-kids" type="text" placeholder="e.g. Sarah – Topic"/>
     <label>Supper</label><textarea id="rm-supper" rows="2" placeholder="e.g. Daryl & Del, Ryan & Esther"></textarea>
-    <label>Topic / Lesson</label><textarea id="rm-topic" rows="2" placeholder="e.g. L9: Marriage & Singleness (1 Cor 7)"></textarea>
+    <label>Topic / Lesson</label><textarea id="rm-topic" rows="2" placeholder="e.g. Love that Builds Up (1 Cor 8:1-13)"></textarea>
     <label>Venue</label><input id="rm-venue" type="text" placeholder="Treasure Place"/>
-    <label>Core Team IC</label><input id="rm-core" type="text" placeholder="e.g. Joshua & Yuan Jing"/>
+    <label>Core Team IC</label><input id="rm-core" type="text" placeholder="e.g. Josh & YJ"/>
     <div class="modal-foot">
       <button class="m-del" id="rm-del" style="display:none" onclick="deleteSession()">🗑 Delete</button>
       <button class="m-cancel" onclick="closeRosterModal()">Cancel</button>
@@ -295,10 +308,7 @@ const GH_TOKEN = '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';
 <!-- FULLSCREEN LYRICS -->
 <div class="fs-overlay" id="fs-overlay">
   <div class="fs-header">
-    <div>
-      <div class="fs-title" id="fs-title"></div>
-      <div class="fs-artist" id="fs-artist"></div>
-    </div>
+    <div><div class="fs-title" id="fs-title"></div><div class="fs-artist" id="fs-artist"></div></div>
     <button class="fs-close" onclick="closeFullscreen()">✕</button>
   </div>
   <div class="fs-lyrics" id="fs-lyrics"></div>
@@ -309,16 +319,24 @@ const GH_TOKEN = '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';
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">✓ Saved!</div>
+<!-- PHOTO LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="lbBgClick(event)">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1,event)">‹</button>
+  <img id="lb-img" src="" alt=""/>
+  <button class="lb-nav lb-next" onclick="lbNav(1,event)">›</button>
+  <div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ─── UTILITIES ───────────────────────────────────────────
-function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function uid(){ return 'tc'+Date.now()+Math.floor(Math.random()*9999); }
+// ── UTILS ────────────────────────────────────────────────
+function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function uid(){return 'tc'+Date.now()+Math.floor(Math.random()*9999)}
 function showToast(msg){
-  const t=document.getElementById('toast'); t.textContent=msg||'✓ Saved!'; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500)
 }
 function showTab(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -327,336 +345,286 @@ function showTab(name,btn){
   btn.classList.add('active');
 }
 
-// ─── SHARED STORAGE via GitHub Gist ──────────────────────
-// We use a public GitHub Gist as a simple shared JSON backend.
-// Replace GIST_ID and TOKEN below with your own.
-// To set up:
-//   1. Go to https://gist.github.com and create a new secret gist
-//      with filename "treasurecell.json" and content "{}"
-//   2. Create a GitHub personal access token with "gist" scope at
-//      https://github.com/settings/tokens
-//   3. Paste the gist ID (from the URL) and token below.
-//
-// ⚠️  NOTE: The token is visible in the HTML source. Since this
-//     is a private cell group page with no sensitive data, this
-//     is acceptable. Do NOT do this for sensitive projects.
-
-const GIST_ID  = 'YOUR_GIST_ID_HERE';   // e.g. 'a1b2c3d4e5f6...'
-const GH_TOKEN = 'YOUR_GITHUB_PAT_HERE'; // e.g. 'ghp_xxxxxxxxxxxx'
-
+// ── GIST STORAGE ─────────────────────────────────────────
+const GIST_ID  = '56a679135ce9fbe125dce1ef26c5f975';
+const GH_TOKEN = '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';
 const GIST_FILE = 'treasurecell.json';
-const USE_GIST  = GIST_ID !== 'YOUR_GIST_ID_HERE';
 
-function setSyncStatus(state, msg) {
-  const dot  = document.getElementById('sync-dot');
-  const text = document.getElementById('sync-text');
-  dot.className = 'sync-dot ' + state;
-  text.textContent = msg;
+function setSyncStatus(state,msg){
+  document.getElementById('sync-dot').className='sync-dot '+state;
+  document.getElementById('sync-text').textContent=msg;
 }
 
-async function loadFromGist() {
-  if (!USE_GIST) {
-    setSyncStatus('error', 'Shared storage not configured — using local data');
-    return null;
-  }
-  try {
-    setSyncStatus('syncing', 'Loading shared data…');
-    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-      headers: { 'Authorization': `token ${GH_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+async function loadFromGist(){
+  try{
+    setSyncStatus('syncing','Loading…');
+    const res=await fetch(`https://api.github.com/gists/${GIST_ID}`,{
+      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}
     });
-    if (!res.ok) throw new Error('Gist fetch failed: ' + res.status);
-    const data = await res.json();
-    const content = data.files[GIST_FILE]?.content;
-    if (!content) throw new Error('File not found in gist');
-    setSyncStatus('synced', 'Synced · ' + new Date().toLocaleTimeString());
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const content=data.files[GIST_FILE]?.content;
+    if(!content||content==='{}')return null;
+    setSyncStatus('synced','Synced · '+new Date().toLocaleTimeString());
     return JSON.parse(content);
-  } catch(e) {
-    setSyncStatus('error', 'Could not load shared data: ' + e.message);
-    return null;
-  }
+  }catch(e){setSyncStatus('error','Load failed: '+e.message);return null}
 }
 
-async function saveToGist(payload) {
-  if (!USE_GIST) {
-    setSyncStatus('error', 'Shared storage not configured');
-    return false;
-  }
-  try {
-    setSyncStatus('syncing', 'Saving…');
-    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `token ${GH_TOKEN}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify(payload, null, 2) } } })
+async function saveToGist(payload){
+  try{
+    setSyncStatus('syncing','Saving…');
+    const res=await fetch(`https://api.github.com/gists/${GIST_ID}`,{
+      method:'PATCH',
+      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(payload,null,2)}}})
     });
-    if (!res.ok) throw new Error('Save failed: ' + res.status);
-    setSyncStatus('synced', 'Saved · ' + new Date().toLocaleTimeString());
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    setSyncStatus('synced','Saved · '+new Date().toLocaleTimeString());
     return true;
-  } catch(e) {
-    setSyncStatus('error', 'Save failed: ' + e.message);
-    return false;
+  }catch(e){setSyncStatus('error','Save failed: '+e.message);return false}
+}
+
+let DB={sessions:[],songs:[],photos:[]};
+
+async function refreshData(){
+  const remote=await loadFromGist();
+  if(remote){
+    // Merge: remote is master, but seed in any sessions not yet on remote
+    const remoteIds=new Set((remote.sessions||[]).map(s=>s.id));
+    const missing=getSeedSessions().filter(s=>!remoteIds.has(s.id));
+    DB.sessions=[...(remote.sessions||[]),...missing];
+    DB.songs=remote.songs&&remote.songs.length?remote.songs:getSeedSongs();
+    DB.photos=Array.isArray(remote.photos)?remote.photos:[];
+  }else{
+    DB.sessions=getSeedSessions();
+    DB.songs=getSeedSongs();
+    DB.photos=[];
   }
+  renderAll();
 }
 
-// Full data object stored in Gist
-let DB = { sessions: [], songs: [] };
-
-async function refreshData() {
-  const remote = await loadFromGist();
-  if (remote) {
-    // Merge: remote wins, but keep any seed sessions not yet in remote
-    const seedSessions = getSeedSessions();
-    const remoteIds = new Set((remote.sessions||[]).map(s=>s.id));
-    const missingSeeds = seedSessions.filter(s=>!remoteIds.has(s.id));
-    DB.sessions = [...(remote.sessions||[]), ...missingSeeds];
-    DB.songs    = remote.songs && remote.songs.length ? remote.songs : getSeedSongs();
-  } else {
-    // Fallback to seeds if gist not configured or failed
-    if (!DB.sessions.length) DB.sessions = getSeedSessions();
-    if (!DB.songs.length)    DB.songs    = getSeedSongs();
-  }
-  renderYearPills();
-  renderRoster();
-  renderSongs();
+async function persist(){
+  await saveToGist({sessions:DB.sessions,songs:DB.songs,photos:DB.photos});
+  renderAll();
 }
 
-async function persistAndRefresh() {
-  const ok = await saveToGist({ sessions: DB.sessions, songs: DB.songs });
-  if (!ok && !USE_GIST) {
-    // Fallback: localStorage so at least current user sees changes
-    localStorage.setItem('tc_db', JSON.stringify(DB));
-  }
-  renderYearPills();
-  renderRoster();
-  renderSongs();
-}
+function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos()}
 
-// ─── SEED DATA ───────────────────────────────────────────
-function getSeedSessions() {
-  return [
-    // 2026 2H
-    {id:'s2h1',  year:'2026 2H', date:'3 Jul 2026',  worship:'', word:'', kids:'', supper:'', topic:'L9: Marriage & Singleness (1 Cor 7:1-40)',             venue:'Treasure Place', core:''},
-    {id:'s2h2',  year:'2026 2H', date:'17 Jul 2026', worship:'', word:'', kids:'', supper:'', topic:'L10: Freedom & Conscience (1 Cor 8:1-13)',             venue:'Treasure Place', core:''},
-    {id:'s2h3',  year:'2026 2H', date:'7 Aug 2026',  worship:'', word:'', kids:'', supper:'', topic:'L11: Rights & Gospel Sacrifice (1 Cor 9:1-27)',        venue:'Treasure Place', core:''},
-    {id:'s2h4',  year:'2026 2H', date:'21 Aug 2026', worship:'', word:'', kids:'', supper:'', topic:'L12: Warnings from Israel\'s History (1 Cor 10:1-22)', venue:'Treasure Place', core:''},
-    {id:'s2h5',  year:'2026 2H', date:'4 Sep 2026',  worship:'', word:'', kids:'', supper:'', topic:'L13: Worship Order & the Lord\'s Supper (1 Cor 11)',   venue:'Treasure Place', core:''},
-    {id:'s2h6',  year:'2026 2H', date:'18 Sep 2026', worship:'', word:'', kids:'', supper:'', topic:'L14: Spiritual Gifts & the Body (1 Cor 12)',           venue:'Treasure Place', core:''},
-    {id:'s2h7',  year:'2026 2H', date:'2 Oct 2026',  worship:'', word:'', kids:'', supper:'', topic:'L15: The Greatest Gift — Love (1 Cor 13)',             venue:'Treasure Place', core:''},
-    {id:'s2h8',  year:'2026 2H', date:'16 Oct 2026', worship:'', word:'', kids:'', supper:'', topic:'L16: Prophecy & Tongues (1 Cor 14:1-40)',              venue:'Treasure Place', core:''},
-    {id:'s2h9',  year:'2026 2H', date:'6 Nov 2026',  worship:'', word:'', kids:'', supper:'', topic:'L17: The Resurrection of the Dead (1 Cor 15:1-58)',    venue:'Treasure Place', core:''},
-    {id:'s2h10', year:'2026 2H', date:'20 Nov 2026', worship:'', word:'', kids:'', supper:'', topic:'L18: Final Instructions & Greetings (1 Cor 16)',        venue:'Treasure Place', core:''},
-    // 2026 1H
-    {id:'s1', year:'2026 1H', date:'23 Jan 2026', worship:'Grace🎤 + Andrew🎸', word:'Luke',  kids:'Bible Story Video',                          supper:'Daryl & Delci, Ryan & Esther',         topic:"L1: The Unity Crisis: Division and Christ's Call (1 Cor 1:1-17)", venue:'Treasure Place', core:'Joshua & Yuan Jing'},
-    {id:'s2', year:'2026 1H', date:'6 Feb 2026',  worship:'Seth & Delci',       word:'Josh',  kids:'Yuan Jing – Jesus Brings Us Together',        supper:'Aunty Janette & Emily, Sarah & Tohken', topic:'L2: The Power of the Christian Message (1 Cor 1:18-2:5)', venue:'Treasure Place', core:'Ryan & Esther'},
-    {id:'s3', year:'2026 1H', date:'20 Feb 2026', worship:'Delci & Daryl',      word:'Emily', kids:"Sarah – God's Wisdom",                        supper:'Potluck – bring your favourite CNY food/snack', topic:'L3: Spiritual Immaturity and Carnality (1 Cor 2:6-3:4)', venue:'Treasure Place', core:'Daryl & Del'},
-    {id:'s4', year:'2026 1H', date:'6 Mar 2026',  worship:'Grace',              word:'Luke',  kids:'Jia Hui – God Helps Us Grow',                supper:'Grace & Andrew, Josh & Yuan',           topic:"L4: The Church is God's Temple (1 Cor 3:5-23)", venue:'Treasure Place', core:'Joshua & Yuan Jing'},
-    {id:'s5', year:'2026 1H', date:'20 Mar 2026', worship:'Daryl & Delci',      word:'Daryl & Hengs', kids:'Megan – Everything We Have Comes from God', supper:'David & Praizel, Tim & Jiahui', topic:'Social Justice Week', venue:'Pandan Valley', core:'Daryl & Del'},
-    {id:'s6', year:'2026 1H', date:'17 Apr 2026', worship:'Grace & Andrew',     word:'Josh',  kids:'Jia Hui – God Helps Us Choose What is Right', supper:'Luke, Seth & Megan',                   topic:'L6: Purity in the Church: A Call to Holy Living (1 Cor 5:1-7)', venue:'Treasure Place', core:'Ryan & Esther'},
-    {id:'s7', year:'2026 1H', date:'1 May 2026',  worship:'Seth & Delci',       word:'Emily', kids:'Yuan Jing – We are Loved and Valued by God',  supper:'Ryan & Esther, Grace & Andrew',         topic:'L7: Dispute in the Church (1 Cor 6:1-11)', venue:'Treasure Place', core:'Joshua & Yuan Jing'},
-    {id:'s8', year:'2026 1H', date:'15 May 2026', worship:'Grace & Andrew',     word:'Daryl', kids:'Megan – Loving God with our Actions',          supper:'Aunty Janette & Emily, Sarah & Tohken', topic:'L8: Defilement in the Church (1 Cor 6:12-20)', venue:'Treasure Place', core:'Daryl & Del'},
-    // 2025 2H
-    {id:'s9',  year:'2025 2H', date:'4 Jul 2025',  worship:'Andrew',             word:'Daryl', kids:'Bible Story Video',                      supper:'Everyone',                              topic:'', venue:'Treasure Place', core:'Daryl & Del'},
-    {id:'s10', year:'2025 2H', date:'18 Jul 2025', worship:'Delci🎤 + Seth🎸',   word:'Luke',  kids:'Sarah – The Twelve Spies',               supper:'Daryl & Del, Seth & Megan',             topic:'L1: Having Courage and Obedience (Josh 1:1-9)', venue:'Treasure Place', core:'Daryl & Del'},
-    {id:'s11', year:'2025 2H', date:'1 Aug 2025',  worship:'Grace🎤 + Andrew🎸', word:'Josh',  kids:'Jia Hui – Rehab and the Two Spies',      supper:'Ryan & Esther, Aunty Janette & Emily',  topic:"L2: Recognizing Faith's Power for Transformation (Josh 2)", venue:'', core:'Ryan & Esther'},
-    {id:'s12', year:'2025 2H', date:'15 Aug 2025', worship:'Delci🎤 + Seth🎸',   word:'Emily', kids:'Yuan Jing – Battle of Jericho',          supper:'Andrew & Grace, Jia Hui & Timothy',     topic:"L3: Stepping into God's Promises (Josh 3)", venue:'', core:'Josh & YJ'},
-    {id:'s13', year:'2025 2H', date:'5 Sep 2025',  worship:'Grace🎤 + Andrew🎸', word:'Luke',  kids:'Megan – Deborah',                        supper:'Luke, David & Praizel',                 topic:"L4: Remembering God's faithfulness (Josh 4)", venue:'Aspen Heights', core:'Ryan & Esther'},
-    {id:'s14', year:'2025 2H', date:'19 Sep 2025', worship:'Delci🎤 + Seth🎸',   word:'Emily', kids:'Bible Story Video',                      supper:'Ryan & Esther, Andrew & Grace',         topic:'L5: Being Spiritually Ready (Josh 5)', venue:'', core:'Josh & YJ'},
-    {id:'s15', year:'2025 2H', date:'3 Oct 2025',  worship:'Grace🎤 + Andrew🎸', word:'Daryl', kids:'Sarah – Gideon',                         supper:'Daryl & Del, Seth & Megan',             topic:'L6: Experiencing Victory through Obedience (Josh 6)', venue:'Aspen Heights', core:'Daryl & Del'},
-    {id:'s16', year:'2025 2H', date:'17 Oct 2025', worship:'Jia Hui + Tim',      word:'Luke',  kids:'Yuan Jing – Samson',                     supper:'Josh & YJ, Aunty Janette & Emily',      topic:'L7: Understanding the Cost to Disobedience (Josh 7)', venue:'Telok Blangah Towers', core:'Daryl & Del'},
-    {id:'s17', year:'2025 2H', date:'7 Nov 2025',  worship:'Delci🎤 + Seth🎸',   word:'Josh',  kids:"Megan – Hannah's Prayers & Samuel",      supper:'David & Praizel, Jia Hui & Tim',        topic:"L8: Knowing God's Mercy in our Failure (Josh 8)", venue:'Pandan Valley', core:'Josh & YJ'},
-    {id:'s18', year:'2025 2H', date:'21 Nov 2025', worship:'Grace🎤 + Andrew🎸', word:'Daryl', kids:'Jia Hui – Samuel & David and Goliath',   supper:'Luke, Josh & Yuan Jing',                topic:'L9+10: Guarding Against Complacency (Josh 23-24)', venue:'Treasure Place', core:'Ryan & Esther'},
-  ];
-}
+// ── SEED DATA ────────────────────────────────────────────
+function getSeedSessions(){return[
+  // ── 2026 2H — from spreadsheet ──
+  {id:'s2h1', year:'2026 2H',date:'3 Jul 2026',
+   worship:'Andrew & Grace',word:'Luke',kids:'Movie Night',
+   supper:'Daryl & Delci\nAunty Janette, Emily',
+   topic:'Love that Builds Up (1 Cor 8:1-13)',
+   venue:'Treasure Place',core:'Daryl & Delci'},
+  {id:'s2h2', year:'2026 2H',date:'17 Jul 2026',
+   worship:'Delci & Seth',word:'Emily',kids:'',
+   supper:'Luke',
+   topic:'Self-Denial for the Gospel (1 Cor 9:1-27)',
+   venue:'',core:'Josh & YJ'},
+  {id:'s2h3', year:'2026 2H',date:'7 Aug 2026',
+   worship:'Andrew & Grace',word:'Josh',kids:'',
+   supper:'Josh & YJ',
+   topic:'Lessons from the Wilderness: A Call to Faithfulness (1 Cor 10:1-11:1)',
+   venue:'',core:'Luke'},
+  {id:'s2h4', year:'2026 2H',date:'21 Aug 2026',
+   worship:'Delci & Seth',word:'Word Ministry Team',kids:'',
+   supper:'Ryan & Esther\nAndrew & Grace',
+   topic:'Faith & Science',
+   venue:'',core:'Daryl & Del'},
+  {id:'s2h5', year:'2026 2H',date:'4 Sep 2026',
+   worship:'Andrew & Grace',word:'Daryl',kids:'',
+   supper:'Daryl & Delci Toh\nKen and Sarah',
+   topic:'Spiritual Gifts (1 Cor 12:1-31)',
+   venue:'Aspen Heights',core:'Ryan & Esther'},
+  {id:'s2h6', year:'2026 2H',date:'18 Sep 2026',
+   worship:'Delci & Seth',word:'Luke',kids:'Sarah',
+   supper:'Andrew & Grace',
+   topic:'The Supremacy of Love (1 Cor 13:1-13)',
+   venue:'',core:'Andrew & Grace'},
+  {id:'s2h7', year:'2026 2H',date:'2 Oct 2026',
+   worship:'Andrew & Grace',word:'Josh',kids:'Sarah',
+   supper:'Josh & YJ',
+   topic:'Orderly Worship and Edification (1 Cor 14:1-40)',
+   venue:'Aspen Heights',core:'Daryl & Del'},
+  {id:'s2h8', year:'2026 2H',date:'16 Oct 2026',
+   worship:'Delci & Seth',word:'Emily',kids:'Jia Hui',
+   supper:'Ryan & Esther Toh\nKen and Sarah',
+   topic:'Our Resurrection Hope (1 Cor 15:1-19)',
+   venue:'Pandan Valley (Luke)',core:'Josh & YJ'},
+  {id:'s2h9', year:'2026 2H',date:'6 Nov 2026',
+   worship:'Andrew & Grace',word:'Daryl',kids:'Jia Hui',
+   supper:'Tim and Jia Hui',
+   topic:'The Transformed and Resurrected Body (1 Cor 15:35-58)',
+   venue:'Tim & Jia Hui (Pinetre...)',core:'Ryan & Esther'},
+  {id:'s2h10',year:'2026 2H',date:'20 Nov 2026',
+   worship:'Father Heart of God Retreat',word:'',kids:'',
+   supper:'',topic:'',venue:'',core:''},
+  // ── 2026 1H ──
+  {id:'s1',year:'2026 1H',date:'23 Jan 2026',worship:"Grace🎤 + Andrew🎸",word:'Luke',kids:'Bible Story Video',supper:'Daryl & Delci, Ryan & Esther',topic:"L1: The Unity Crisis: Division and Christ's Call (1 Cor 1:1-17)",venue:'Treasure Place',core:'Joshua & Yuan Jing'},
+  {id:'s2',year:'2026 1H',date:'6 Feb 2026',worship:'Seth & Delci',word:'Josh',kids:'Yuan Jing – Jesus Brings Us Together',supper:'Aunty Janette & Emily, Sarah & Tohken',topic:'L2: The Power of the Christian Message (1 Cor 1:18-2:5)',venue:'Treasure Place',core:'Ryan & Esther'},
+  {id:'s3',year:'2026 1H',date:'20 Feb 2026',worship:'Delci & Daryl',word:'Emily',kids:"Sarah – God's Wisdom",supper:'Potluck – bring your favourite CNY food/snack',topic:'L3: Spiritual Immaturity and Carnality (1 Cor 2:6-3:4)',venue:'Treasure Place',core:'Daryl & Del'},
+  {id:'s4',year:'2026 1H',date:'6 Mar 2026',worship:'Grace',word:'Luke',kids:'Jia Hui – God Helps Us Grow',supper:'Grace & Andrew, Josh & Yuan',topic:"L4: The Church is God's Temple (1 Cor 3:5-23)",venue:'Treasure Place',core:'Joshua & Yuan Jing'},
+  {id:'s5',year:'2026 1H',date:'20 Mar 2026',worship:'Daryl & Delci',word:'Daryl & Hengs',kids:'Megan – Everything We Have Comes from God',supper:'David & Praizel, Tim & Jiahui',topic:'Social Justice Week',venue:'Pandan Valley',core:'Daryl & Del'},
+  {id:'s6',year:'2026 1H',date:'17 Apr 2026',worship:'Grace & Andrew',word:'Josh',kids:'Jia Hui – God Helps Us Choose What is Right',supper:'Luke, Seth & Megan',topic:'L6: Purity in the Church: A Call to Holy Living (1 Cor 5:1-7)',venue:'Treasure Place',core:'Ryan & Esther'},
+  {id:'s7',year:'2026 1H',date:'1 May 2026',worship:'Seth & Delci',word:'Emily',kids:'Yuan Jing – We are Loved and Valued by God',supper:'Ryan & Esther, Grace & Andrew',topic:'L7: Dispute in the Church (1 Cor 6:1-11)',venue:'Treasure Place',core:'Joshua & Yuan Jing'},
+  {id:'s8',year:'2026 1H',date:'15 May 2026',worship:'Grace & Andrew',word:'Daryl',kids:'Megan – Loving God with our Actions',supper:'Aunty Janette & Emily, Sarah & Tohken',topic:'L8: Defilement in the Church (1 Cor 6:12-20)',venue:'Treasure Place',core:'Daryl & Del'},
+  // ── 2025 2H ──
+  {id:'s9',year:'2025 2H',date:'4 Jul 2025',worship:'Andrew',word:'Daryl',kids:'Bible Story Video',supper:'Everyone',topic:'',venue:'Treasure Place',core:'Daryl & Del'},
+  {id:'s10',year:'2025 2H',date:'18 Jul 2025',worship:'Delci🎤 + Seth🎸',word:'Luke',kids:'Sarah – The Twelve Spies',supper:'Daryl & Del, Seth & Megan',topic:'L1: Having Courage and Obedience (Josh 1:1-9)',venue:'Treasure Place',core:'Daryl & Del'},
+  {id:'s11',year:'2025 2H',date:'1 Aug 2025',worship:'Grace🎤 + Andrew🎸',word:'Josh',kids:'Jia Hui – Rehab and the Two Spies',supper:'Ryan & Esther, Aunty Janette & Emily',topic:"L2: Recognizing Faith's Power for Transformation (Josh 2)",venue:'',core:'Ryan & Esther'},
+  {id:'s12',year:'2025 2H',date:'15 Aug 2025',worship:'Delci🎤 + Seth🎸',word:'Emily',kids:'Yuan Jing – Battle of Jericho',supper:'Andrew & Grace, Jia Hui & Timothy',topic:"L3: Stepping into God's Promises (Josh 3)",venue:'',core:'Josh & YJ'},
+  {id:'s13',year:'2025 2H',date:'5 Sep 2025',worship:'Grace🎤 + Andrew🎸',word:'Luke',kids:'Megan – Deborah',supper:'Luke, David & Praizel',topic:"L4: Remembering God's faithfulness (Josh 4)",venue:'Aspen Heights',core:'Ryan & Esther'},
+  {id:'s14',year:'2025 2H',date:'19 Sep 2025',worship:'Delci🎤 + Seth🎸',word:'Emily',kids:'Bible Story Video',supper:'Ryan & Esther, Andrew & Grace',topic:'L5: Being Spiritually Ready (Josh 5)',venue:'',core:'Josh & YJ'},
+  {id:'s15',year:'2025 2H',date:'3 Oct 2025',worship:'Grace🎤 + Andrew🎸',word:'Daryl',kids:'Sarah – Gideon',supper:'Daryl & Del, Seth & Megan',topic:'L6: Experiencing Victory through Obedience (Josh 6)',venue:'Aspen Heights',core:'Daryl & Del'},
+  {id:'s16',year:'2025 2H',date:'17 Oct 2025',worship:'Jia Hui + Tim',word:'Luke',kids:'Yuan Jing – Samson',supper:'Josh & YJ, Aunty Janette & Emily',topic:'L7: Understanding the Cost to Disobedience (Josh 7)',venue:'Telok Blangah Towers',core:'Daryl & Del'},
+  {id:'s17',year:'2025 2H',date:'7 Nov 2025',worship:'Delci🎤 + Seth🎸',word:'Josh',kids:"Megan – Hannah's Prayers & Samuel",supper:'David & Praizel, Jia Hui & Tim',topic:"L8: Knowing God's Mercy in our Failure (Josh 8)",venue:'Pandan Valley',core:'Josh & YJ'},
+  {id:'s18',year:'2025 2H',date:'21 Nov 2025',worship:'Grace🎤 + Andrew🎸',word:'Daryl',kids:'Jia Hui – Samuel & David and Goliath',supper:'Luke, Josh & Yuan Jing',topic:'L9+10: Guarding Against Complacency (Josh 23-24)',venue:'Treasure Place',core:'Ryan & Esther'},
+]}
+function getSeedSongs(){return[
+  {id:'song1',title:'Great Are You Lord',artist:'All Sons & Daughters',lyrics:"It's Your breath in our lungs\nSo we pour out our praise, we pour out our praise\nIt's Your breath in our lungs\nSo we pour out our praise to You only\n\nAnd all the earth will shout Your praise\nOur hearts will cry, these bones will sing\nGreat are You Lord"},
+  {id:'song2',title:'What A Beautiful Name',artist:'Hillsong Worship',lyrics:"You were the Word at the beginning\nOne with God the Lord Most High\nYour hidden glory in creation\nNow revealed in You our Christ\n\nWhat a beautiful Name it is\nWhat a beautiful Name it is\nThe Name of Jesus Christ my King"},
+  {id:'song3',title:'Goodness of God',artist:'Bethel Music',lyrics:"I love You Lord\nOh Your mercy never fails me\nAll my days I've been held in Your hands\nFrom the moment that I wake up\nUntil I lay my head\nI will sing of the goodness of God"},
+]}
 
-function getSeedSongs() {
-  return [
-    { id:'song1', title:'Great Are You Lord', artist:'All Sons & Daughters', lyrics:"It's Your breath in our lungs\nSo we pour out our praise, we pour out our praise\nIt's Your breath in our lungs\nSo we pour out our praise to You only\n\nAnd all the earth will shout Your praise\nOur hearts will cry, these bones will sing\nGreat are You Lord" },
-    { id:'song2', title:'What A Beautiful Name', artist:'Hillsong Worship', lyrics:"You were the Word at the beginning\nOne with God the Lord Most High\nYour hidden glory in creation\nNow revealed in You our Christ\n\nWhat a beautiful Name it is\nWhat a beautiful Name it is\nThe Name of Jesus Christ my King" },
-    { id:'song3', title:'Goodness of God', artist:'Bethel Music', lyrics:"I love You Lord\nOh Your mercy never fails me\nAll my days I've been held in Your hands\nFrom the moment that I wake up\nUntil I lay my head\nI will sing of the goodness of God" },
-  ];
-}
-
-// ─── ROSTER ──────────────────────────────────────────────
-let activeYear = '2026 2H'; // DEFAULT: always land on 2026 2H
-let editSessionId = null;
-
-const YEAR_THEMES = {
-  '2026 2H': { theme: '1 Corinthians (cont.)', venue: 'Treasure Place (unless stated)', teal: true },
-  '2026 1H': { theme: '1 Corinthians',         venue: 'Treasure Place (unless stated)', teal: false },
-  '2025 2H': { theme: 'Joshua',                venue: 'Various',                        teal: false },
+// ── ROSTER ───────────────────────────────────────────────
+let activeYear='2026 2H';
+let editSessionId=null;
+const YEAR_THEMES={
+  '2026 2H':{theme:'1 Corinthians (cont.)',venue:'Treasure Place (unless stated)',bg:'var(--teal-l)',bc:'#80d8d4'},
+  '2026 1H':{theme:'1 Corinthians',venue:'Treasure Place (unless stated)',bg:'var(--gold-l)',bc:'#f0d080'},
+  '2025 2H':{theme:'Joshua',venue:'Various',bg:'var(--gold-l)',bc:'#f0d080'},
 };
+function isUpcoming(d){return!!d&&new Date(d)>new Date()}
+function allYears(){return[...new Set(DB.sessions.map(s=>s.year))].sort((a,b)=>b.localeCompare(a))}
 
-function isUpcoming(dateStr) {
-  if (!dateStr) return false;
-  return new Date(dateStr) > new Date();
+function renderYearPills(){
+  document.getElementById('year-pills').innerHTML=allYears().map(y=>
+    `<button class="ypill${y===activeYear?' active':''}${y==='2026 2H'?' new-half':''}" onclick="setYear('${y}')">${y}${y==='2026 2H'?' ✨':''}</button>`
+  ).join('');
+}
+function updateNotice(y){
+  const n=document.getElementById('roster-notice'),t=YEAR_THEMES[y]||{theme:y,venue:'Treasure Place',bg:'var(--gold-l)',bc:'#f0d080'};
+  n.innerHTML=`📖 Theme: <strong>${t.theme}</strong> &nbsp;·&nbsp; 🏠 Venue: ${t.venue}`;
+  n.style.background=t.bg;n.style.borderColor=t.bc;
+}
+function setYear(y){activeYear=y;renderYearPills();updateNotice(y);renderRoster()}
+
+function renderRoster(){
+  const rows=DB.sessions.filter(s=>s.year===activeYear);
+  const na=`<span style="color:#ccc;font-size:0.75rem">—</span>`;
+  document.getElementById('roster-body').innerHTML=rows.length
+    ?rows.map(s=>{
+      const up=isUpcoming(s.date);
+      return`<tr class="${up?'upcoming-row':''}">
+        <td><strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(s.date)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}</td>
+        <td>${s.worship?`<span class="badge worship">${x(s.worship)}</span>`:na}</td>
+        <td>${s.word?`<span class="badge word">${x(s.word)}</span>`:na}</td>
+        <td style="font-size:0.8rem;max-width:130px">${x(s.kids)||na}</td>
+        <td style="font-size:0.78rem;max-width:150px;white-space:pre-line">${x(s.supper)||na}</td>
+        <td style="font-size:0.78rem;max-width:200px;color:var(--mid)">${x(s.topic)||na}</td>
+        <td style="font-size:0.78rem;white-space:nowrap">${s.venue?`📍 ${x(s.venue)}`:na}</td>
+        <td>${s.core?`<span class="badge core">${x(s.core)}</span>`:na}</td>
+        <td><div class="row-actions">
+          <button class="ia ed" onclick="openRosterModal('${s.id}')">✏️</button>
+          <button class="ia dl" onclick="deleteSessionDirect('${s.id}')">🗑</button>
+        </div></td>
+      </tr>`;
+    }).join('')
+    :`<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet. Click ＋ to add one.</td></tr>`;
 }
 
-function allYears() {
-  return [...new Set(DB.sessions.map(s=>s.year))].sort((a,b)=>b.localeCompare(a));
-}
-
-function renderYearPills() {
-  const yrs = allYears();
-  const wrap = document.getElementById('year-pills');
-  wrap.innerHTML = yrs.map(y => {
-    const isNew = y === '2026 2H';
-    return `<button class="ypill${y===activeYear?' active':''}${isNew?' new-half':''}" onclick="setYear('${y}')">${y}${isNew?' ✨':''}</button>`;
-  }).join('');
-}
-
-function updateNotice(year) {
-  const notice = document.getElementById('roster-notice');
-  const info = YEAR_THEMES[year] || { theme: year, venue: 'Treasure Place', teal: false };
-  notice.innerHTML = `📖 Theme: <strong>${info.theme}</strong> &nbsp;·&nbsp; 🏠 Venue: ${info.venue}`;
-  notice.style.background = info.teal ? 'var(--teal-l)' : 'var(--gold-l)';
-  notice.style.borderColor = info.teal ? '#80d8d4' : '#f0d080';
-}
-
-function setYear(y) { activeYear = y; renderYearPills(); updateNotice(y); renderRoster(); }
-
-function renderRoster() {
-  const rows = DB.sessions.filter(s => s.year === activeYear);
-  const tb = document.getElementById('roster-body');
-  const tbc = `<span style="color:#ccc;font-size:0.75rem">TBC</span>`;
-  tb.innerHTML = rows.length
-    ? rows.map(s => {
-        const up = isUpcoming(s.date);
-        return `<tr class="${up?'upcoming-row':''}">
-          <td>
-            <strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(s.date)}</strong>
-            ${up ? '<br><span class="badge upcoming">upcoming</span>' : ''}
-            ${s.venue ? `<br><span style="font-size:0.72rem;color:var(--mid)">📍 ${x(s.venue)}</span>` : ''}
-          </td>
-          <td>${s.worship ? `<span class="badge worship">${x(s.worship)}</span>` : tbc}</td>
-          <td>${s.word    ? `<span class="badge word">${x(s.word)}</span>` : tbc}</td>
-          <td style="font-size:0.8rem;max-width:160px">${s.kids   || tbc}</td>
-          <td style="font-size:0.78rem;max-width:160px">${s.supper|| tbc}</td>
-          <td style="font-size:0.78rem;max-width:180px;color:var(--mid)">${x(s.topic)}</td>
-          <td>${s.core    ? `<span class="badge core">${x(s.core)}</span>` : tbc}</td>
-          <td><div class="row-actions">
-            <button class="ia ed" onclick="openRosterModal('${s.id}')" title="Edit">✏️</button>
-            <button class="ia dl" onclick="deleteSessionDirect('${s.id}')" title="Delete">🗑</button>
-          </div></td>
-        </tr>`;
-      }).join('')
-    : `<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet. Click ＋ to add one.</td></tr>`;
-}
-
-function openRosterModal(id) {
-  editSessionId = id;
-  const del = document.getElementById('rm-del');
-  const hy  = document.getElementById('rm-halfyear');
-  if (id) {
-    const s = DB.sessions.find(s=>s.id===id);
-    document.getElementById('rm-title').textContent = 'Edit Session';
-    hy.value = s.year || activeYear;
-    document.getElementById('rm-date').value    = s.date;
-    document.getElementById('rm-worship').value = s.worship;
-    document.getElementById('rm-word').value    = s.word;
-    document.getElementById('rm-kids').value    = s.kids;
-    document.getElementById('rm-supper').value  = s.supper;
-    document.getElementById('rm-topic').value   = s.topic;
-    document.getElementById('rm-venue').value   = s.venue;
-    document.getElementById('rm-core').value    = s.core;
-    del.style.display = 'inline-block';
-  } else {
-    document.getElementById('rm-title').textContent = 'Add Session';
-    hy.value = activeYear || '2026 2H';
-    ['rm-date','rm-worship','rm-word','rm-kids','rm-supper','rm-topic','rm-venue','rm-core'].forEach(f => document.getElementById(f).value = '');
-    del.style.display = 'none';
+function openRosterModal(id){
+  editSessionId=id;
+  if(id){
+    const s=DB.sessions.find(s=>s.id===id);
+    document.getElementById('rm-title').textContent='Edit Session';
+    document.getElementById('rm-halfyear').value=s.year||activeYear;
+    document.getElementById('rm-date').value=s.date;
+    document.getElementById('rm-worship').value=s.worship;
+    document.getElementById('rm-word').value=s.word;
+    document.getElementById('rm-kids').value=s.kids;
+    document.getElementById('rm-supper').value=s.supper;
+    document.getElementById('rm-topic').value=s.topic;
+    document.getElementById('rm-venue').value=s.venue;
+    document.getElementById('rm-core').value=s.core;
+    document.getElementById('rm-del').style.display='inline-block';
+  }else{
+    document.getElementById('rm-title').textContent='Add Session';
+    document.getElementById('rm-halfyear').value=activeYear;
+    ['rm-date','rm-worship','rm-word','rm-kids','rm-supper','rm-topic','rm-venue','rm-core'].forEach(f=>document.getElementById(f).value='');
+    document.getElementById('rm-del').style.display='none';
   }
   document.getElementById('roster-modal').classList.add('open');
 }
+function closeRosterModal(){document.getElementById('roster-modal').classList.remove('open');editSessionId=null}
+document.getElementById('roster-modal').onclick=e=>{if(e.target===e.currentTarget)closeRosterModal()}
 
-function closeRosterModal() {
-  document.getElementById('roster-modal').classList.remove('open');
-  editSessionId = null;
-}
-
-async function saveSession() {
-  const date = document.getElementById('rm-date').value.trim();
-  if (!date) { showToast('⚠️ Please enter a date'); return; }
-  const obj = {
-    id:      editSessionId || uid(),
-    year:    document.getElementById('rm-halfyear').value || activeYear,
+async function saveSession(){
+  const date=document.getElementById('rm-date').value.trim();
+  if(!date){showToast('⚠️ Please enter a date');return}
+  const obj={
+    id:editSessionId||uid(),
+    year:document.getElementById('rm-halfyear').value||activeYear,
     date,
-    worship: document.getElementById('rm-worship').value,
-    word:    document.getElementById('rm-word').value,
-    kids:    document.getElementById('rm-kids').value,
-    supper:  document.getElementById('rm-supper').value,
-    topic:   document.getElementById('rm-topic').value,
-    venue:   document.getElementById('rm-venue').value,
-    core:    document.getElementById('rm-core').value,
+    worship:document.getElementById('rm-worship').value,
+    word:document.getElementById('rm-word').value,
+    kids:document.getElementById('rm-kids').value,
+    supper:document.getElementById('rm-supper').value,
+    topic:document.getElementById('rm-topic').value,
+    venue:document.getElementById('rm-venue').value,
+    core:document.getElementById('rm-core').value,
   };
-  if (editSessionId) {
-    const i = DB.sessions.findIndex(s=>s.id===editSessionId);
-    DB.sessions[i] = obj;
-  } else {
-    DB.sessions.push(obj);
-  }
-  closeRosterModal();
-  showToast('💾 Saving…');
-  await persistAndRefresh();
-  showToast('✅ Session saved & shared!');
+  if(editSessionId){const i=DB.sessions.findIndex(s=>s.id===editSessionId);DB.sessions[i]=obj}
+  else DB.sessions.push(obj);
+  closeRosterModal();showToast('💾 Saving…');
+  await persist();showToast('✅ Saved & shared!');
+}
+async function deleteSession(){
+  DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);
+  closeRosterModal();await persist();showToast('🗑 Deleted');
+}
+async function deleteSessionDirect(id){
+  if(!confirm('Delete this session?'))return;
+  DB.sessions=DB.sessions.filter(s=>s.id!==id);
+  await persist();showToast('🗑 Deleted');
 }
 
-async function deleteSession() {
-  DB.sessions = DB.sessions.filter(s=>s.id!==editSessionId);
-  closeRosterModal();
-  await persistAndRefresh();
-  showToast('🗑 Session deleted');
-}
-
-async function deleteSessionDirect(id) {
-  if (!confirm('Delete this session?')) return;
-  DB.sessions = DB.sessions.filter(s=>s.id!==id);
-  await persistAndRefresh();
-  showToast('🗑 Session deleted');
-}
-
-document.getElementById('roster-modal').onclick = e => { if(e.target===e.currentTarget) closeRosterModal(); };
-
-// ─── SPIRITUAL GIFTS ─────────────────────────────────────
-const GIFTS_DATA = [
-  { rank:1, name:'Exhortation',    count:7, max:7, cls:'r1', fill:'fill-1' },
-  { rank:2, name:'Discernment',    count:5, max:7, cls:'r2', fill:'fill-2' },
-  { rank:3, name:'Prophecy',       count:5, max:7, cls:'r3', fill:'fill-3' },
-  { rank:4, name:'Faith',          count:4, max:7, cls:'r4', fill:'fill-4' },
-  { rank:5, name:'Pastor/Shepherd',count:4, max:7, cls:'r5', fill:'fill-5' },
+// ── GIFTS ────────────────────────────────────────────────
+const GIFTS_DATA=[
+  {rank:1,name:'Exhortation',count:7,max:7,cls:'r1',fill:'fill-1'},
+  {rank:2,name:'Discernment',count:5,max:7,cls:'r2',fill:'fill-2'},
+  {rank:3,name:'Prophecy',count:5,max:7,cls:'r3',fill:'fill-3'},
+  {rank:4,name:'Faith',count:4,max:7,cls:'r4',fill:'fill-4'},
+  {rank:5,name:'Pastor/Shepherd',count:4,max:7,cls:'r5',fill:'fill-5'},
 ];
-const MEMBERS_DATA = [
-  { name:'Daryl',     gifts:['Exhortation','Prophecy'],  color:'#f0a500', emoji:'🌟' },
-  { name:'Delci',     gifts:['Administration','Helps'],  color:'#d06030', emoji:'🌺' },
-  { name:'Emily',     gifts:['Exhortation','Faith'],     color:'#e8637a', emoji:'🌸' },
-  { name:'Grace',     gifts:['Exhortation','Prophecy'],  color:'#9b72cf', emoji:'💜' },
-  { name:'Josh',      gifts:['Exhortation','Faith'],     color:'#3aafa9', emoji:'🌊' },
-  { name:'Luke',      gifts:['Exhortation','Faith'],     color:'#e67e22', emoji:'🔥' },
-  { name:'Seth',      gifts:['Exhortation','Pastor'],    color:'#5d8a3c', emoji:'🌿' },
-  { name:'Tim',       gifts:['Exhortation','Pastor'],    color:'#c05080', emoji:'🎯' },
-  { name:'Andrew',    gifts:['Discernment','Pastor'],    color:'#3a80d0', emoji:'⚡' },
-  { name:'Esther',    gifts:['Discernment'],             color:'#8050c0', emoji:'✨' },
-  { name:'Megan',     gifts:['Discernment'],             color:'#50a080', emoji:'🌻' },
-  { name:'Yuan Jing', gifts:['Discernment'],             color:'#d0a030', emoji:'🎋' },
-  { name:'Jiahui',    gifts:['Prophecy'],                color:'#a04060', emoji:'🌹' },
-  { name:'Ryan',      gifts:['Prophecy'],                color:'#4070a0', emoji:'💙' },
-  { name:'Sarah',     gifts:['Prophecy'],                color:'#60a050', emoji:'🍀' },
-  { name:'Praizel',   gifts:['Faith'],                   color:'#c08030', emoji:'🌾' },
+const MEMBERS_DATA=[
+  {name:'Daryl',gifts:['Exhortation','Prophecy'],color:'#f0a500',emoji:'🌟'},
+  {name:'Delci',gifts:['Administration','Helps'],color:'#d06030',emoji:'🌺'},
+  {name:'Emily',gifts:['Exhortation','Faith'],color:'#e8637a',emoji:'🌸'},
+  {name:'Grace',gifts:['Exhortation','Prophecy'],color:'#9b72cf',emoji:'💜'},
+  {name:'Josh',gifts:['Exhortation','Faith'],color:'#3aafa9',emoji:'🌊'},
+  {name:'Luke',gifts:['Exhortation','Faith'],color:'#e67e22',emoji:'🔥'},
+  {name:'Seth',gifts:['Exhortation','Pastor'],color:'#5d8a3c',emoji:'🌿'},
+  {name:'Tim',gifts:['Exhortation','Pastor'],color:'#c05080',emoji:'🎯'},
+  {name:'Andrew',gifts:['Discernment','Pastor'],color:'#3a80d0',emoji:'⚡'},
+  {name:'Esther',gifts:['Discernment'],color:'#8050c0',emoji:'✨'},
+  {name:'Megan',gifts:['Discernment'],color:'#50a080',emoji:'🌻'},
+  {name:'Yuan Jing',gifts:['Discernment'],color:'#d0a030',emoji:'🎋'},
+  {name:'Jiahui',gifts:['Prophecy'],color:'#a04060',emoji:'🌹'},
+  {name:'Ryan',gifts:['Prophecy'],color:'#4070a0',emoji:'💙'},
+  {name:'Sarah',gifts:['Prophecy'],color:'#60a050',emoji:'🍀'},
+  {name:'Praizel',gifts:['Faith'],color:'#c08030',emoji:'🌾'},
 ];
-const GIFT_COLORS = {
-  'Exhortation':    {bg:'#fff4d6',color:'#e67e22'},
-  'Discernment':    {bg:'#f0f0f0',color:'#868e96'},
-  'Prophecy':       {bg:'#f0e8e0',color:'#a0522d'},
-  'Faith':          {bg:'#f0e8ff',color:'#7950b0'},
-  'Pastor':         {bg:'#e8f4e8',color:'#3a7a3a'},
-  'Pastor/Shepherd':{bg:'#e8f4e8',color:'#3a7a3a'},
-  'Administration': {bg:'#e8f0ff',color:'#3a5ab8'},
-  'Helps':          {bg:'#fff0e8',color:'#c06030'},
+const GIFT_COLORS={
+  'Exhortation':{bg:'#fff4d6',color:'#e67e22'},'Discernment':{bg:'#f0f0f0',color:'#868e96'},
+  'Prophecy':{bg:'#f0e8e0',color:'#a0522d'},'Faith':{bg:'#f0e8ff',color:'#7950b0'},
+  'Pastor':{bg:'#e8f4e8',color:'#3a7a3a'},'Pastor/Shepherd':{bg:'#e8f4e8',color:'#3a7a3a'},
+  'Administration':{bg:'#e8f0ff',color:'#3a5ab8'},'Helps':{bg:'#fff0e8',color:'#c06030'},
 };
-function renderGifts() {
-  document.getElementById('gift-bars').innerHTML = GIFTS_DATA.map(g=>`
+function renderGifts(){
+  document.getElementById('gift-bars').innerHTML=GIFTS_DATA.map(g=>`
     <div class="gift-row">
       <div class="gift-rank ${g.cls}">${g.rank}</div>
       <div class="gift-info">
@@ -665,35 +633,29 @@ function renderGifts() {
       </div>
       <div class="gift-count">${g.count} member${g.count!==1?'s':''}</div>
     </div>`).join('');
-  document.getElementById('members-grid').innerHTML = MEMBERS_DATA.map(m=>`
+  document.getElementById('members-grid').innerHTML=MEMBERS_DATA.map(m=>`
     <div class="member-card">
       <div class="member-avatar" style="background:${m.color}22;color:${m.color}">${m.emoji}</div>
       <div class="member-name">${x(m.name)}</div>
       <div class="member-gifts">${m.gifts.slice(0,2).map(g=>{
         const gc=GIFT_COLORS[g]||{bg:'#f0ece3',color:'#666'};
-        return `<span class="mgift" style="background:${gc.bg};color:${gc.color}">${g}</span>`;
+        return`<span class="mgift" style="background:${gc.bg};color:${gc.color}">${g}</span>`
       }).join('')}</div>
     </div>`).join('');
 }
 
-// ─── SONGS ───────────────────────────────────────────────
-function renderSongs() {
-  const list = document.getElementById('songs-list');
-  if (!DB.songs.length) {
-    list.innerHTML = '<div class="card" style="text-align:center;color:var(--mid);padding:32px">No songs yet. Click ＋ to add one! 🎶</div>';
-    return;
-  }
-  list.innerHTML = DB.songs.map(s=>`
+// ── SONGS ────────────────────────────────────────────────
+function renderSongs(){
+  const list=document.getElementById('songs-list');
+  if(!DB.songs.length){list.innerHTML='<div class="card" style="text-align:center;color:var(--mid);padding:32px">No songs yet 🎶</div>';return}
+  list.innerHTML=DB.songs.map(s=>`
     <div class="song-card" id="sc-${s.id}">
       <div class="song-header" onclick="toggleSong('${s.id}')">
-        <div class="song-title-wrap">
-          <span class="song-icon">🎵</span>
-          <span class="song-title">${x(s.title)}</span>
-        </div>
+        <div class="song-title-wrap"><span class="song-icon">🎵</span><span class="song-title">${x(s.title)}</span></div>
         <div class="song-actions" onclick="event.stopPropagation()">
-          <button class="ia ed" onclick="openFullscreen('${s.id}')" title="Fullscreen">⛶</button>
-          <button class="ia ed" onclick="editSongTitle('${s.id}')" title="Rename">✏️</button>
-          <button class="ia dl" onclick="deleteSong('${s.id}')" title="Delete">🗑</button>
+          <button class="ia ed" onclick="openFullscreen('${s.id}')">⛶</button>
+          <button class="ia ed" onclick="editSongTitle('${s.id}')">✏️</button>
+          <button class="ia dl" onclick="deleteSong('${s.id}')">🗑</button>
         </div>
         <span class="song-chevron">▼</span>
       </div>
@@ -702,74 +664,146 @@ function renderSongs() {
           <input id="art-${s.id}" value="${x(s.artist)}" placeholder="Artist / Band"/>
           <button class="song-save-btn" onclick="saveSongLyrics('${s.id}')">💾 Save</button>
         </div>
-        <textarea class="song-lyrics" id="lyr-${s.id}" placeholder="Paste song lyrics here…">${x(s.lyrics)}</textarea>
+        <textarea class="song-lyrics" id="lyr-${s.id}" placeholder="Paste lyrics…">${x(s.lyrics)}</textarea>
       </div>
     </div>`).join('');
 }
-
-function toggleSong(id) { document.getElementById('sc-'+id).classList.toggle('open'); }
-
-async function addSong() {
-  const title = prompt('Song title:');
-  if (!title) return;
-  DB.songs.push({ id: uid(), title: title.trim(), artist:'', lyrics:'' });
-  await persistAndRefresh();
-  setTimeout(()=>{ const c=document.getElementById('sc-'+DB.songs[DB.songs.length-1].id); if(c) c.classList.add('open'); },100);
+function toggleSong(id){document.getElementById('sc-'+id).classList.toggle('open')}
+async function addSong(){
+  const t=prompt('Song title:');if(!t)return;
+  const s={id:uid(),title:t.trim(),artist:'',lyrics:''};
+  DB.songs.push(s);await persist();
+  setTimeout(()=>document.getElementById('sc-'+s.id)?.classList.add('open'),80);
   showToast('✅ Song added!');
 }
-
-async function editSongTitle(id) {
-  const s = DB.songs.find(s=>s.id===id);
-  const t = prompt('Rename song:', s.title);
-  if (t && t.trim()) { s.title = t.trim(); await persistAndRefresh(); showToast('✅ Renamed!'); }
+async function editSongTitle(id){
+  const s=DB.songs.find(s=>s.id===id);
+  const t=prompt('Rename:',s.title);
+  if(t&&t.trim()){s.title=t.trim();await persist();showToast('✅ Renamed!')}
+}
+async function deleteSong(id){
+  if(!confirm('Delete this song?'))return;
+  DB.songs=DB.songs.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted');
+}
+async function saveSongLyrics(id){
+  const s=DB.songs.find(s=>s.id===id);
+  s.lyrics=document.getElementById('lyr-'+id).value;
+  s.artist=document.getElementById('art-'+id).value;
+  await persist();showToast('✅ Saved & shared!');
 }
 
-async function deleteSong(id) {
-  if (!confirm('Delete this song?')) return;
-  DB.songs = DB.songs.filter(s=>s.id!==id);
-  await persistAndRefresh();
-  showToast('🗑 Song deleted');
+// ── FULLSCREEN ───────────────────────────────────────────
+let fsFontSize=18,fsDark=true;
+function openFullscreen(id){
+  const s=DB.songs.find(s=>s.id===id);if(!s)return;
+  const el=document.getElementById('lyr-'+id);if(el)s.lyrics=el.value;
+  document.getElementById('fs-title').textContent=s.title;
+  document.getElementById('fs-artist').textContent=s.artist||'';
+  document.getElementById('fs-lyrics').textContent=s.lyrics||'(No lyrics yet)';
+  document.getElementById('fs-lyrics').style.fontSize=fsFontSize+'px';
+  applyFsBg();document.getElementById('fs-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeFullscreen(){document.getElementById('fs-overlay').classList.remove('open');document.body.style.overflow=''}
+function fsFont(d){fsFontSize=Math.min(36,Math.max(12,fsFontSize+d));document.getElementById('fs-lyrics').style.fontSize=fsFontSize+'px'}
+function fsBg(){fsDark=!fsDark;applyFsBg()}
+function applyFsBg(){
+  const ov=document.getElementById('fs-overlay'),ly=document.getElementById('fs-lyrics');
+  ov.style.background=fsDark?'#1a120a':'#fffdf7';
+  ly.style.color=fsDark?'rgba(255,255,255,0.92)':'#3a2e22';
 }
 
-async function saveSongLyrics(id) {
-  const s = DB.songs.find(s=>s.id===id);
-  s.lyrics = document.getElementById('lyr-'+id).value;
-  s.artist = document.getElementById('art-'+id).value;
-  await persistAndRefresh();
-  showToast('✅ Lyrics saved & shared!');
+// ── PHOTOS ───────────────────────────────────────────────
+const GRID=25; // 5×5
+let lbIdx=0;
+
+function renderPhotos(){
+  const photos=DB.photos||[];
+  let html='';
+  for(let i=0;i<GRID;i++){
+    if(i<photos.length){
+      html+=`<div class="photo-cell" onclick="openLightbox(${i})">
+        <img src="${photos[i].dataUrl}" alt="photo ${i+1}"/>
+        <button class="photo-del" onclick="deletePhoto(event,${i})">✕</button>
+      </div>`;
+    }else{
+      html+=`<div class="photo-empty" onclick="document.getElementById('photo-input').click()">
+        <span class="photo-empty-icon">📷</span>
+        <span>Add photo</span>
+      </div>`;
+    }
+  }
+  document.getElementById('photos-grid').innerHTML=html;
 }
 
-// ─── FULLSCREEN LYRICS ────────────────────────────────────
-let fsFontSize = 18;
-let fsDark = true;
-
-function openFullscreen(id) {
-  const s = DB.songs.find(s=>s.id===id);
-  if (!s) return;
-  const lyrEl = document.getElementById('lyr-'+id);
-  if (lyrEl) s.lyrics = lyrEl.value;
-  document.getElementById('fs-title').textContent  = s.title;
-  document.getElementById('fs-artist').textContent = s.artist || '';
-  document.getElementById('fs-lyrics').textContent = s.lyrics || '(No lyrics yet — close and paste some!)';
-  document.getElementById('fs-lyrics').style.fontSize = fsFontSize+'px';
-  applyFsBg();
-  document.getElementById('fs-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+async function handlePhotoUpload(ev){
+  const files=Array.from(ev.target.files);
+  if(!files.length)return;
+  const slots=GRID-(DB.photos.length);
+  if(slots<=0){showToast('⚠️ Gallery full (25 photos max)');ev.target.value='';return}
+  const toAdd=files.slice(0,slots);
+  showToast('⏳ Processing…');
+  for(const f of toAdd){
+    const raw=await toDataUrl(f);
+    const compressed=await compressImg(raw,900,0.78);
+    DB.photos.push({id:uid(),dataUrl:compressed});
+  }
+  ev.target.value='';
+  await persist();
+  showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
 }
-function closeFullscreen() { document.getElementById('fs-overlay').classList.remove('open'); document.body.style.overflow=''; }
-function fsFont(d) { fsFontSize=Math.min(36,Math.max(12,fsFontSize+d)); document.getElementById('fs-lyrics').style.fontSize=fsFontSize+'px'; }
-function fsBg() { fsDark=!fsDark; applyFsBg(); }
-function applyFsBg() {
-  const ov=document.getElementById('fs-overlay'), ly=document.getElementById('fs-lyrics');
-  if(fsDark){ ov.style.background='#1a120a'; ly.style.color='rgba(255,255,255,0.92)'; }
-  else { ov.style.background='#fffdf7'; ly.style.color='#3a2e22'; }
+function toDataUrl(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=rej;r.readAsDataURL(file)})
 }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeFullscreen(); });
+function compressImg(url,maxW,q){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      res(c.toDataURL('image/jpeg',q));
+    };
+    img.src=url;
+  })
+}
+async function deletePhoto(ev,i){
+  ev.stopPropagation();
+  if(!confirm('Remove this photo?'))return;
+  DB.photos.splice(i,1);await persist();showToast('🗑 Photo removed');
+}
 
-// ─── INIT ─────────────────────────────────────────────────
+// lightbox
+function openLightbox(i){
+  lbIdx=i;
+  document.getElementById('lb-img').src=DB.photos[i].dataUrl;
+  document.getElementById('lb-counter').textContent=(i+1)+' / '+DB.photos.length;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+function lbBgClick(e){if(e.target===document.getElementById('lightbox'))closeLightbox()}
+function lbNav(dir,e){
+  e.stopPropagation();
+  lbIdx=(lbIdx+dir+DB.photos.length)%DB.photos.length;
+  document.getElementById('lb-img').src=DB.photos[lbIdx].dataUrl;
+  document.getElementById('lb-counter').textContent=(lbIdx+1)+' / '+DB.photos.length;
+}
+
+// keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('lightbox').classList.contains('open')){
+    if(e.key==='ArrowLeft')lbNav(-1,{stopPropagation:()=>{}});
+    else if(e.key==='ArrowRight')lbNav(1,{stopPropagation:()=>{}});
+    else if(e.key==='Escape')closeLightbox();
+  }else if(e.key==='Escape')closeFullscreen();
+});
+
+// ── INIT ─────────────────────────────────────────────────
 updateNotice(activeYear);
 renderGifts();
-refreshData(); // loads from Gist (or seeds) and renders everything
+refreshData();
 </script>
 </body>
 </html>
