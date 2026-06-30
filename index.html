@@ -386,35 +386,24 @@ async function saveToDB(payload){
 
 let DB={sessions:[],songs:[],photos:[]};
 
-// Seed IDs that should always reflect the latest data from the source spreadsheet.
-// Any session with one of these IDs gets overwritten with fresh seed data on every load.
-const AUTHORITATIVE_SEED_IDS=new Set(['s2h1','s2h2','s2h3','s2h4','s2h5','s2h6','s2h7','s2h8','s2h9','s2h10']);
-
 async function refreshData(){
   const seed=getSeedSessions();
-  const seedMap=Object.fromEntries(seed.map(s=>[s.id,s]));
 
   const remote=await loadFromDB();
   if(remote){
-    // Start with remote sessions, but force-overwrite authoritative seed rows
-    const remoteSessions=(remote.sessions||[]).map(s=>
-      AUTHORITATIVE_SEED_IDS.has(s.id)?seedMap[s.id]:s
-    );
-    // Add any seed rows that don't exist in remote at all
-    const remoteIds=new Set(remoteSessions.map(s=>s.id));
+    // Remote (Supabase) is the source of truth. Seed data only fills in rows
+    // that genuinely don't exist yet in the database — it NEVER overwrites
+    // a row that's already there, so edits from any device always persist.
+    const remoteIds=new Set((remote.sessions||[]).map(s=>s.id));
     const missing=seed.filter(s=>!remoteIds.has(s.id));
-    DB.sessions=[...remoteSessions,...missing];
+    DB.sessions=[...(remote.sessions||[]),...missing];
     DB.songs=remote.songs&&remote.songs.length?remote.songs:getSeedSongs();
     DB.photos=Array.isArray(remote.photos)?remote.photos:[];
   }else{
     try{const lb=JSON.parse(localStorage.getItem('tc_db')||'{}');
-      // Same force-overwrite for localStorage fallback
-      const lbSessions=(lb.sessions||[]).map(s=>
-        AUTHORITATIVE_SEED_IDS.has(s.id)?seedMap[s.id]:s
-      );
-      const lbIds=new Set(lbSessions.map(s=>s.id));
+      const lbIds=new Set((lb.sessions||[]).map(s=>s.id));
       const missing=seed.filter(s=>!lbIds.has(s.id));
-      DB.sessions=[...lbSessions,...missing];
+      DB.sessions=[...(lb.sessions||[]),...missing];
       DB.songs=lb.songs||getSeedSongs();
       DB.photos=lb.photos||[];
     }catch{DB.sessions=seed;DB.songs=getSeedSongs();DB.photos=[];}
