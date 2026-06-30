@@ -13,8 +13,10 @@
     .site-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
     .site-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3rem);color:white;text-shadow:0 2px 8px rgba(0,0,0,.2);position:relative}
     .site-header p{color:rgba(255,255,255,.88);font-size:.95rem;margin-top:6px;font-weight:600;letter-spacing:.04em;position:relative}
-    nav{display:flex;justify-content:center;background:white;border-bottom:3px solid var(--border);flex-wrap:wrap}
-    nav button{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:14px 18px;border:none;background:white;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .18s}
+    nav{display:flex;justify-content:stretch;background:white;border-bottom:3px solid var(--border)}
+    nav button{font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;padding:12px 4px;border:none;background:white;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .18s;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1.2}
+    nav button .nav-icon{font-size:1.2rem}
+    nav button .nav-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
     nav button:hover{color:var(--amber);background:var(--gold-l)}
     nav button.active{color:var(--amber);border-bottom-color:var(--amber);background:var(--gold-l)}
     main{max-width:960px;margin:0 auto;padding:28px 16px 70px}
@@ -165,6 +167,18 @@
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
     .loading-msg{text-align:center;padding:40px;color:var(--mid);font-weight:700;font-size:.9rem}
     .inline-edit-hint{font-size:.72rem;color:var(--mid);font-weight:600;margin-bottom:8px;padding:6px 12px;background:var(--gold-l);border-radius:8px;border:1px solid var(--border);display:inline-block}
+    @media(max-width:480px){
+      .site-header{padding:20px 16px 16px}
+      .site-header h1{font-size:1.7rem}
+      .site-header p{font-size:.82rem}
+      main{padding:16px 10px 80px}
+      .roster-toolbar{gap:6px}
+      .roster-toolbar h2{font-size:1.1rem}
+      .btn-add{font-size:.8rem;padding:8px 12px}
+      .notice{font-size:.8rem;padding:10px 12px}
+      .sync-bar{font-size:.7rem;padding:6px 10px}
+      .modal{padding:20px 16px}
+    }
   </style>
 </head>
 <body>
@@ -175,10 +189,10 @@
 </div>
 
 <nav>
-  <button class="active" onclick="showTab('roster',this)">📋 Roster</button>
-  <button onclick="showTab('gifts',this)">✨ Spiritual Gifts</button>
-  <button onclick="showTab('songs',this)">🎵 Worship Songs</button>
-  <button onclick="showTab('photos',this)">📸 Photos</button>
+  <button class="active" onclick="showTab('roster',this)"><span class="nav-icon">📋</span><span class="nav-label">Roster</span></button>
+  <button onclick="showTab('gifts',this)"><span class="nav-icon">✨</span><span class="nav-label">Gifts</span></button>
+  <button onclick="showTab('songs',this)"><span class="nav-icon">🎵</span><span class="nav-label">Songs</span></button>
+  <button onclick="showTab('photos',this)"><span class="nav-icon">📸</span><span class="nav-label">Photos</span></button>
 </nav>
 
 <main>
@@ -341,7 +355,10 @@ async function loadFromDB(){
     const res=await fetch(`${SUPA_URL}/rest/v1/celldata?id=eq.1&select=payload`,{
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
     });
-    if(!res.ok)throw new Error('HTTP '+res.status);
+    if(!res.ok){
+      const body=await res.text();
+      throw new Error('HTTP '+res.status+' '+body.slice(0,120));
+    }
     const rows=await res.json();
     if(!rows.length||!rows[0].payload||rows[0].payload==='{}')return null;
     setSyncStatus('synced','Synced · '+new Date().toLocaleTimeString());
@@ -358,7 +375,10 @@ async function saveToDB(payload){
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
       body:JSON.stringify({payload:JSON.stringify(payload)})
     });
-    if(!res.ok)throw new Error('HTTP '+res.status);
+    if(!res.ok){
+      const body=await res.text();
+      throw new Error('HTTP '+res.status+' '+body.slice(0,120));
+    }
     setSyncStatus('synced','Saved · '+new Date().toLocaleTimeString());
     return true;
   }catch(e){setSyncStatus('error','Save failed: '+e.message);return false}
