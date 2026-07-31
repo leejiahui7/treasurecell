@@ -259,6 +259,11 @@
         <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"/>
       </label>
     </div>
+    <div class="sync-bar">
+      <div class="sync-dot syncing" id="photo-sync-dot"></div>
+      <span id="photo-sync-text">Connecting…</span>
+      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
+    </div>
     <div class="notice" style="background:var(--purple-l);border-color:#c9a8f0">
       🖼️ Upload your favourite Treasure Cell memories! Click any photo to view fullscreen.
     </div>
@@ -346,6 +351,9 @@ function showTab(name,btn){
 function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
+  const pd=document.getElementById('photo-sync-dot'),pt=document.getElementById('photo-sync-text');
+  if(pd){pd.className='sync-dot '+state}
+  if(pt){pt.textContent=msg}
 }
 
 async function loadFromDB(){
@@ -415,6 +423,10 @@ async function persist(){
   const ok=await saveToDB({sessions:DB.sessions,songs:DB.songs,photos:DB.photos});
   try{localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions,songs:DB.songs,photos:DB.photos}))}catch{}
   renderAll();
+  if(!ok){
+    showToast('⚠️ Not synced — saved on this device only. Tap Refresh & try again.');
+  }
+  return ok;
 }
 
 function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos()}
@@ -527,7 +539,7 @@ const MULTILINE_FIELDS=['supper','topic','kids'];
 function makeEditable(event,sessionId,field){
   // ignore clicks on buttons inside the cell
   if(event.target.tagName==='BUTTON'||event.target.tagName==='INPUT'||event.target.tagName==='TEXTAREA')return;
-  
+
   // cancel any existing inline edit first
   if(currentlyEditingId){
     const prev=currentlyEditingId;
@@ -605,8 +617,8 @@ async function saveInlineEdit(sessionId,field){
   currentlyEditingId=null;
   restoreDisplay(sessionId,field,newVal);
   showToast('💾 Saving…');
-  await persist();
-  showToast('✅ Saved & synced!');
+  const ok=await persist();
+  if(ok)showToast('✅ Saved & synced!');
 }
 
 function openRosterModal(id){
@@ -640,10 +652,10 @@ async function saveSession(){
     core:document.getElementById('rm-core').value};
   if(editSessionId){const i=DB.sessions.findIndex(s=>s.id===editSessionId);DB.sessions[i]=obj}
   else DB.sessions.push(obj);
-  closeRosterModal();showToast('💾 Saving…');await persist();showToast('✅ Saved & shared!');
+  closeRosterModal();showToast('💾 Saving…');const ok=await persist();if(ok)showToast('✅ Saved & shared!');
 }
-async function deleteSession(){DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);closeRosterModal();await persist();showToast('🗑 Deleted')}
-async function deleteSessionDirect(id){if(!confirm('Delete this session?'))return;DB.sessions=DB.sessions.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted')}
+async function deleteSession(){DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);closeRosterModal();const ok=await persist();if(ok)showToast('🗑 Deleted')}
+async function deleteSessionDirect(id){if(!confirm('Delete this session?'))return;DB.sessions=DB.sessions.filter(s=>s.id!==id);const ok=await persist();if(ok)showToast('🗑 Deleted')}
 
 // ── GIFTS ────────────────────────────────────────────────
 const GIFTS_DATA=[
@@ -732,15 +744,15 @@ async function addSong(){
 }
 async function editSongTitle(id){
   const s=DB.songs.find(s=>s.id===id);const t=prompt('Rename:',s.title);
-  if(t&&t.trim()){s.title=t.trim();await persist();showToast('✅ Renamed!')}
+  if(t&&t.trim()){s.title=t.trim();const ok=await persist();if(ok)showToast('✅ Renamed!')}
 }
 async function deleteSong(id){
-  if(!confirm('Delete this song?'))return;DB.songs=DB.songs.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted')
+  if(!confirm('Delete this song?'))return;DB.songs=DB.songs.filter(s=>s.id!==id);const ok=await persist();if(ok)showToast('🗑 Deleted')
 }
 async function saveSongLyrics(id){
   const s=DB.songs.find(s=>s.id===id);
   s.lyrics=document.getElementById('lyr-'+id).value;s.artist=document.getElementById('art-'+id).value;
-  await persist();showToast('✅ Saved & shared!');
+  const ok=await persist();if(ok)showToast('✅ Saved & shared!');
 }
 
 // ── FULLSCREEN ───────────────────────────────────────────
@@ -786,9 +798,11 @@ async function handlePhotoUpload(ev){
   if(slots<=0){showToast('⚠️ Gallery full (25 photos)');ev.target.value='';return}
   const toAdd=files.slice(0,slots);showToast('⏳ Processing…');
   for(const f of toAdd){
-    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,900,.78)});
+    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,800,.7)});
   }
-  ev.target.value='';await persist();showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
+  ev.target.value='';
+  const ok=await persist();
+  if(ok)showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded & shared!`);
 }
 function toDataUrl(f){return new Promise((r,j)=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.onerror=j;fr.readAsDataURL(f)})}
 function compressImg(url,maxW,q){
@@ -801,7 +815,7 @@ function compressImg(url,maxW,q){
     };img.src=url;
   })
 }
-async function deletePhoto(ev,i){ev.stopPropagation();if(!confirm('Remove this photo?'))return;DB.photos.splice(i,1);await persist();showToast('🗑 Removed')}
+async function deletePhoto(ev,i){ev.stopPropagation();if(!confirm('Remove this photo?'))return;DB.photos.splice(i,1);const ok=await persist();if(ok)showToast('🗑 Removed')}
 function openLightbox(i){
   lbIdx=i;document.getElementById('lb-img').src=DB.photos[i].dataUrl;
   document.getElementById('lb-counter').textContent=(i+1)+' / '+DB.photos.length;
