@@ -27,7 +27,7 @@
     .notice{border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.88rem;font-weight:600;display:flex;gap:10px;align-items:center;border:1.5px solid}
     .sync-bar{display:flex;align-items:center;gap:8px;font-size:.75rem;font-weight:700;color:var(--mid);margin-bottom:12px;padding:8px 14px;background:white;border:1.5px solid var(--border);border-radius:10px}
     .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#ccc}
-    .sync-dot.synced{background:#4caf50}.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}.sync-dot.error{background:var(--rose)}
+    .sync-dot.synced{background:#4caf50}.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}.sync-dot.error{background:var(--rose)}.sync-dot.local{background:var(--mid)}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
     .roster-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px}
     .roster-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--amber)}
@@ -201,7 +201,7 @@
       📖 Theme: <strong>1 Corinthians (cont.)</strong> &nbsp;·&nbsp; 🏠 Venue: Treasure Place (unless stated)
     </div>
     <div style="margin-bottom:12px">
-      <span class="inline-edit-hint">✏️ Click any cell to edit inline · press Enter or click Save to sync</span>
+      <span class="inline-edit-hint">✏️ Click any cell to edit inline · press Enter or click Save</span>
     </div>
     <div class="year-pills" id="year-pills"></div>
     <div class="roster-wrap">
@@ -307,11 +307,9 @@
 <div class="toast" id="toast"></div>
 <script>
 // ════════════════════════════════════════════════════════
-//  SUPABASE CONFIG — real credentials
+//  No shared backend — data lives only in this browser's
+//  localStorage. Nothing is synced between devices/people.
 // ════════════════════════════════════════════════════════
-const SUPA_URL = 'https://nczuxhpghzdncsjwuvpf.supabase.co';
-const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
-const CONFIGURED = !SUPA_URL.startsWith('YOUR_');
 // ── UTILS ────────────────────────────────────────────────
 function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function uid(){return 'tc'+Date.now()+Math.floor(Math.random()*9999)}
@@ -325,7 +323,7 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
-// ── SUPABASE STORAGE ─────────────────────────────────────
+// ── LOCAL STORAGE ────────────────────────────────────────
 function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
@@ -333,86 +331,45 @@ function setSyncStatus(state,msg){
   if(pd){pd.className='sync-dot '+state}
   if(pt){pt.textContent=msg}
 }
-async function loadFromDB(){
-  if(!CONFIGURED){setSyncStatus('error','Configure Supabase to enable shared sync');return null}
-  try{
-    setSyncStatus('syncing','Loading…');
-    const res=await fetch(`${SUPA_URL}/rest/v1/celldata?id=eq.1&select=payload`,{
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-    });
-    if(!res.ok){
-      const body=await res.text();
-      throw new Error('HTTP '+res.status+' '+body.slice(0,120));
-    }
-    const rows=await res.json();
-    if(!rows.length||!rows[0].payload||rows[0].payload==='{}')return null;
-    setSyncStatus('synced','Synced · '+new Date().toLocaleTimeString());
-    return JSON.parse(rows[0].payload);
-  }catch(e){setSyncStatus('error','Load failed: '+e.message);return null}
-}
-async function saveToDB(payload){
-  if(!CONFIGURED)return false;
-  try{
-    setSyncStatus('syncing','Saving…');
-    const res=await fetch(`${SUPA_URL}/rest/v1/celldata?id=eq.1`,{
-      method:'PATCH',
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({payload:JSON.stringify(payload)})
-    });
-    if(!res.ok){
-      const body=await res.text();
-      throw new Error('HTTP '+res.status+' '+body.slice(0,120));
-    }
-    setSyncStatus('synced','Saved · '+new Date().toLocaleTimeString());
-    return true;
-  }catch(e){setSyncStatus('error','Save failed: '+e.message);return false}
-}
 let DB={sessions:[],songs:[],photos:[]};
 async function refreshData(){
   const seed=getSeedSessions();
-  const remote=await loadFromDB();
-  if(remote){
-    // Remote (Supabase) is the source of truth. Seed data only fills in rows
-    // that genuinely don't exist yet in the database — it NEVER overwrites
-    // a row that's already there, so edits from any device always persist.
-    const remoteIds=new Set((remote.sessions||[]).map(s=>s.id));
-    const missing=seed.filter(s=>!remoteIds.has(s.id));
-    DB.sessions=[...(remote.sessions||[]),...missing];
-    DB.songs=remote.songs&&remote.songs.length?remote.songs:getSeedSongs();
-    DB.photos=Array.isArray(remote.photos)?remote.photos:[];
-  }else{
-    try{const lb=JSON.parse(localStorage.getItem('tc_db')||'{}');
-      const lbIds=new Set((lb.sessions||[]).map(s=>s.id));
-      const missing=seed.filter(s=>!lbIds.has(s.id));
-      DB.sessions=[...(lb.sessions||[]),...missing];
-      DB.songs=lb.songs||getSeedSongs();
-      DB.photos=lb.photos||[];
-    }catch{DB.sessions=seed;DB.songs=getSeedSongs();DB.photos=[];}
-  }
+  try{
+    const lb=JSON.parse(localStorage.getItem('tc_db')||'{}');
+    const lbIds=new Set((lb.sessions||[]).map(s=>s.id));
+    const missing=seed.filter(s=>!lbIds.has(s.id));
+    DB.sessions=[...(lb.sessions||[]),...missing];
+    DB.songs=lb.songs&&lb.songs.length?lb.songs:getSeedSongs();
+    DB.photos=lb.photos||[];
+  }catch{DB.sessions=seed;DB.songs=getSeedSongs();DB.photos=[];}
+  setSyncStatus('local','📱 Local only — saved on this device, not shared with others');
   renderAll();
 }
 async function persist(){
-  const ok=await saveToDB({sessions:DB.sessions,songs:DB.songs,photos:DB.photos});
-  try{localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions,songs:DB.songs,photos:DB.photos}))}catch{}
-  renderAll();
-  if(!ok){
-    showToast('⚠️ Not synced — saved on this device only. Tap Refresh & try again.');
+  try{
+    localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions,songs:DB.songs,photos:DB.photos}));
+    setSyncStatus('local','📱 Local only — saved on this device, not shared with others');
+    renderAll();
+    return true;
+  }catch(e){
+    setSyncStatus('error','⚠️ Storage full — could not save. Remove a photo and try again.');
+    renderAll();
+    return false;
   }
-  return ok;
 }
 function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos()}
 // ── SEED DATA ────────────────────────────────────────────
 function getSeedSessions(){return[
   // 2026 2H — kept in sync with source spreadsheet (authoritative seed, always overrides stored data)
-  {id:'s2h1',year:'2026 2H',date:'3 Jul 2026',worship:'Andrew & Grace',word:'Luke',kids:'Movie Night',supper:'Daryl & Delci\nAunty Janette, Emily',topic:'Love that Builds Up (1 Cor 8:1-13)',venue:'Treasure Place',core:'Daryl & Delci'},
-  {id:'s2h2',year:'2026 2H',date:'17 Jul 2026',worship:'Delci & Seth',word:'Emily',kids:'',supper:'Luke',topic:'Self-Denial for the Gospel (1 Cor 9:1-27)',venue:'',core:'Josh & YJ'},
-  {id:'s2h3',year:'2026 2H',date:'7 Aug 2026',worship:'Andrew & Grace',word:'Josh',kids:'',supper:'Josh & YJ',topic:'Lessons from the Wilderness: A Call to Faithfulness (1 Cor 10:1-11:1)',venue:'',core:'Luke'},
-  {id:'s2h4',year:'2026 2H',date:'21 Aug 2026',worship:'Delci & Seth',word:'Word Ministry Team',kids:'',supper:'Ryan & Esther\nAndrew & Grace',topic:'Faith & Science',venue:'',core:'Daryl & Del'},
-  {id:'s2h5',year:'2026 2H',date:'4 Sep 2026',worship:'Andrew & Grace',word:'Daryl',kids:'',supper:'Daryl & Delci Toh\nKen and Sarah',topic:'Spiritual Gifts (1 Cor 12: 1-31)',venue:'Aspen Heights',core:'Ryan & Esther'},
-  {id:'s2h6',year:'2026 2H',date:'18 Sep 2026',worship:'Delci & Seth',word:'Luke',kids:'Sarah',supper:'Andrew & Grace',topic:'The Supremacy of Love (1 Cor 13:1-13)',venue:'',core:'Andrew & Grace'},
-  {id:'s2h7',year:'2026 2H',date:'2 Oct 2026',worship:'Andrew & Grace',word:'Josh',kids:'Sarah',supper:'Josh & YJ',topic:'Orderly Worship and Edification (1 Cor 14:1-40)',venue:'Aspen Heights',core:'Daryl & Del'},
-  {id:'s2h8',year:'2026 2H',date:'16 Oct 2026',worship:'Delci & Seth',word:'Emily',kids:'Jia Hui',supper:'Ryan & Esther Toh\nKen and Sarah',topic:'Our Resurrection Hope (1 Cor 15 :1-19)',venue:'Pandan Valley (luke)',core:'Josh & YJ'},
-  {id:'s2h9',year:'2026 2H',date:'6 Nov 2026',worship:'Andrew & Grace',word:'Daryl',kids:'Jia Hui',supper:'Tim and Jia Hui',topic:'The Transformed and Resurrected Body (1 Cor 15:35-58)',venue:'Tim & Jia Hui (Pinetre...)',core:'Ryan & Esther'},
+  {id:'s2h1',year:'2026 2H',date:'3 Jul 2026',worship:'Andrew & Grace',word:'Luke',kids:'Movie Night',supper:'Daryl & Delci\nAunty Janette, Emily, Meg & Seth',topic:'Love that Builds Up (1 Cor 8:1-13)',venue:'Treasure Place',core:'Daryl & Delci'},
+  {id:'s2h2',year:'2026 2H',date:'17 Jul 2026',worship:'Delci',word:'Emily',kids:'Yuan Jing – Gospel of John: Word Made Flesh',supper:'Luke, Tim and Jia Hui',topic:'Self-Denial for the Gospel (1 Cor 9:1-27)',venue:'Treasure Place',core:'Josh & YJ'},
+  {id:'s2h3',year:'2026 2H',date:'7 Aug 2026',worship:'Andrew & Grace',word:'Josh',kids:'Yuan Jing – Gospel of John: Water into Wine',supper:'Josh & YJ, Praizel & David',topic:'Lessons from the Wilderness: A Call to Faithfulness (1 Cor 10:1-11:1)',venue:'Treasure Place',core:'Luke'},
+  {id:'s2h4',year:'2026 2H',date:'21 Aug 2026',worship:'Delci',word:'Word Ministry Team',kids:"Sarah – Gospel of John: Healing Official's Son",supper:'Ryan & Esther, Andrew & Grace',topic:'Faith & Science',venue:'Treasure Place',core:'Daryl & Del'},
+  {id:'s2h5',year:'2026 2H',date:'4 Sep 2026',worship:'Andrew & Grace',word:'Daryl',kids:'Megan – Gospel of John: Healing Paralysed Man',supper:'Toh Ken and Sarah\nSeth & Megan',topic:'Spiritual Gifts (1 Cor 12: 1-31)',venue:'Aspen Heights',core:'Ryan & Esther'},
+  {id:'s2h6',year:'2026 2H',date:'18 Sep 2026',worship:'Delci',word:'Luke',kids:'Sarah – Gospel of John: Feeding the 5000',supper:'Andrew & Grace, Daryl & Del',topic:'The Supremacy of Love (1 Cor 13:1-13)',venue:'Treasure Place',core:'Andrew & Grace'},
+  {id:'s2h7',year:'2026 2H',date:'2 Oct 2026',worship:'Andrew & Grace',word:'Josh',kids:'Megan – Gospel of John: Walking on Water',supper:'Josh & YJ, Praizel & David',topic:'Orderly Worship and Edification (1 Cor 14:1-40)',venue:'Aspen Heights',core:'Daryl & Del'},
+  {id:'s2h8',year:'2026 2H',date:'16 Oct 2026',worship:'Delci & Seth',word:'Emily',kids:'Jia Hui – Gospel of John: Healing Man Born Blind',supper:'Ryan & Esther Toh\nKen and Sarah',topic:'Our Resurrection Hope (1 Cor 15 :1-19)',venue:'Pandan Valley (luke)',core:'Josh & YJ'},
+  {id:'s2h9',year:'2026 2H',date:'6 Nov 2026',worship:'Andrew & Grace',word:'Daryl',kids:'Jia Hui – Gospel of John: Raising Lazarus',supper:'Tim and Jia Hui',topic:'The Transformed and Resurrected Body (1 Cor 15:35-58)',venue:'Tim & Jia Hui (Pinetre...)',core:'Ryan & Esther'},
   {id:'s2h10',year:'2026 2H',date:'20 Nov 2026',worship:'Father Heart of God Retreat',word:'-',kids:'-',supper:'-',topic:'-',venue:'-',core:'-'},
   // 2026 1H
   {id:'s1',year:'2026 1H',date:'23 Jan 2026',worship:"Grace🎤 + Andrew🎸",word:'Luke',kids:'Bible Story Video',supper:'Daryl & Delci, Ryan & Esther',topic:"L1: The Unity Crisis: Division and Christ's Call (1 Cor 1:1-17)",venue:'Treasure Place',core:'Joshua & Yuan Jing'},
@@ -573,7 +530,7 @@ async function saveInlineEdit(sessionId,field){
   restoreDisplay(sessionId,field,newVal);
   showToast('💾 Saving…');
   const ok=await persist();
-  if(ok)showToast('✅ Saved & synced!');
+  if(ok)showToast('✅ Saved!');
 }
 function openRosterModal(id){
   editSessionId=id;
@@ -606,7 +563,7 @@ async function saveSession(){
     core:document.getElementById('rm-core').value};
   if(editSessionId){const i=DB.sessions.findIndex(s=>s.id===editSessionId);DB.sessions[i]=obj}
   else DB.sessions.push(obj);
-  closeRosterModal();showToast('💾 Saving…');const ok=await persist();if(ok)showToast('✅ Saved & shared!');
+  closeRosterModal();showToast('💾 Saving…');const ok=await persist();if(ok)showToast('✅ Saved!');
 }
 async function deleteSession(){DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);closeRosterModal();const ok=await persist();if(ok)showToast('🗑 Deleted')}
 async function deleteSessionDirect(id){if(!confirm('Delete this session?'))return;DB.sessions=DB.sessions.filter(s=>s.id!==id);const ok=await persist();if(ok)showToast('🗑 Deleted')}
@@ -704,7 +661,7 @@ async function deleteSong(id){
 async function saveSongLyrics(id){
   const s=DB.songs.find(s=>s.id===id);
   s.lyrics=document.getElementById('lyr-'+id).value;s.artist=document.getElementById('art-'+id).value;
-  const ok=await persist();if(ok)showToast('✅ Saved & shared!');
+  const ok=await persist();if(ok)showToast('✅ Saved!');
 }
 // ── FULLSCREEN ───────────────────────────────────────────
 let fsFontSize=18,fsDark=true;
@@ -748,11 +705,11 @@ async function handlePhotoUpload(ev){
   if(slots<=0){showToast('⚠️ Gallery full (25 photos)');ev.target.value='';return}
   const toAdd=files.slice(0,slots);showToast('⏳ Processing…');
   for(const f of toAdd){
-    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,800,.7)});
+    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,700,.65)});
   }
   ev.target.value='';
   const ok=await persist();
-  if(ok)showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded & shared!`);
+  if(ok)showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
 }
 function toDataUrl(f){return new Promise((r,j)=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.onerror=j;fr.readAsDataURL(f)})}
 function compressImg(url,maxW,q){
