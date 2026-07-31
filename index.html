@@ -39,7 +39,6 @@
     .ypill:hover:not(.active){border-color:var(--gold);color:var(--amber)}
     .ypill.new-half{background:linear-gradient(135deg,#d6f3f2,#f0e8ff);border-color:var(--teal);color:var(--teal)}
     .ypill.new-half.active{background:var(--teal);border-color:var(--teal);color:white}
-
     /* ROSTER TABLE */
     .roster-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid var(--border);box-shadow:var(--shadow)}
     table.roster{width:100%;border-collapse:collapse;font-size:.83rem;min-width:700px}
@@ -48,7 +47,6 @@
     table.roster tr:last-child td{border-bottom:none}
     table.roster tr:hover td{background:var(--gold-l)}
     tr.upcoming-row td{background:#f9fffe}tr.upcoming-row:hover td{background:var(--teal-l)}
-
     /* INLINE EDIT */
     .editable-cell{position:relative;cursor:text;min-width:80px}
     .editable-cell:hover::after{content:'✏️';position:absolute;top:2px;right:2px;font-size:.6rem;opacity:.5;pointer-events:none}
@@ -58,14 +56,12 @@
     .row-save-btn{font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;padding:3px 10px;border:none;border-radius:6px;background:var(--teal);color:white;cursor:pointer;white-space:nowrap;margin-top:3px;display:block}
     .row-save-btn:hover{opacity:.85}
     .row-editing td{background:#fffdf0 !important;border-bottom:2px solid var(--amber)}
-
     .badge{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:20px;margin:1px 2px}
     .badge.worship{background:#fde8ec;color:var(--rose)}.badge.word{background:#fff4d6;color:var(--amber)}
     .badge.core{background:#e8f4e8;color:#3a7a3a}.badge.upcoming{background:#d6f3f2;color:var(--teal);border:1px dashed var(--teal);font-size:.65rem;padding:1px 6px}
     .row-actions{display:flex;gap:4px;flex-direction:column;align-items:flex-start}
     .ia{background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:5px;font-size:.78rem;transition:background .14s}
     .ia.ed:hover{background:var(--gold-l);color:var(--amber)}.ia.dl{color:#ccc}.ia.dl:hover{background:var(--rose-l);color:var(--rose)}
-
     /* GIFTS */
     .gifts-header{text-align:center;margin-bottom:28px}
     .gifts-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--purple);margin-bottom:6px}
@@ -89,7 +85,6 @@
     .member-name{font-weight:800;font-size:.82rem;color:var(--dark);margin-bottom:6px}
     .member-gifts{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
     .mgift{font-size:.65rem;padding:2px 7px;border-radius:10px;font-weight:700}
-
     /* SONGS */
     .songs-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
     .songs-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--rose)}
@@ -120,7 +115,6 @@
     .fs-font-controls{display:flex;gap:8px;padding:12px 20px;background:rgba(0,0,0,.3);flex-shrink:0;justify-content:center}
     .fs-font-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;padding:6px 14px;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);cursor:pointer}
     .fs-font-btn:hover{background:rgba(255,255,255,.18)}
-
     /* PHOTOS */
     .photos-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px}
     .photos-toolbar h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--purple)}
@@ -145,7 +139,6 @@
     .lb-nav:hover{background:rgba(255,255,255,.25)}
     .lb-prev{left:16px}.lb-next{right:16px}
     .lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:.8rem;font-weight:700;font-family:'Nunito',sans-serif}
-
     /* MODAL */
     .overlay{position:fixed;inset:0;background:rgba(58,46,34,.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
     .overlay.open{opacity:1;pointer-events:all}
@@ -182,21 +175,17 @@
   </style>
 </head>
 <body>
-
 <div class="site-header">
   <h1>Treasure Cell 💎</h1>
   <p>Growing Together in Christ</p>
 </div>
-
 <nav>
   <button class="active" onclick="showTab('roster',this)"><span class="nav-icon">📋</span><span class="nav-label">Roster</span></button>
   <button onclick="showTab('gifts',this)"><span class="nav-icon">✨</span><span class="nav-label">Gifts</span></button>
   <button onclick="showTab('songs',this)"><span class="nav-icon">🎵</span><span class="nav-label">Songs</span></button>
   <button onclick="showTab('photos',this)"><span class="nav-icon">📸</span><span class="nav-label">Photos</span></button>
 </nav>
-
 <main>
-
   <!-- ═══ ROSTER ═══ -->
   <div class="panel active" id="tab-roster">
     <div class="roster-toolbar">
@@ -225,7 +214,6 @@
       </table>
     </div>
   </div>
-
   <!-- ═══ GIFTS ═══ -->
   <div class="panel" id="tab-gifts">
     <div class="gifts-header">
@@ -239,7 +227,6 @@
     <div class="slabel">Members &amp; Their Gifts</div>
     <div class="members-grid" id="members-grid"></div>
   </div>
-
   <!-- ═══ SONGS ═══ -->
   <div class="panel" id="tab-songs">
     <div class="songs-toolbar">
@@ -249,7 +236,6 @@
     <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc">🎶 Paste lyrics so everyone can follow along. Click any song to expand.</div>
     <div id="songs-list"><div class="loading-msg">⏳ Loading…</div></div>
   </div>
-
   <!-- ═══ PHOTOS ═══ -->
   <div class="panel" id="tab-photos">
     <div class="photos-toolbar">
@@ -259,6 +245,11 @@
         <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"/>
       </label>
     </div>
+    <div class="sync-bar">
+      <div class="sync-dot syncing" id="photo-sync-dot"></div>
+      <span id="photo-sync-text">Connecting…</span>
+      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
+    </div>
     <div class="notice" style="background:var(--purple-l);border-color:#c9a8f0">
       🖼️ Upload your favourite Treasure Cell memories! Click any photo to view fullscreen.
     </div>
@@ -266,9 +257,7 @@
       <div class="loading-msg" style="grid-column:1/-1">⏳ Loading…</div>
     </div>
   </div>
-
 </main>
-
 <!-- ROSTER MODAL (for adding new sessions) -->
 <div class="overlay" id="roster-modal">
   <div class="modal">
@@ -294,7 +283,6 @@
     </div>
   </div>
 </div>
-
 <!-- FULLSCREEN LYRICS -->
 <div class="fs-overlay" id="fs-overlay">
   <div class="fs-header">
@@ -308,7 +296,6 @@
     <button class="fs-font-btn" onclick="fsBg()">🌙 / ☀️</button>
   </div>
 </div>
-
 <!-- PHOTO LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="lbBgClick(event)">
   <button class="lb-close" onclick="closeLightbox()">✕</button>
@@ -317,9 +304,7 @@
   <button class="lb-nav lb-next" onclick="lbNav(1,event)">›</button>
   <div class="lb-counter" id="lb-counter"></div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 // ════════════════════════════════════════════════════════
 //  SUPABASE CONFIG — real credentials
@@ -327,7 +312,6 @@
 const SUPA_URL = 'https://nczuxhpghzdncsjwuvpf.supabase.co';
 const SUPA_KEY = 'sb_publishable_KxmuN9ixziE9QPrtb_aQrw_WLvUxSZS';
 const CONFIGURED = !SUPA_URL.startsWith('YOUR_');
-
 // ── UTILS ────────────────────────────────────────────────
 function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function uid(){return 'tc'+Date.now()+Math.floor(Math.random()*9999)}
@@ -341,13 +325,14 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
-
 // ── SUPABASE STORAGE ─────────────────────────────────────
 function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
+  const pd=document.getElementById('photo-sync-dot'),pt=document.getElementById('photo-sync-text');
+  if(pd){pd.className='sync-dot '+state}
+  if(pt){pt.textContent=msg}
 }
-
 async function loadFromDB(){
   if(!CONFIGURED){setSyncStatus('error','Configure Supabase to enable shared sync');return null}
   try{
@@ -365,7 +350,6 @@ async function loadFromDB(){
     return JSON.parse(rows[0].payload);
   }catch(e){setSyncStatus('error','Load failed: '+e.message);return null}
 }
-
 async function saveToDB(payload){
   if(!CONFIGURED)return false;
   try{
@@ -383,12 +367,9 @@ async function saveToDB(payload){
     return true;
   }catch(e){setSyncStatus('error','Save failed: '+e.message);return false}
 }
-
 let DB={sessions:[],songs:[],photos:[]};
-
 async function refreshData(){
   const seed=getSeedSessions();
-
   const remote=await loadFromDB();
   if(remote){
     // Remote (Supabase) is the source of truth. Seed data only fills in rows
@@ -410,15 +391,16 @@ async function refreshData(){
   }
   renderAll();
 }
-
 async function persist(){
   const ok=await saveToDB({sessions:DB.sessions,songs:DB.songs,photos:DB.photos});
   try{localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions,songs:DB.songs,photos:DB.photos}))}catch{}
   renderAll();
+  if(!ok){
+    showToast('⚠️ Not synced — saved on this device only. Tap Refresh & try again.');
+  }
+  return ok;
 }
-
 function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos()}
-
 // ── SEED DATA ────────────────────────────────────────────
 function getSeedSessions(){return[
   // 2026 2H — kept in sync with source spreadsheet (authoritative seed, always overrides stored data)
@@ -458,7 +440,6 @@ function getSeedSongs(){return[
   {id:'song2',title:'What A Beautiful Name',artist:'Hillsong Worship',lyrics:"You were the Word at the beginning\nOne with God the Lord Most High\nYour hidden glory in creation\nNow revealed in You our Christ\n\nWhat a beautiful Name it is\nWhat a beautiful Name it is\nThe Name of Jesus Christ my King"},
   {id:'song3',title:'Goodness of God',artist:'Bethel Music',lyrics:"I love You Lord\nOh Your mercy never fails me\nAll my days I've been held in Your hands\nFrom the moment that I wake up\nUntil I lay my head\nI will sing of the goodness of God"},
 ]}
-
 // ── ROSTER ───────────────────────────────────────────────
 let activeYear='2026 2H',editSessionId=null;
 const YEAR_THEMES={
@@ -479,10 +460,8 @@ function updateNotice(y){
   n.style.background=t.bg;n.style.borderColor=t.bc;
 }
 function setYear(y){activeYear=y;renderYearPills();updateNotice(y);renderRoster()}
-
 // ── INLINE EDITING ────────────────────────────────────────
 let currentlyEditingId=null;
-
 function renderRoster(){
   const rows=DB.sessions.filter(s=>s.year===activeYear);
   const na=`<span style="color:#ccc;font-size:.75rem">—</span>`;
@@ -520,14 +499,12 @@ function renderRoster(){
     </tr>`}).join('')
     :`<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--mid)">No sessions yet.</td></tr>`;
 }
-
 // textarea fields (multiline)
 const MULTILINE_FIELDS=['supper','topic','kids'];
-
 function makeEditable(event,sessionId,field){
   // ignore clicks on buttons inside the cell
   if(event.target.tagName==='BUTTON'||event.target.tagName==='INPUT'||event.target.tagName==='TEXTAREA')return;
-  
+
   // cancel any existing inline edit first
   if(currentlyEditingId){
     const prev=currentlyEditingId;
@@ -535,17 +512,13 @@ function makeEditable(event,sessionId,field){
     // restore display for previously editing row
     restoreDisplay(prev.id,prev.field);
   }
-
   const s=DB.sessions.find(s=>s.id===sessionId);
   if(!s)return;
   currentlyEditingId={id:sessionId,field};
-
   const dispEl=document.getElementById(`disp-${sessionId}-${field}`);
   if(!dispEl)return;
-
   const isMulti=MULTILINE_FIELDS.includes(field);
   const val=s[field]||'';
-
   if(isMulti){
     dispEl.innerHTML=`<textarea class="cell-input" id="inp-${sessionId}-${field}" rows="3">${val}</textarea>
       <button class="row-save-btn" onclick="saveInlineEdit('${sessionId}','${field}')">💾 Save</button>`;
@@ -553,14 +526,11 @@ function makeEditable(event,sessionId,field){
     dispEl.innerHTML=`<input class="cell-input" id="inp-${sessionId}-${field}" value="${val.replace(/"/g,'&quot;')}"/>
       <button class="row-save-btn" onclick="saveInlineEdit('${sessionId}','${field}')">💾 Save</button>`;
   }
-
   // highlight the row
   document.getElementById(`tr-${sessionId}`).classList.add('row-editing');
-
   // focus and select
   const inp=document.getElementById(`inp-${sessionId}-${field}`);
   if(inp){inp.focus();inp.select();}
-
   // save on Enter (single-line), Escape cancels
   if(inp){
     inp.addEventListener('keydown',function(e){
@@ -569,7 +539,6 @@ function makeEditable(event,sessionId,field){
     });
   }
 }
-
 function restoreDisplay(sessionId,field,value){
   const s=DB.sessions.find(s=>s.id===sessionId);
   if(!s)return;
@@ -577,7 +546,6 @@ function restoreDisplay(sessionId,field,value){
   const na=`<span style="color:#ccc;font-size:.75rem">—</span>`;
   const dispEl=document.getElementById(`disp-${sessionId}-${field}`);
   if(!dispEl)return;
-
   const up=isUpcoming(s.date);
   if(field==='date'){
     dispEl.innerHTML=`<strong style="color:${up?'var(--teal)':'var(--amber)'}">${x(v)}</strong>${up?'<br><span class="badge upcoming">upcoming</span>':''}`;
@@ -594,7 +562,6 @@ function restoreDisplay(sessionId,field,value){
   }
   document.getElementById(`tr-${sessionId}`)?.classList.remove('row-editing');
 }
-
 async function saveInlineEdit(sessionId,field){
   const inp=document.getElementById(`inp-${sessionId}-${field}`);
   if(!inp)return;
@@ -605,10 +572,9 @@ async function saveInlineEdit(sessionId,field){
   currentlyEditingId=null;
   restoreDisplay(sessionId,field,newVal);
   showToast('💾 Saving…');
-  await persist();
-  showToast('✅ Saved & synced!');
+  const ok=await persist();
+  if(ok)showToast('✅ Saved & synced!');
 }
-
 function openRosterModal(id){
   editSessionId=id;
   if(id){
@@ -640,11 +606,10 @@ async function saveSession(){
     core:document.getElementById('rm-core').value};
   if(editSessionId){const i=DB.sessions.findIndex(s=>s.id===editSessionId);DB.sessions[i]=obj}
   else DB.sessions.push(obj);
-  closeRosterModal();showToast('💾 Saving…');await persist();showToast('✅ Saved & shared!');
+  closeRosterModal();showToast('💾 Saving…');const ok=await persist();if(ok)showToast('✅ Saved & shared!');
 }
-async function deleteSession(){DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);closeRosterModal();await persist();showToast('🗑 Deleted')}
-async function deleteSessionDirect(id){if(!confirm('Delete this session?'))return;DB.sessions=DB.sessions.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted')}
-
+async function deleteSession(){DB.sessions=DB.sessions.filter(s=>s.id!==editSessionId);closeRosterModal();const ok=await persist();if(ok)showToast('🗑 Deleted')}
+async function deleteSessionDirect(id){if(!confirm('Delete this session?'))return;DB.sessions=DB.sessions.filter(s=>s.id!==id);const ok=await persist();if(ok)showToast('🗑 Deleted')}
 // ── GIFTS ────────────────────────────────────────────────
 const GIFTS_DATA=[
   {rank:1,name:'Exhortation',count:7,max:7,cls:'r1',fill:'fill-1'},
@@ -697,7 +662,6 @@ function renderGifts(){
       }).join('')}</div>
     </div>`).join('');
 }
-
 // ── SONGS ────────────────────────────────────────────────
 function renderSongs(){
   const list=document.getElementById('songs-list');
@@ -732,17 +696,16 @@ async function addSong(){
 }
 async function editSongTitle(id){
   const s=DB.songs.find(s=>s.id===id);const t=prompt('Rename:',s.title);
-  if(t&&t.trim()){s.title=t.trim();await persist();showToast('✅ Renamed!')}
+  if(t&&t.trim()){s.title=t.trim();const ok=await persist();if(ok)showToast('✅ Renamed!')}
 }
 async function deleteSong(id){
-  if(!confirm('Delete this song?'))return;DB.songs=DB.songs.filter(s=>s.id!==id);await persist();showToast('🗑 Deleted')
+  if(!confirm('Delete this song?'))return;DB.songs=DB.songs.filter(s=>s.id!==id);const ok=await persist();if(ok)showToast('🗑 Deleted')
 }
 async function saveSongLyrics(id){
   const s=DB.songs.find(s=>s.id===id);
   s.lyrics=document.getElementById('lyr-'+id).value;s.artist=document.getElementById('art-'+id).value;
-  await persist();showToast('✅ Saved & shared!');
+  const ok=await persist();if(ok)showToast('✅ Saved & shared!');
 }
-
 // ── FULLSCREEN ───────────────────────────────────────────
 let fsFontSize=18,fsDark=true;
 function openFullscreen(id){
@@ -761,7 +724,6 @@ function applyFsBg(){
   const ov=document.getElementById('fs-overlay'),ly=document.getElementById('fs-lyrics');
   ov.style.background=fsDark?'#1a120a':'#fffdf7';ly.style.color=fsDark?'rgba(255,255,255,.92)':'#3a2e22';
 }
-
 // ── PHOTOS ───────────────────────────────────────────────
 const GRID=25;let lbIdx=0;
 function renderPhotos(){
@@ -786,9 +748,11 @@ async function handlePhotoUpload(ev){
   if(slots<=0){showToast('⚠️ Gallery full (25 photos)');ev.target.value='';return}
   const toAdd=files.slice(0,slots);showToast('⏳ Processing…');
   for(const f of toAdd){
-    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,900,.78)});
+    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,800,.7)});
   }
-  ev.target.value='';await persist();showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
+  ev.target.value='';
+  const ok=await persist();
+  if(ok)showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded & shared!`);
 }
 function toDataUrl(f){return new Promise((r,j)=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.onerror=j;fr.readAsDataURL(f)})}
 function compressImg(url,maxW,q){
@@ -801,7 +765,7 @@ function compressImg(url,maxW,q){
     };img.src=url;
   })
 }
-async function deletePhoto(ev,i){ev.stopPropagation();if(!confirm('Remove this photo?'))return;DB.photos.splice(i,1);await persist();showToast('🗑 Removed')}
+async function deletePhoto(ev,i){ev.stopPropagation();if(!confirm('Remove this photo?'))return;DB.photos.splice(i,1);const ok=await persist();if(ok)showToast('🗑 Removed')}
 function openLightbox(i){
   lbIdx=i;document.getElementById('lb-img').src=DB.photos[i].dataUrl;
   document.getElementById('lb-counter').textContent=(i+1)+' / '+DB.photos.length;
@@ -821,7 +785,6 @@ document.addEventListener('keydown',e=>{
     else if(e.key==='Escape')closeLightbox();
   }else if(e.key==='Escape')closeFullscreen();
 });
-
 // ── INIT ─────────────────────────────────────────────────
 updateNotice(activeYear);
 renderGifts();
