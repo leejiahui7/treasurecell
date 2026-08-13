@@ -233,6 +233,11 @@
       <h2>🎵 Worship Songs</h2>
       <button class="btn-add-song" onclick="addSong()">＋ Add Song</button>
     </div>
+    <div class="sync-bar">
+      <div class="sync-dot syncing" id="song-sync-dot"></div>
+      <span id="song-sync-text">Connecting…</span>
+      <button onclick="refreshShared()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
+    </div>
     <div class="notice" style="background:var(--rose-l);border-color:#f0c0cc">🎶 Paste lyrics so everyone can follow along. Click any song to expand.</div>
     <div id="songs-list"><div class="loading-msg">⏳ Loading…</div></div>
   </div>
@@ -248,7 +253,7 @@
     <div class="sync-bar">
       <div class="sync-dot syncing" id="photo-sync-dot"></div>
       <span id="photo-sync-text">Connecting…</span>
-      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
+      <button onclick="refreshShared()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
     </div>
     <div class="notice" style="background:var(--purple-l);border-color:#c9a8f0">
       🖼️ Upload your favourite Treasure Cell memories! Click any photo to view fullscreen.
@@ -305,10 +310,80 @@
   <div class="lb-counter" id="lb-counter"></div>
 </div>
 <div class="toast" id="toast"></div>
+<!-- ════════════════════════════════════════════════════════
+     GitHub as the shared backend — no third party service.
+     Songs are kept in data/songs.json and photos are kept
+     as image files in the photos/ folder, both committed
+     straight into THIS repo via the GitHub API. Everyone who
+     loads the page reads/writes the same repo, so songs and
+     photos are shared across every device.
+
+     ⚠️ SECURITY NOTE: the token below is embedded in public
+     page source. Anyone who views source can read it and use
+     it to write or delete files in this repo (not other
+     repos, if scoped correctly). Use a FINE-GRAINED token
+     scoped to ONLY this repo with ONLY "Contents:
+     Read and write" permission — never a classic token, and
+     never a token with access to other repos. Rotate it if
+     you ever suspect misuse. See setup notes at the end of
+     this file for exact steps.
+     ════════════════════════════════════════════════════════ -->
+<script>
+const GH_CONFIG={
+  owner:"leejiahui7",
+  repo:"treasurecell",
+  branch:"main",
+  token:"PASTE_YOUR_FINE_GRAINED_TOKEN"
+};
+const ghReady=GH_CONFIG.token&&GH_CONFIG.token.indexOf('PASTE_')!==0;
+function ghHeaders(){return{Authorization:'token '+GH_CONFIG.token,Accept:'application/vnd.github+json'}}
+function ghUrl(path){return `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${path}`}
+function utf8ToB64(str){return btoa(unescape(encodeURIComponent(str)))}
+function b64ToUtf8(str){return decodeURIComponent(escape(atob(str)))}
+async function ghGetFile(path){
+  const res=await fetch(ghUrl(path)+`?ref=${GH_CONFIG.branch}`,{headers:ghHeaders()});
+  if(res.status===404)return null;
+  if(!res.ok)throw new Error('GitHub GET failed: '+res.status);
+  const j=await res.json();
+  return{sha:j.sha,content:j.content?b64ToUtf8(j.content.replace(/\n/g,'')):''};
+}
+async function ghListDir(path){
+  const res=await fetch(ghUrl(path)+`?ref=${GH_CONFIG.branch}`,{headers:ghHeaders()});
+  if(res.status===404)return[];
+  if(!res.ok)throw new Error('GitHub LIST failed: '+res.status);
+  return await res.json();
+}
+async function ghPutFile(path,contentB64,message,sha){
+  const body={message,content:contentB64,branch:GH_CONFIG.branch};
+  if(sha)body.sha=sha;
+  const res=await fetch(ghUrl(path),{method:'PUT',headers:{...ghHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!res.ok){const t=await res.text();throw new Error('GitHub PUT failed: '+res.status+' '+t)}
+  return await res.json();
+}
+async function ghDeleteFile(path,sha,message){
+  const res=await fetch(ghUrl(path),{method:'DELETE',headers:{...ghHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message,sha,branch:GH_CONFIG.branch})});
+  if(!res.ok){const t=await res.text();throw new Error('GitHub DELETE failed: '+res.status+' '+t)}
+}
+// Load-modify-save wrapper for data/songs.json with retry on sha conflict
+async function updateSongsFile(mutatorFn,message){
+  for(let attempt=0;attempt<3;attempt++){
+    const file=await ghGetFile('data/songs.json');
+    const current=file?JSON.parse(file.content):[];
+    const updated=mutatorFn(current);
+    try{
+      await ghPutFile('data/songs.json',utf8ToB64(JSON.stringify(updated,null,2)),message,file?file.sha:undefined);
+      return updated;
+    }catch(e){
+      if(attempt===2)throw e;
+    }
+  }
+}
+</script>
 <script>
 // ════════════════════════════════════════════════════════
-//  No shared backend — data lives only in this browser's
-//  localStorage. Nothing is synced between devices/people.
+//  Roster/gifts still live in this browser's localStorage
+//  (device only). Songs and photos are synced to everyone
+//  through Firestore, set up above.
 // ════════════════════════════════════════════════════════
 // ── UTILS ────────────────────────────────────────────────
 function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -323,13 +398,19 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
-// ── LOCAL STORAGE ────────────────────────────────────────
+// ── LOCAL STORAGE (roster/gifts only) ─────────────────────
 function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
-  const pd=document.getElementById('photo-sync-dot'),pt=document.getElementById('photo-sync-text');
-  if(pd){pd.className='sync-dot '+state}
-  if(pt){pt.textContent=msg}
+}
+// ── SHARED SYNC STATUS (songs + photos, via Firestore) ────
+function setSharedSyncStatus(state,msg){
+  const ids=[['song-sync-dot','song-sync-text'],['photo-sync-dot','photo-sync-text']];
+  ids.forEach(([dotId,textId])=>{
+    const d=document.getElementById(dotId),t=document.getElementById(textId);
+    if(d)d.className='sync-dot '+state;
+    if(t)t.textContent=msg;
+  });
 }
 let DB={sessions:[],songs:[],photos:[]};
 async function refreshData(){
@@ -339,25 +420,60 @@ async function refreshData(){
     const lbIds=new Set((lb.sessions||[]).map(s=>s.id));
     const missing=seed.filter(s=>!lbIds.has(s.id));
     DB.sessions=[...(lb.sessions||[]),...missing];
-    DB.songs=lb.songs&&lb.songs.length?lb.songs:getSeedSongs();
-    DB.photos=lb.photos||[];
-  }catch{DB.sessions=seed;DB.songs=getSeedSongs();DB.photos=[];}
+  }catch{DB.sessions=seed}
   setSyncStatus('local','📱 Local only — saved on this device, not shared with others');
-  renderAll();
+  renderYearPills();renderRoster();
 }
 async function persist(){
   try{
-    localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions,songs:DB.songs,photos:DB.photos}));
+    localStorage.setItem('tc_db',JSON.stringify({sessions:DB.sessions}));
     setSyncStatus('local','📱 Local only — saved on this device, not shared with others');
-    renderAll();
+    renderYearPills();renderRoster();
     return true;
   }catch(e){
-    setSyncStatus('error','⚠️ Storage full — could not save. Remove a photo and try again.');
-    renderAll();
+    setSyncStatus('error','⚠️ Storage full — could not save.');
     return false;
   }
 }
 function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos()}
+// ── SHARED DATA (songs + photos, via GitHub repo) ─────────
+const POLL_MS=45000;
+async function loadSongs(){
+  const file=await ghGetFile('data/songs.json');
+  if(!file){
+    // First run — seed the file with the starter songs
+    const seeds=getSeedSongs();
+    await ghPutFile('data/songs.json',utf8ToB64(JSON.stringify(seeds,null,2)),'Seed starter songs');
+    DB.songs=seeds;
+  }else{
+    DB.songs=JSON.parse(file.content||'[]');
+  }
+  renderSongs();
+}
+async function loadPhotos(){
+  const entries=await ghListDir('photos');
+  const files=entries.filter(e=>e.type==='file').sort((a,b)=>a.name.localeCompare(b.name));
+  DB.photos=files.map(f=>({id:f.name,sha:f.sha,dataUrl:f.download_url}));
+  renderPhotos();
+}
+async function refreshShared(){
+  if(!ghReady){
+    setSharedSyncStatus('error','⚠️ Not connected — add your GitHub token to enable sharing');
+    DB.songs=getSeedSongs();DB.photos=[];renderSongs();renderPhotos();
+    return;
+  }
+  try{
+    await Promise.all([loadSongs(),loadPhotos()]);
+    setSharedSyncStatus('synced','🌐 Synced — shared with everyone');
+  }catch(e){
+    console.error(e);
+    setSharedSyncStatus('error','⚠️ Sync error — check your GitHub token/repo settings');
+  }
+}
+function startSharedSync(){
+  refreshShared();
+  setInterval(refreshShared,POLL_MS);
+}
 // ── SEED DATA ────────────────────────────────────────────
 function getSeedSessions(){return[
   // 2026 2H — kept in sync with source spreadsheet (authoritative seed, always overrides stored data)
@@ -646,22 +762,41 @@ function renderSongs(){
 function toggleSong(id){document.getElementById('sc-'+id).classList.toggle('open')}
 async function addSong(){
   const t=prompt('Song title:');if(!t)return;
-  const s={id:uid(),title:t.trim(),artist:'',lyrics:''};
-  DB.songs.push(s);await persist();
-  setTimeout(()=>document.getElementById('sc-'+s.id)?.classList.add('open'),80);
-  showToast('✅ Song added!');
+  if(!ghReady){showToast('⚠️ Not connected to shared storage yet');return}
+  const newId=uid();
+  try{
+    await updateSongsFile(songs=>[...songs,{id:newId,title:t.trim(),artist:'',lyrics:''}],`Add song: ${t.trim()}`);
+    await loadSongs();
+    setTimeout(()=>document.getElementById('sc-'+newId)?.classList.add('open'),150);
+    showToast('✅ Song added!');
+  }catch(e){console.error(e);showToast('⚠️ Could not add song')}
 }
 async function editSongTitle(id){
   const s=DB.songs.find(s=>s.id===id);const t=prompt('Rename:',s.title);
-  if(t&&t.trim()){s.title=t.trim();const ok=await persist();if(ok)showToast('✅ Renamed!')}
+  if(t&&t.trim()){
+    try{
+      await updateSongsFile(songs=>songs.map(x=>x.id===id?{...x,title:t.trim()}:x),`Rename song to: ${t.trim()}`);
+      await loadSongs();
+      showToast('✅ Renamed!');
+    }catch(e){console.error(e);showToast('⚠️ Could not rename')}
+  }
 }
 async function deleteSong(id){
-  if(!confirm('Delete this song?'))return;DB.songs=DB.songs.filter(s=>s.id!==id);const ok=await persist();if(ok)showToast('🗑 Deleted')
+  if(!confirm('Delete this song?'))return;
+  try{
+    await updateSongsFile(songs=>songs.filter(x=>x.id!==id),'Delete song');
+    await loadSongs();
+    showToast('🗑 Deleted');
+  }catch(e){console.error(e);showToast('⚠️ Could not delete')}
 }
 async function saveSongLyrics(id){
-  const s=DB.songs.find(s=>s.id===id);
-  s.lyrics=document.getElementById('lyr-'+id).value;s.artist=document.getElementById('art-'+id).value;
-  const ok=await persist();if(ok)showToast('✅ Saved!');
+  const lyrics=document.getElementById('lyr-'+id).value;
+  const artist=document.getElementById('art-'+id).value;
+  try{
+    await updateSongsFile(songs=>songs.map(x=>x.id===id?{...x,lyrics,artist}:x),'Update song lyrics');
+    await loadSongs();
+    showToast('✅ Saved!');
+  }catch(e){console.error(e);showToast('⚠️ Could not save')}
 }
 // ── FULLSCREEN ───────────────────────────────────────────
 let fsFontSize=18,fsDark=true;
@@ -689,7 +824,7 @@ function renderPhotos(){
     if(i<photos.length){
       html+=`<div class="photo-cell" onclick="openLightbox(${i})">
         <img src="${photos[i].dataUrl}" alt="photo ${i+1}"/>
-        <button class="photo-del" onclick="deletePhoto(event,${i})">✕</button>
+        <button class="photo-del" onclick="deletePhoto(event,'${photos[i].id}')">✕</button>
       </div>`;
     }else{
       html+=`<div class="photo-empty" onclick="document.getElementById('photo-input').click()">
@@ -701,15 +836,22 @@ function renderPhotos(){
 }
 async function handlePhotoUpload(ev){
   const files=Array.from(ev.target.files);if(!files.length)return;
+  if(!ghReady){showToast('⚠️ Not connected to shared storage yet');ev.target.value='';return}
   const slots=GRID-DB.photos.length;
   if(slots<=0){showToast('⚠️ Gallery full (25 photos)');ev.target.value='';return}
-  const toAdd=files.slice(0,slots);showToast('⏳ Processing…');
+  const toAdd=files.slice(0,slots);showToast('⏳ Uploading…');
+  let uploaded=0;
   for(const f of toAdd){
-    const raw=await toDataUrl(f);DB.photos.push({id:uid(),dataUrl:await compressImg(raw,700,.65)});
+    const raw=await toDataUrl(f);
+    const dataUrl=await compressImg(raw,1600,.8);
+    const base64=dataUrl.split(',')[1];
+    const id=uid()+'.jpg';
+    try{await ghPutFile('photos/'+id,base64,'Add photo: '+id);uploaded++}
+    catch(e){console.error(e);showToast('⚠️ Upload failed for one photo')}
   }
   ev.target.value='';
-  const ok=await persist();
-  if(ok)showToast(`✅ ${toAdd.length} photo${toAdd.length>1?'s':''} uploaded!`);
+  await loadPhotos();
+  if(uploaded)showToast(`✅ ${uploaded} photo${uploaded>1?'s':''} uploaded!`);
 }
 function toDataUrl(f){return new Promise((r,j)=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.onerror=j;fr.readAsDataURL(f)})}
 function compressImg(url,maxW,q){
@@ -722,7 +864,15 @@ function compressImg(url,maxW,q){
     };img.src=url;
   })
 }
-async function deletePhoto(ev,i){ev.stopPropagation();if(!confirm('Remove this photo?'))return;DB.photos.splice(i,1);const ok=await persist();if(ok)showToast('🗑 Removed')}
+async function deletePhoto(ev,id){
+  ev.stopPropagation();if(!confirm('Remove this photo?'))return;
+  const p=DB.photos.find(p=>p.id===id);if(!p)return;
+  try{
+    await ghDeleteFile('photos/'+id,p.sha,'Delete photo: '+id);
+    await loadPhotos();
+    showToast('🗑 Removed');
+  }catch(e){console.error(e);showToast('⚠️ Could not remove')}
+}
 function openLightbox(i){
   lbIdx=i;document.getElementById('lb-img').src=DB.photos[i].dataUrl;
   document.getElementById('lb-counter').textContent=(i+1)+' / '+DB.photos.length;
@@ -746,6 +896,7 @@ document.addEventListener('keydown',e=>{
 updateNotice(activeYear);
 renderGifts();
 refreshData();
+startSharedSync();
 </script>
 </body>
 </html>
