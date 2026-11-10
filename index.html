@@ -262,6 +262,20 @@
     </div>
   </div>
 </main>
+<!-- SONG MODAL (for adding a new song) -->
+<div class="overlay" id="song-modal">
+  <div class="modal">
+    <h3>🎵 Add Song</h3>
+    <label for="new-song-title">Song Title</label>
+    <input id="new-song-title" maxlength="200" placeholder="e.g. Amazing Grace"/>
+    <label for="new-song-lyrics">Lyrics</label>
+    <textarea id="new-song-lyrics" style="min-height:220px;line-height:1.7" placeholder="Paste or type the lyrics here…"></textarea>
+    <div class="modal-foot">
+      <button class="m-cancel" onclick="closeSongModal()">Cancel</button>
+      <button class="song-save-btn" id="new-song-save" style="font-size:.88rem;padding:9px 18px;border-radius:10px" onclick="submitNewSong()">💾 Add Song</button>
+    </div>
+  </div>
+</div>
 <!-- ROSTER MODAL (for adding new sessions) -->
 <div class="overlay" id="roster-modal">
   <div class="modal">
@@ -718,10 +732,23 @@ async function sharedWrite(action,payload,okMsg,failMsg){
   catch(e){console.error(e);showToast('⚠️ '+failMsg);setSharedSyncStatus('error','⚠️ '+failMsg+'. '+(e.message||''));return null}
   finally{sharedBusy--}
 }
-async function addSong(){
-  const t=prompt('Song title:');if(!t||!t.trim())return;
-  const j=await sharedWrite('addSong',{title:t.trim()},'✅ Song added!','Could not add song');
-  if(j&&j.newId)document.getElementById('sc-'+j.newId)?.classList.add('open');
+function addSong(){
+  if(!sheetReady){showToast('⚠️ Not connected to shared storage yet');return}
+  document.getElementById('song-modal').classList.add('open');
+  document.getElementById('new-song-title').focus();
+}
+function closeSongModal(){document.getElementById('song-modal').classList.remove('open')}
+document.getElementById('song-modal').onclick=e=>{if(e.target===e.currentTarget)closeSongModal()}
+async function submitNewSong(){
+  const tEl=document.getElementById('new-song-title'),lEl=document.getElementById('new-song-lyrics'),btn=document.getElementById('new-song-save');
+  const title=tEl.value.trim(),lyrics=lEl.value;
+  if(!title){showToast('⚠️ Please enter a song title');tEl.focus();return}
+  btn.disabled=true;btn.textContent='Saving…';
+  const j=await sharedWrite('addSong',{title,lyrics},'✅ Song added!','Could not add song');
+  btn.disabled=false;btn.textContent='💾 Add Song';
+  if(!j)return; // keep the form open with what was typed so nothing is lost
+  tEl.value='';lEl.value='';closeSongModal();
+  if(j.newId)document.getElementById('sc-'+j.newId)?.classList.add('open');
 }
 async function editSongTitle(id){
   const s=DB.songs.find(s=>s.id===id);const t=prompt('Rename:',s.title);
@@ -842,7 +869,7 @@ document.addEventListener('keydown',e=>{
     if(e.key==='ArrowLeft')lbNav(-1,{stopPropagation:()=>{}});
     else if(e.key==='ArrowRight')lbNav(1,{stopPropagation:()=>{}});
     else if(e.key==='Escape')closeLightbox();
-  }else if(e.key==='Escape')closeFullscreen();
+  }else if(e.key==='Escape'){closeFullscreen();closeSongModal()}
 });
 // ── INIT ─────────────────────────────────────────────────
 updateNotice(activeYear);
