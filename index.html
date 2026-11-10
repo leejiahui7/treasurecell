@@ -195,7 +195,7 @@
     <div class="sync-bar">
       <div class="sync-dot syncing" id="sync-dot"></div>
       <span id="sync-text">Connecting…</span>
-      <button onclick="refreshData()" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
+      <button onclick="loadShared(true)" style="margin-left:auto;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;padding:3px 10px;border:1.5px solid var(--border);border-radius:7px;background:white;color:var(--mid);cursor:pointer">↻ Refresh</button>
     </div>
     <div class="notice" id="roster-notice" style="background:var(--teal-l);border-color:#80d8d4">
       📖 Theme: <strong>1 Corinthians (cont.)</strong> &nbsp;·&nbsp; 🏠 Venue: Treasure Place (unless stated)
@@ -310,39 +310,19 @@
 </div>
 <div class="toast" id="toast"></div>
 <!-- ════════════════════════════════════════════════════════
-     Firebase (Firestore only — no Storage, so no billing
-     account is needed). Songs and photos are stored in a
-     shared Firestore database instead of localStorage, so
-     everyone sees the same data on every device.
-     Replace the values below with your own Firebase project's
-     config (see setup notes at the end of this file).
+     Shared storage: Google Sheet (songs) + Google Drive (photos)
+     through a small Google Apps Script web app (see Code.gs).
+     Paste your web app URL (it ends in /exec) between the quotes.
      ════════════════════════════════════════════════════════ -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 <script>
-const firebaseConfig={
-  apiKey:"AIzaSyAe7wJagR040BeHrCrTsdKn9_FfjKILEFA",
-  authDomain:"treasure-72015.firebaseapp.com",
-  projectId:"treasure-72015",
-  storageBucket:"treasure-72015.firebasestorage.app",
-  messagingSenderId:"884316591837",
-  appId:"1:884316591837:web:f04e5ddd073aa383e2ad34"
-  measurementId: "G-8XPKJDHKHL"
-};
-let fb=null,songsCol=null,photosCol=null,firebaseReady=false;
-try{
-  firebase.initializeApp(firebaseConfig);
-  fb=firebase.firestore();
-  songsCol=fb.collection('songs');
-  photosCol=fb.collection('photos');
-  firebaseReady=true;
-}catch(e){console.error('Firebase init failed',e)}
+const SHEET_API_URL='https://script.google.com/macros/s/AKfycbynbLnyRfjfoHDACnB-UWtMSz9UVV6QQSnf0RnQfCyNH0QI9NDMmyEzfP5BpASDq4qq/exec';
+const sheetReady=/^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec$/.test(SHEET_API_URL);
 </script>
 <script>
 // ════════════════════════════════════════════════════════
 //  Roster/gifts still live in this browser's localStorage
-//  (device only). Songs and photos are synced to everyone
-//  through Firestore, set up above.
+//  (device only). Songs and photos are shared with everyone
+//  through the Google Sheet web app set up above.
 // ════════════════════════════════════════════════════════
 // ── UTILS ────────────────────────────────────────────────
 function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -362,7 +342,7 @@ function setSyncStatus(state,msg){
   document.getElementById('sync-dot').className='sync-dot '+state;
   document.getElementById('sync-text').textContent=msg;
 }
-// ── SHARED SYNC STATUS (songs + photos, via Firestore) ────
+// ── SHARED SYNC STATUS (songs + photos, via Google Sheet) ─
 function setSharedSyncStatus(state,msg){
   const ids=[['song-sync-dot','song-sync-text'],['photo-sync-dot','photo-sync-text']];
   ids.forEach(([dotId,textId])=>{
@@ -395,32 +375,45 @@ async function persist(){
   }
 }
 function renderAll(){renderYearPills();renderRoster();renderSongs();renderPhotos()}
-// ── SHARED DATA (songs + photos, via Firestore) ───────────
+// ── SHARED DATA (songs + photos, via Google Sheet) ────────
+const SYNC_OK='🌐 Synced. Shared with everyone';
+let lastSongsJson='',lastPhotosJson='',sharedBusy=0;
+async function api(action,payload){
+  // text/plain keeps this a "simple" request, which Apps Script needs (no CORS preflight)
+  const r=await fetch(SHEET_API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...(payload||{})})});
+  const j=await r.json();
+  if(!j.ok)throw new Error(j.error||'Request failed');
+  applyShared(j,true);
+  return j;
+}
+function applyShared(j,force){
+  const sj=JSON.stringify(j.songs||[]),pj=JSON.stringify(j.photos||[]);
+  // don't redraw the song list under someone who is typing, unless it is their own save
+  const typing=document.getElementById('songs-list').contains(document.activeElement);
+  if(sj!==lastSongsJson&&(force||!typing)){lastSongsJson=sj;DB.songs=j.songs||[];renderSongs()}
+  if(pj!==lastPhotosJson){lastPhotosJson=pj;DB.photos=j.photos||[];renderPhotos()}
+  setSharedSyncStatus('synced',SYNC_OK);
+}
+async function loadShared(showSpinner){
+  if(!sheetReady||sharedBusy)return;
+  if(showSpinner)setSharedSyncStatus('syncing','Refreshing…');
+  try{
+    const r=await fetch(SHEET_API_URL+'?t='+Date.now(),{redirect:'follow'});
+    const j=await r.json();
+    if(!j.ok)throw new Error(j.error||'Request failed');
+    if(!sharedBusy)applyShared(j,false);
+  }catch(e){console.error(e);setSharedSyncStatus('error','⚠️ Could not reach the shared sheet. Check the web app URL and deployment')}
+}
 function startSharedSync(){
-  if(!firebaseReady){
-    setSharedSyncStatus('error','⚠️ Not connected — add your Firebase config to enable sharing');
-    DB.songs=getSeedSongs();DB.photos=[];renderSongs();renderPhotos();
+  if(!sheetReady){
+    setSharedSyncStatus('error','⚠️ Not connected. Paste your Apps Script web app URL into index.html');
+    DB.songs=[];DB.photos=[];renderSongs();renderPhotos();
     return;
   }
-  songsCol.orderBy('createdAt').onSnapshot(snap=>{
-    DB.songs=snap.docs.map(d=>({id:d.id,...d.data()}));
-    if(!DB.songs.length&&snap.metadata.fromCache===false){seedSongsOnce()}
-    renderSongs();
-    setSharedSyncStatus('synced','🌐 Synced — shared with everyone');
-  },err=>{console.error(err);setSharedSyncStatus('error','⚠️ Sync error — check Firestore rules')});
-  photosCol.orderBy('createdAt').onSnapshot(snap=>{
-    DB.photos=snap.docs.map(d=>({id:d.id,...d.data()}));
-    renderPhotos();
-    setSharedSyncStatus('synced','🌐 Synced — shared with everyone');
-  },err=>{console.error(err);setSharedSyncStatus('error','⚠️ Sync error — check Firestore rules')});
-}
-let seededSongs=false;
-async function seedSongsOnce(){
-  if(seededSongs)return;seededSongs=true;
-  const seeds=getSeedSongs();
-  for(const s of seeds){
-    await songsCol.add({title:s.title,artist:s.artist||'',lyrics:s.lyrics||'',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-  }
+  loadShared(false);
+  // Sheets has no live push, so check for other people's changes once a minute while the tab is visible
+  setInterval(()=>{if(!document.hidden)loadShared(false)},60000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadShared(false)});
 }
 // ── SEED DATA ────────────────────────────────────────────
 function getSeedSessions(){return[
@@ -455,11 +448,6 @@ function getSeedSessions(){return[
   {id:'s16',year:'2025 2H',date:'17 Oct 2025',worship:'Jia Hui + Tim',word:'Luke',kids:'Yuan Jing – Samson',supper:'Josh & YJ, Aunty Janette & Emily',topic:'L7: Understanding the Cost to Disobedience (Josh 7)',venue:'Telok Blangah Towers',core:'Daryl & Del'},
   {id:'s17',year:'2025 2H',date:'7 Nov 2025',worship:'Delci🎤 + Seth🎸',word:'Josh',kids:"Megan – Hannah's Prayers & Samuel",supper:'David & Praizel, Jia Hui & Tim',topic:"L8: Knowing God's Mercy in our Failure (Josh 8)",venue:'Pandan Valley',core:'Josh & YJ'},
   {id:'s18',year:'2025 2H',date:'21 Nov 2025',worship:'Grace🎤 + Andrew🎸',word:'Daryl',kids:'Jia Hui – Samuel & David and Goliath',supper:'Luke, Josh & Yuan Jing',topic:'L9+10: Guarding Against Complacency (Josh 23-24)',venue:'Treasure Place',core:'Ryan & Esther'},
-]}
-function getSeedSongs(){return[
-  {id:'song1',title:'Great Are You Lord',artist:'All Sons & Daughters',lyrics:"It's Your breath in our lungs\nSo we pour out our praise, we pour out our praise\nIt's Your breath in our lungs\nSo we pour out our praise to You only\n\nAnd all the earth will shout Your praise\nOur hearts will cry, these bones will sing\nGreat are You Lord"},
-  {id:'song2',title:'What A Beautiful Name',artist:'Hillsong Worship',lyrics:"You were the Word at the beginning\nOne with God the Lord Most High\nYour hidden glory in creation\nNow revealed in You our Christ\n\nWhat a beautiful Name it is\nWhat a beautiful Name it is\nThe Name of Jesus Christ my King"},
-  {id:'song3',title:'Goodness of God',artist:'Bethel Music',lyrics:"I love You Lord\nOh Your mercy never fails me\nAll my days I've been held in Your hands\nFrom the moment that I wake up\nUntil I lay my head\nI will sing of the goodness of God"},
 ]}
 // ── ROSTER ───────────────────────────────────────────────
 let activeYear='2026 2H',editSessionId=null;
@@ -685,6 +673,21 @@ function renderGifts(){
 }
 // ── SONGS ────────────────────────────────────────────────
 function renderSongs(){
+  const open=[...document.querySelectorAll('.song-card.open')].map(c=>c.id);
+  const drafts={};
+  (window._renderedSongs||[]).forEach(s=>{
+    const l=document.getElementById('lyr-'+s.id),a=document.getElementById('art-'+s.id);
+    if(l&&a&&(l.value!==(s.lyrics||'')||a.value!==(s.artist||'')))drafts[s.id]={l:l.value,a:a.value};
+  });
+  renderSongsRaw();
+  window._renderedSongs=DB.songs.map(s=>({id:s.id,lyrics:s.lyrics,artist:s.artist}));
+  open.forEach(id=>document.getElementById(id)?.classList.add('open'));
+  Object.keys(drafts).forEach(id=>{
+    const l=document.getElementById('lyr-'+id),a=document.getElementById('art-'+id);
+    if(l&&a){l.value=drafts[id].l;a.value=drafts[id].a}
+  });
+}
+function renderSongsRaw(){
   const list=document.getElementById('songs-list');
   if(!DB.songs.length){list.innerHTML='<div class="card" style="text-align:center;color:var(--mid);padding:32px">No songs yet 🎶</div>';return}
   list.innerHTML=DB.songs.map(s=>`
@@ -708,32 +711,32 @@ function renderSongs(){
     </div>`).join('');
 }
 function toggleSong(id){document.getElementById('sc-'+id).classList.toggle('open')}
+async function sharedWrite(action,payload,okMsg,failMsg){
+  if(!sheetReady){showToast('⚠️ Not connected to shared storage yet');return null}
+  sharedBusy++;setSharedSyncStatus('syncing','Saving…');
+  try{const j=await api(action,payload);if(okMsg)showToast(okMsg);return j}
+  catch(e){console.error(e);showToast('⚠️ '+failMsg);setSharedSyncStatus('error','⚠️ '+failMsg+'. '+(e.message||''));return null}
+  finally{sharedBusy--}
+}
 async function addSong(){
-  const t=prompt('Song title:');if(!t)return;
-  if(!firebaseReady){showToast('⚠️ Not connected to shared storage yet');return}
-  try{
-    const ref=await songsCol.add({title:t.trim(),artist:'',lyrics:'',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-    setTimeout(()=>document.getElementById('sc-'+ref.id)?.classList.add('open'),150);
-    showToast('✅ Song added!');
-  }catch(e){console.error(e);showToast('⚠️ Could not add song')}
+  const t=prompt('Song title:');if(!t||!t.trim())return;
+  const j=await sharedWrite('addSong',{title:t.trim()},'✅ Song added!','Could not add song');
+  if(j&&j.newId)document.getElementById('sc-'+j.newId)?.classList.add('open');
 }
 async function editSongTitle(id){
   const s=DB.songs.find(s=>s.id===id);const t=prompt('Rename:',s.title);
-  if(t&&t.trim()){
-    try{await songsCol.doc(id).update({title:t.trim()});showToast('✅ Renamed!')}
-    catch(e){console.error(e);showToast('⚠️ Could not rename')}
-  }
+  if(t&&t.trim())await sharedWrite('updateSong',{id,title:t.trim()},'✅ Renamed!','Could not rename');
 }
 async function deleteSong(id){
   if(!confirm('Delete this song?'))return;
-  try{await songsCol.doc(id).delete();showToast('🗑 Deleted')}
-  catch(e){console.error(e);showToast('⚠️ Could not delete')}
+  await sharedWrite('deleteSong',{id},'🗑 Deleted','Could not delete');
 }
 async function saveSongLyrics(id){
   const lyrics=document.getElementById('lyr-'+id).value;
   const artist=document.getElementById('art-'+id).value;
-  try{await songsCol.doc(id).update({lyrics,artist});showToast('✅ Saved!')}
-  catch(e){console.error(e);showToast('⚠️ Could not save')}
+  // mark this card as clean so the redraw shows the saved copy
+  const r=(window._renderedSongs||[]).find(s=>s.id===id);if(r){r.lyrics=lyrics;r.artist=artist}
+  await sharedWrite('updateSong',{id,lyrics,artist},'✅ Saved!','Could not save');
 }
 // ── FULLSCREEN ───────────────────────────────────────────
 let fsFontSize=18,fsDark=true;
@@ -760,7 +763,7 @@ function renderPhotos(){
   for(let i=0;i<GRID;i++){
     if(i<photos.length){
       html+=`<div class="photo-cell" onclick="openLightbox(${i})">
-        <img src="${photos[i].dataUrl}" alt="photo ${i+1}"/>
+        <img src="${photoSrc(photos[i])}" data-fid="${x(photos[i].fileId)}" onerror="photoFallback(this)" alt="photo ${i+1}"/>
         <button class="photo-del" onclick="deletePhoto(event,'${photos[i].id}')">✕</button>
       </div>`;
     }else{
@@ -771,22 +774,32 @@ function renderPhotos(){
   }
   document.getElementById('photos-grid').innerHTML=html;
 }
+// Photos live in a Google Drive folder. Try Google's image server first, then the
+// Drive thumbnail link, then ask the web app for the picture itself.
+const PHOTO_SRC={};
+function photoSrc(p){return PHOTO_SRC[p.fileId]||`https://lh3.googleusercontent.com/d/${encodeURIComponent(p.fileId)}=w1400`}
+function photoFallback(img){
+  const fid=img.dataset.fid,step=+(img.dataset.fb||0);img.dataset.fb=step+1;
+  if(step===0){img.src=`https://drive.google.com/thumbnail?id=${encodeURIComponent(fid)}&sz=w1400`}
+  else if(step===1){
+    fetch(SHEET_API_URL+'?action=photo&id='+encodeURIComponent(fid),{redirect:'follow'}).then(r=>r.json())
+      .then(j=>{if(j.ok){PHOTO_SRC[fid]=j.dataUrl;img.src=j.dataUrl}}).catch(e=>console.error(e));
+  }
+}
 async function handlePhotoUpload(ev){
   const files=Array.from(ev.target.files);if(!files.length)return;
-  if(!firebaseReady){showToast('⚠️ Not connected to shared storage yet');ev.target.value='';return}
+  if(!sheetReady){showToast('⚠️ Not connected to shared storage yet');ev.target.value='';return}
   const slots=GRID-DB.photos.length;
   if(slots<=0){showToast('⚠️ Gallery full (25 photos)');ev.target.value='';return}
-  const toAdd=files.slice(0,slots);showToast('⏳ Processing…');
+  const toAdd=files.slice(0,slots);
   let uploaded=0;
-  for(const f of toAdd){
-    const raw=await toDataUrl(f);
-    let dataUrl=await compressImg(raw,700,.65);
-    // Firestore documents cap at 1MB — compress further if still too big
-    let quality=.65;
-    while(dataUrl.length>900000&&quality>.2){quality-=.15;dataUrl=await compressImg(raw,700,quality)}
-    if(dataUrl.length>900000){showToast('⚠️ One photo was too large to upload, skipped');continue}
-    try{await photosCol.add({dataUrl,createdAt:firebase.firestore.FieldValue.serverTimestamp()});uploaded++}
-    catch(e){console.error(e);showToast('⚠️ Upload failed')}
+  for(let i=0;i<toAdd.length;i++){
+    showToast(`⏳ Uploading ${i+1} of ${toAdd.length}…`);
+    try{
+      const raw=await toDataUrl(toAdd[i]);
+      const dataUrl=await compressImg(raw,1400,.8);
+      if(await sharedWrite('addPhoto',{dataUrl},'','Upload failed'))uploaded++;
+    }catch(e){console.error(e);showToast('⚠️ Upload failed')}
   }
   ev.target.value='';
   if(uploaded)showToast(`✅ ${uploaded} photo${uploaded>1?'s':''} uploaded!`);
@@ -804,11 +817,16 @@ function compressImg(url,maxW,q){
 }
 async function deletePhoto(ev,id){
   ev.stopPropagation();if(!confirm('Remove this photo?'))return;
-  try{await photosCol.doc(id).delete();showToast('🗑 Removed')}
-  catch(e){console.error(e);showToast('⚠️ Could not remove')}
+  await sharedWrite('deletePhoto',{id},'🗑 Removed','Could not remove');
+}
+function setLightboxImg(i){
+  const p=DB.photos[i],lb=document.getElementById('lb-img');
+  const g=document.querySelectorAll('#photos-grid .photo-cell img')[i];
+  lb.dataset.fid=p.fileId;lb.dataset.fb=g?(g.dataset.fb||0):0;lb.onerror=()=>photoFallback(lb);
+  lb.src=(g&&g.src)||photoSrc(p);
 }
 function openLightbox(i){
-  lbIdx=i;document.getElementById('lb-img').src=DB.photos[i].dataUrl;
+  lbIdx=i;setLightboxImg(i);
   document.getElementById('lb-counter').textContent=(i+1)+' / '+DB.photos.length;
   document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';
 }
@@ -816,7 +834,7 @@ function closeLightbox(){document.getElementById('lightbox').classList.remove('o
 function lbBgClick(e){if(e.target===document.getElementById('lightbox'))closeLightbox()}
 function lbNav(dir,e){
   e.stopPropagation();lbIdx=(lbIdx+dir+DB.photos.length)%DB.photos.length;
-  document.getElementById('lb-img').src=DB.photos[lbIdx].dataUrl;
+  setLightboxImg(lbIdx);
   document.getElementById('lb-counter').textContent=(lbIdx+1)+' / '+DB.photos.length;
 }
 document.addEventListener('keydown',e=>{
